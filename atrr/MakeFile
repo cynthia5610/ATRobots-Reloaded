@@ -1,0 +1,11 @@
+#install linux dependancies
+installlinux:
+
+#install mac dependancies
+installmac:
+
+#compile and link libraries for linux
+atrl:
+
+#compile and link libraries for mac
+atrm:

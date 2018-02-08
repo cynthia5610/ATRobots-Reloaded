@@ -1,2 +1,4 @@
-# ATRobots-Reloaded
-A ported version of the original ATRobots game from Turbo Pascal 6 to C++
+# ATRobots_Reloaded
+This is an attempt to port over the ATRobot game written in turbo pascal 6 to a modern programming language (C++)
+The ported game is available in this repo along with the original game.
+![alt text](https://i.imgur.com/HFCZSrR.png)
