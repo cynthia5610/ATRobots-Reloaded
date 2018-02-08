@@ -7,11 +7,11 @@
 
 using namespace std;
 
-/* -- function hexnum -- */
-char hexNumber(int number){
-    char hexNum;
+char hexNumber(unsigned char hexNum);
+string hexByte(unsigned char hexByte);
 
-    hexNum = number;
+/* -- function hexnum(num:byte):char -- */
+char hexNumber(unsigned char hexNum){
 
     switch(hexNum){
 
@@ -35,6 +35,14 @@ char hexNumber(int number){
            
     }
     return(hexNum);
+}
+
+/* -- function hexb(num:byte):string -- */
+string hexByte(unsigned char hexByte){
+    string hexString;
+    hexByte = hexNumber(hexByte << 4) + hexNumber(hexByte && 15);
+    hexString.push_back(hexByte);
+    return hexString;
 }
 
 
