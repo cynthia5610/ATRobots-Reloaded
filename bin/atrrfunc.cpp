@@ -111,16 +111,12 @@ string uCase(string lString){
 
 /* -- lcase(s:string):string -- */
 string lcase(string s){
-    int i;
+    string uString;
 
-    if(s.length() >= 1){
-        for(i = 0; i < s.length(); i++){
-            if( ((int)s[i])>=65 && ((int)s[i])<=90 ){
-                s[i] = (char)((int)s[i]+32);
-            }
-        }
-    }
-    return s;
+    transform(s.begin(), s.end(), s.begin(), ::tolower);
+    uString = s;
+
+    return uString;
 }
 
 /* -- space(i:byte):string -- */
