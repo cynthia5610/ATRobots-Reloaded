@@ -7,42 +7,147 @@
 
 using namespace std;
 
-char hexNumber(unsigned char hexNum);
-string hexByte(unsigned char hexByte);
-
 /* -- function hexnum(num:byte):char -- */
-char hexNumber(unsigned char hexNum){
+char hexnum(unsigned char num){
 
-    switch(hexNum){
+    switch(num){
 
-        case 0: hexNum = '0';
-        case 1: hexNum = '1';
-        case 2: hexNum = '2';
-        case 3: hexNum = '3';
-        case 4: hexNum = '4';
-        case 5: hexNum = '5';
-        case 6: hexNum = '6';
-        case 7: hexNum = '7';
-        case 8: hexNum = '8';
-        case 9: hexNum = '9';
-        case 10: hexNum = 'A';
-        case 11: hexNum = 'B';
-        case 12: hexNum = 'C';
-        case 13: hexNum = 'D';
-        case 14: hexNum = 'E';
-        case 15: hexNum = 'F';
-        default: hexNum = 'X';
+        case 0: return '0'; 
+        case 1: return '1'; 
+        case 2: return '2'; 
+        case 3: return '3'; 
+        case 4: return '4'; 
+        case 5: return '5'; 
+        case 6: return '6'; 
+        case 7: return '7'; 
+        case 8: return '8'; 
+        case 9: return '9'; 
+        case 10: return 'A'; 
+        case 11: return 'B'; 
+        case 12: return 'C'; 
+        case 13: return 'D'; 
+        case 14: return 'E';  
+        case 15: return 'F';
+        default: return 'X';
            
     }
-    return(hexNum);
 }
 
 /* -- function hexb(num:byte):string -- */
-string hexByte(unsigned char hexByte){
-    string hexString;
-    hexByte = hexNumber(hexByte << 4) + hexNumber(hexByte && 15);
-    hexString.push_back(hexByte);
-    return hexString;
+string hexb(unsigned char num){
+    return (hexnum(num << 4) + hexnum(num & 15));
 }
+
+/* -- function hex(num:word):string -- */
+string hex(unsigned short num){
+    return(hexb(num << 8) + hexb(num & 255));
+}
+
+/* -- function valuer(i:string):real; -- */
+double valuer(string i){
+    double s;
+    s = stod(i);
+    return s;
+}
+
+/* -- function value(i:string):longint; -- */
+long value(string i){
+    long s;
+    s = atol(i);
+    return s;
+}
+
+/* -- cstrr(i:real):string; -- */
+string cstrr(double i){
+    string s1;
+    s1 = i;
+    return s1;
+}
+
+/* -- cstr(i:longint):string -- */
+string cstr(long i){
+    string s1;
+    s1 = i;
+    return s1;
+}
+
+/* -- zero_pad(n,l:longint):string -- */
+string zero_pad(long n, long l){
+    string s;
+    s = cstr(n);
+    while(s.length() < l){
+        s = '0' + s;
+    }
+    return s;
+}
+
+/* -- zero_pads(s:string; l:longint):string; -- */
+string zero_pads(string s, long l){
+    string s1;
+    s1 = s;
+    while(s1.length() < l){
+        s1 = '0' + s1;
+    }
+    return s1;
+}
+
+/* -- addfront(b:string; l:integer):string -- */
+string addfront(string b, int l){
+    while(b.length() < l){
+        b = ' ' + b;
+    }
+    return b;
+}
+
+/* -- ucase(s:string):string -- */
+string uCase(string lString){
+    string uString;
+
+    transform(lString.begin(), lString.end(),lString.begin(), ::toupper);
+    uString = lString;
+
+    return uString;
+}
+
+/* -- lcase(s:string):string -- */
+string lcase(string s){
+    int i;
+
+    if(s.length() >= 1){
+        for(i = 0; i < s.length(); i++){
+            if( ((int)s[i])>=65 && ((int)s[i])<=90 ){
+                s[i] = (char)((int)s[i]+32);
+            }
+        }
+    }
+    return s;
+}
+
+/* -- space(i:byte):string -- */
+string space(unsigned char i){
+    string s;
+    int k;
+
+    if(i > 0){
+        for(k = 0; k < i; k++){
+            s = s + ' ';
+        }
+    }
+    return s;
+}
+
+/* -- repchar(c:char; i:byte):string -- */
+string repchar(char c, unsigned char i){
+    string s;
+    int k;
+
+    if(i > 0){
+        for(k = 0; k < i; k++){
+            s = s + c;
+        }
+    }
+    return s;
+}
+
 
 
