@@ -4,22 +4,23 @@
 
 std::string operand (int n, int m)
 {
-	std::string s;
-	s = std::to_string(n);
-	switch(m)
-	{
-		case 1: s = "@" + s; break;
-		case 2: s = ":" + s; break;
-		case 3: s = "$" + s; break;
-		case 4: s = "!" + s; break;
-		default: s = std::to_string(n); break;
-	}
-	if(m)
-	{
-		s = "[" + s + "]";
-	}
-	return s;
+    std::string s;
+    s = std::to_string(n);
+    switch(m & 7)
+    {
+        case 1: s = "@" + s; break;
+        case 2: s = ":" + s; break;
+        case 3: s = "$" + s; break;
+        case 4: s = "!" + s; break;
+        default: s = std::to_string(n); break;
+    }
+    if((m & 8) > 0)
+    {
+        s = "[" + s + "]";
+    }
+    return s;
 }
+
 
 std::string mnemonic (int n, int m)
 {
