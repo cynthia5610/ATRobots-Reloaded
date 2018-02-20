@@ -13,7 +13,7 @@ string addfront(string b, int l);
 string addrear(string b, int l);
 string lstr(string s1, int l);
 string rstr(string s1, int l);
-bool EXSIST(string thisfile);
+bool EXIST(string thisfile);
 bool VALID(string thisfile);
 string name_form(string name);
 string exten(string name);
@@ -24,9 +24,6 @@ string no_path(string fn);
 long file_length(string fn);
 
 
-int main(){
-
-}
 
 string addfront(string b, int l){
     while(b.length() < l){
@@ -66,7 +63,7 @@ string rstr(string s1, int l){
     } 
 }
 
-bool EXSIST(string thisfile){
+bool EXIST(string thisfile){
     ifstream inFile;
     inFile.open(thisfile);
     if(!inFile.is_open()){
@@ -79,7 +76,7 @@ bool EXSIST(string thisfile){
 }
 
 bool VALID(string thisfile){
-    if (!EXSIST(thisfile)){
+    if (!EXIST(thisfile)){
 
     }
 }
