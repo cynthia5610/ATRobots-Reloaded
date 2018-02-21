@@ -1,18 +1,20 @@
 #include <iostream>
 #include <string>
-#include "operand.h"
+using namespace std;
 
-std::string operand (int n, int m)
+//Uses cstr helper function in ATRFUNC.PAS
+
+string operand (int n, int m)
 {
-    std::string s;
-    s = std::to_string(n);
+    string s;
+    s = cstr(n);
     switch(m & 7)
     {
         case 1: s = "@" + s; break;
         case 2: s = ":" + s; break;
         case 3: s = "$" + s; break;
         case 4: s = "!" + s; break;
-        default: s = std::to_string(n); break;
+        default: s = cstr(n); break;
     }
     if((m & 8) > 0)
     {
@@ -22,10 +24,10 @@ std::string operand (int n, int m)
 }
 
 
-std::string mnemonic (int n, int m)
+string mnemonic (int n, int m)
 {
-	std::string s;
-	s = std::to_string(n);
+	string s;
+	s = cstr(n);
 	if(m == 0)
 	{
 		switch(n)
@@ -77,7 +79,7 @@ std::string mnemonic (int n, int m)
    			case 44:  s = "SAR"; break;
    			case 45:  s = "NEG"; break;
    			case 46:  s = "JTL"; break;
-   			default:   s = "XXX"; break;
+   			default:  s = "XXX"; break;
 		}
 	}
 	else
