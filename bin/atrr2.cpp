@@ -1,8 +1,44 @@
 #include <iostream>
 #include <string>
+
+#include "types.hh"
+#include "atrrfunc.hh"
+
 using namespace std;
 
-//Uses cstr helper function in ATRFUNC.PAS
+int main(int argc, char *argv[]){
+	//loop variables
+	int i, j, k, l, n, w;
+	if(matches > 0){
+		for(i = 0; i < num_robots; i++){
+			bout;
+		}
+	}
+
+	if(matches > 1){
+		cout << endl;
+		cout << endl;
+
+		cout << "Bout Complete! (" << matches << " matches)" << endl;
+
+		k = 0;
+		w = 0;
+
+		for(i = 0; i < num_robots; i++){
+			//with robot[i]^ do
+			if(wins = w){
+				k++;
+			}
+			if(wins > w){
+				k = 1;
+				n = i;
+				w = wins;
+			}
+			cout << "Robot           Wins  Matches  Kills  Deaths    Shots" << endl;
+			cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		}
+	}
+}
 
 string operand (int n, int m)
 {
@@ -87,4 +123,8 @@ string mnemonic (int n, int m)
 		s = operand(n,m);
 	}
 	return s;
-}  
+}
+
+void log_errors(string ov, int n, int i){
+
+}
