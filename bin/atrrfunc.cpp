@@ -7,6 +7,12 @@
 
 using namespace std;
 
+ long delay_per_sec;
+ bool registered, graphix, sound_on;
+ string reg_name;
+ unsigned short int reg_num;
+ double sint, cost[255];
+
 /* -- function hexnum(num:byte):char -- */
 char hexnum(unsigned char num){
 
