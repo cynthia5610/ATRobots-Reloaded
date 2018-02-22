@@ -6,6 +6,12 @@
 
 using namespace std;
 
+long delay_per_sec;
+bool registered, graphix, sound_on;
+string reg_name;
+unsigned short int reg_num;
+double sint, cost[255];
+
 char hexnum(unsigned char num);
 string hexb(unsigned char num);
 string hex(unsigned short num);
