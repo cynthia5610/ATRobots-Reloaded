@@ -148,7 +148,7 @@ typedef struct{
         ram[max_ram];
         mine_rec mine[max_mines];
 
-    long wings,
+    long wins,
          trials,
          kills,
          deaths,
