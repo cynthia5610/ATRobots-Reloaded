@@ -86,13 +86,13 @@ string name_form(string name){
     if (name == "." || name == ".."){
         return addrear(name,12);
     }
-    while(k <= name.length() && name[k] != '.'){  //prob should be < for every one of this
+    while(k < name.length() && name[k] != '.'){  //prob should be < for every one of this
         s1 = s1 + name[k];
         k++;
     }
     if (k < name.length()){
         k++;
-        while (k <= name.length() && name[k] != '.'){
+        while (k < name.length() && name[k] != '.'){
             s2 = s2 + name[k];
             k++;
         }
@@ -104,13 +104,13 @@ string exten (string name){
     int i, j, k, l;
     string s1, s2, s3;
     k = 0;
-    while(k <= name.length() && name[k] != '.'){
+    while(k < name.length() && name[k] != '.'){
         s1 = s1 + name[k];
         k++;
     }
     if (k < name.length()){
         k++;
-        while (k <= name.length() && name[k] != '.'){
+        while (k < name.length() && name[k] != '.'){
             s2 = s2 + name[k];
             k++;
         }
@@ -121,8 +121,8 @@ string exten (string name){
 string base_name(string name){
     int i, j, k, l;
     string s1, s2, s3;
-    k = 1;
-    while(k <= name.length() && name[k] != '.'){
+    k = 0;
+    while(k < name.length() && name[k] != '.'){
         s1 = s1 + name[k];
         k++;
     }
@@ -136,7 +136,7 @@ string attribs(int b){
 string path(string fn){
     int i, k;
     k = 0;
-    for (i = fn.length(); i>= 1; i--){
+    for (i = fn.length()-1; i>= 0; i--){
         if ((fn[i] == '\\' || fn[i] == ':') && k<i){
             k = i;
         }
@@ -152,7 +152,7 @@ string path(string fn){
 string no_path(string fn){
     int i, k;
     k = 0;
-    for (i = fn.length(); i>= 1; i--){
+    for (i = fn.length()-1; i>= 0; i--){
         if ((fn[i] == '\\' || fn[i] == ':') && k<i){
             k = i;
         }
