@@ -78,7 +78,18 @@ int main(int argc, char *argv[]){
 	}
 }
 
-void bout(){
+void init() //***Cynthia***//
+{
+    return;
+}
+
+void init_bout() //***Cynthia***//
+{
+    return;
+}
+
+void bout()
+{
 	int i, j, k, n;
 	char c;
 	long timer;
@@ -298,24 +309,89 @@ string mnemonic (int n, int m)
 	return s;
 }
 
-void process_keypress(char c){
-	return;
+int max_shown()
+{
+    int max;
+    switch(stats_mode)
+    {
+        case 1: max = 12; break;
+        case 2: max = 32; break;
+        default: max = 6; break;
+    }
+    return max;
 }
+
 
 /*
 ----- GRAPHICS FUNCTIONS ----
 */
 
-void graph_mode(bool on){
+void graph_mode(bool on)
+{
 	return;
 }
 
-void toggle_graphix(){
+void toggle_graphix()
+{
 	graph_mode(!graphix);
-	if(!graphix){
+	if(!graphix)
+    {
 		cout << "Match " << played << "/" << matches << ", Battle in progress..." << endl;
 	}
 	return;
+}
+
+bool graph_check(int n)
+{
+    return false; // Set to false to not use graphics
+}
+
+void robot_graph(int n)
+{
+    return;
+}
+
+void update_armor(int n)
+{
+    return;
+}
+
+void update_heat(int n)
+{
+    return;
+}
+
+void update_lives(int n)
+{
+    return;
+}
+
+void update_cycle_window()
+{
+    if(!graphix)
+    {
+    cout << "\r" << "Match " << played << "/" << matches << ", Cycle: " << zero_pad(game_cycle,9);
+    }
+    else
+    {
+        cout << endl;
+    }
+    return;
+}
+
+void setscreen()
+{
+    return;
+}
+
+void draw_robot(int n)
+{
+    return;
+}
+
+void begin_window()
+{
+    return;
 }
 
 /* 
@@ -323,18 +399,278 @@ void toggle_graphix(){
 Empty and return void in order to create sitting duck
 */
 
-void do_mine(int n, int m){
+void do_mine(int n, int m)
+{
 	return;
 }
 
-void do_missile(int n){
+void do_missile(int n)
+{
 	return;
 }
 
-void do_robot(int n){
+void do_robot(int n)
+{
 	return;
 }
 
-void draw_robot(int n){
-	return;
+void init_robot(int n)
+{
+    return;
 }
+
+void create_robot(int n, string filename)
+{
+    return;
+}
+
+void init_mine(int n, int detectrange, int size)
+{
+    return;
+}
+
+int count_missiles()
+{
+    return 0;
+}
+
+void init_missiles(float xx, float yy, float xxv, float yyv, int dir, int s, int blast, bool ob)
+{
+    return;
+}
+
+void damage(int n, int d, bool physical)
+{
+    return;
+}
+
+int scan(int n)
+{
+    return 0;
+}
+
+void score_robots()
+{
+    return;
+}
+
+/*
+ ------ COMPILE/PARSING/CONFIG FUNCTIONS -----
+ Empty and return void
+ */
+
+void log_error(int n, int i, string ov)
+{
+    return;
+}
+
+void robot_error(int n, int i, string ov) //Contains graphics
+{
+    return;
+}
+
+void prog_error(int n, string ss)
+{
+    return;
+}
+
+void print_code(int n, int p)
+{
+    return;
+}
+
+void parse1(int n, int p, parsetype s)
+{
+    return;
+}
+
+void check_plen(int plen)
+{
+    return;
+}
+
+void compile(int n, string filename)
+{
+    return;
+}
+
+void robot_config(int n)
+{
+    return;
+}
+
+void reset_software(int n)
+{
+    return;
+}
+
+void reset_hardware(int n)
+{
+    return;
+}
+
+void parse_param(string s)
+{
+    return;
+}
+
+void delete_compile_report()
+{
+    return;
+}
+
+void write_compile_report()
+{
+    return;
+}
+
+int get_from_ram(int n, int i, int j)
+{
+    return 0;
+}
+
+int get_val(int n, int c, int o)
+{
+    return 0;
+}
+
+void put_val(int n, int c, int o, int v)
+{
+    return;
+}
+
+void push(int n, int v)
+{
+    return;
+}
+
+int pop(int n)
+{
+    return 0;
+}
+
+int find_label(int n)
+{
+    return 0;
+}
+
+void com_transmit(int n, int chan, int data)
+{
+    return;
+}
+
+int com_receive(int n)
+{
+    return 0;
+}
+
+int in_port(int n, int p, int time_used)
+{
+    return 0;
+}
+
+void out_port(int n, int p, int v, int time_used)
+{
+    return;
+}
+
+void call_int(int n, int int_num, int time_used)
+{
+    return;
+}
+
+bool invalid_microcode(int n, int ip)
+{
+    return false;
+}
+
+void execute_instruction(int n)
+{
+    return;
+}
+
+/*
+ ------ DEBUG FUNCTIONS -----
+ Empty and return void
+ */
+
+void update_debug_bars()
+{
+    return;
+}
+
+void update_debug_system()
+{
+    return;
+}
+
+void update_debug_registers()
+{
+    return;
+}
+
+void update_debug_flags()
+{
+    return;
+}
+
+void update_debug_memory()
+{
+    return;
+}
+
+void update_debug_code()
+{
+    return;
+}
+
+void update_debug_window()
+{
+    return;
+}
+
+void init_debug_window()
+{
+    return;
+}
+
+void close_debug_window()
+{
+    return;
+}
+
+/*
+ ------ OTHER FUNCTIONS -----
+ Empty and return void
+ */
+
+void process_keypress(char c)
+{
+    return;
+}
+
+void shutdown()
+{
+    return;
+}
+
+bool gameover()
+{
+    return true;
+}
+
+string victor_string(int k, int n)
+{
+    return " ";
+}
+
+void show_statistics()
+{
+    return;
+}
+
+void write_report()
+{
+    return;
+}
+
