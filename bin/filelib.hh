@@ -1,5 +1,5 @@
 #ifndef __FILELIB_HH__
-#DEFINE __FILELIB_HH__
+#define __FILELIB_HH__
 
 #include <iostream>
 
