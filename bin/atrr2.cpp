@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <stdlib.h>
+#include <ctime>
 
 #include "types.hh"
 #include "atrrfunc.hh"
@@ -83,11 +84,119 @@ int main(int argc, char *argv[]){
 	}
 }
 
-void init() //***Cynthia***//
+void init
 {
-    return;
+    int i;
+    if(debugging_compiler || compile_by_line || show_code)
+    {        cout << "!!! Warning !!! Compiler Debugging enabled !!!" << endl; //*1
+    }
+    step_mode = 0;
+    logging_errors = false;
+    stats_mode = 0;
+    insane_missiles = false;
+    insanity = 0;
+    delay_per_sec = 0;
+    windoze = true;
+    graphix = false;
+    no_gfx = false;
+    sound_on = true;
+    timing = true;
+    matches = 1;
+    played = 0;
+    old_shields = false;
+    quit = false;
+    compile_only = false;
+    show_arcs = false;
+    debug_info = false;
+    show_cnotice = true;
+    show_source = true;
+    report = false;
+    kill_count = 0;
+    maxcode = max_code;
+    make_tables(); // ATRFUNC;
+    srand(time(NULL)); //*2
+    num_robots = -1;
+    game_limit = 100000;
+    game_cycle = 0;
+    game_delay = default_delay;
+    time_slice = default_slice;
+    for(i = 0; i < max_missiles, i++)
+    {
+        missile[i].a = 0;
+        missile[i].source = -1;
+        missile[i].x = 0;
+        missile[i].y = 0;
+        missile[i].lx = 0;
+        missile[i].ly = 0;
+        missile[i].mult = 1;
+    }
+    
+    registered = false; //ATRFUNC
+    reg_name = "Unregistered"; //ATRFUNC/ATRT
+    reg_num = $FFFF //ATRFUNC/ATRT
+    check_registration(); //ATRFUNC/ATRT
+    
+    cout << endl;
+    cout << progname << " " << version << " " << endl;
+    cout << cnotice1 << endl;
+    cout << cnotice2 << endl;
+    if(!registered) //ATRFUNC :: Boolean
+    {
+        cout << "Unregistered version" << endl;
+    }
+    else cout << "Resgister to: " << reg_name << endl;
+    
+    cout << endl;
+    
+    delete_compile_report(); //ATR2
+    if(paramcount > 0)
+    {
+        for(i = 0; i < paramcount; i++)
+        {
+            parse_param(btrim(ucase(paramstr(i)))); //ATR2(ATRFUNC(ATRFUNC(SYSTEM::namespace))) *4
+        }
+    }
+    else prog_error(5," "); //ATR2
+    temp_mode = step_mode;
+    if(logging_errors)
+    {
+        for(i = 0; i < num_robots; i++)
+        {
+            assign(robot[i]->errorlog, base_name(fn)+".ERR"); //base_name FILELIB //Need to see for assign func *5
+            rewrite(errorlog); //OPENS file for writing
+        }
+    }
+    if(compile_only) write_compile_report(); //ATR2
+    if(num_robots < 1) prog_error(4," "); //ATR2
+    
+    if(!no_gfx) graph_mode(true); //ATR2
+    
+    //---Fix-ups---//
+    if(matches > 100000) matches = 100000;
+    if(matches < 1) matches = 1;
+    if(game_delay > 1000) game_delay = 1000;
+    if(game_delay < 0) game_delay = 0;
+    if(time_slice > 100) time_slice = 100;
+    if(time_slice < 1) time_slice = 1;
+    if(game_limit < 0) game_limit = 0;
+    if(game_limit > 100000) game_limit = 100000;
+    if(maxcode < 1) maxcode = 1;
+    if(maxcode > max_code) maxcode = max_code;
+    
+    //----avoid floating pointers ----//
+    for(i = num_robots+1; i < max_robots+2; i++)
+    {
+        robot[i] = robot[0];
+    }
+    robot[-1] = robot[0];
+    robot[-2] = robot[0];
+    
+    if(!graphix)
+    {
+        cout << "Freemem: " << memavail << endl; //memavail *6
+        cout << endl;
+    }
 }
-
 void init_bout()
 {
     int i, j, k;
