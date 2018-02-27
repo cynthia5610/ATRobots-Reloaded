@@ -1,5 +1,4 @@
 #include <iostream>
-#include <stdlib.h>
 #include <string>
 #include "atrrfunc.hh"
 
@@ -39,24 +38,29 @@ cout << "this is not a double" << cstrr(21) << endl;
 // Testing cstr
 cout << " " << endl;
 cout << "-cstr-" << endl;
+string resultcstr;
 long exampcstr = 2147483647;
 cout << cstr(exampcstr) << endl;
 cout << "This is not a long" << cstr(21) << endl;
 
 // Testing ucase
 cout << " " << endl;
-cout << "-ucase-" << endl;
+cout << "-uCase-" << endl;
+string resultucase;
 string exampucase ="this is a test. this should be in allcaps";
-cout << ucase(exampucase) << endl;
-cout << ucase("THIS IS ALREADY CAPPED. WHAT WILL HAPPEN?");
+resultucase = uCase(exampucase);
+cout << resultucase << endl;
+cout << uCase("THIS IS ALREADY CAPPED. WHAT WILL HAPPEN?") << endl;
 
 // Testing lcase
 cout << " " << endl;
 cout << "-lcase-" << endl;
+string resultlcase;
 string examplcase = "THIS IS A TEST. THIS SHOULD BE IN LOWERCASE";
-cout << lcase(examplcase) << endl;
+resultlcase = lcase(examplcase);
+cout << resultlcase  << endl;
 cout << lcase("this is already lowercase") << endl;
-cout << lcase(examplcase) << endl;
+
 
 
 
