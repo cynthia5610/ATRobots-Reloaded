@@ -83,8 +83,37 @@ void init() //***Cynthia***//
     return;
 }
 
-void init_bout() //***Cynthia***//
+void init_bout()
 {
+    int i, j, k;
+    game_cycle = 0;
+    for(i = 0; i < max_missiles; i++)
+    {
+        missiles[i]->a = 0;
+        missiles[i]->source = -1;
+        missiles[i]->x = 0;
+        missiles[i]->y = 0;
+        missiles[i]->lx = 0;
+        missiles[i]->ly = 0;
+        missiles[i]->mult = 1;
+    }
+    for(i = 0; i < num_robots; i++)
+    {
+        robot[i]->mem_watch = 128;
+        reset_hardware(i); //ATR2
+        reset_software(i); //ATR2
+    }
+    if(graphix) setscreen();
+    if (graphix && step_mode > 0) init_debug_window();
+    if(!graphix)
+    {
+        //textcolor(7);
+        /**
+         cout << "\r" << "Match " << played << " /" << matches << ", Battle in progress..." << endl;
+         cout << endl;
+         **/
+    }
+    // Comment out code Init_bout Line 3406
     return;
 }
 
