@@ -22,15 +22,6 @@ string path(string fn);
 string no_path(string fn);
 long file_length(string fn);
 
-
-
-string addfront(string b, int l){
-    while(b.length() < l){
-        b = ' ' + b;
-    }
-    return b;
-}
-
 string addrear(string b, int l){
     while(b.length() < l){
         b = b + ' ';

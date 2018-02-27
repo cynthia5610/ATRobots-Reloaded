@@ -1,9 +1,9 @@
 mac:
 
-	g++ ../bin/atrr2.cpp
-	g++ ../bin/atrrfunc.cpp
-	g++ ../bin/filelib.cpp
-	g++ -o atrr ../bin/atrr2.o ../bin/atrrfunc.o ../bin/filelib.o
+	g++ -c ../bin/atrr2.cpp
+	g++ -c ../bin/atrrfunc.cpp
+	g++ -c ../bin/filelib.cpp
+	g++ -o atrr atrr2.o atrrfunc.o filelib.o
 
 linux:
 

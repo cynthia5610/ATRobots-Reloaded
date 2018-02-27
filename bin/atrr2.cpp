@@ -3,8 +3,8 @@
 #include <stdlib.h>
 
 #include "types.hh"
-#include "atrrfunc.hh"
-#include "filelib.hh"
+#include "atrrfunc.cpp"
+#include "filelib.cpp"
 
 using namespace std;
 

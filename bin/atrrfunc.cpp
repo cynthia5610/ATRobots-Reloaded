@@ -59,18 +59,19 @@ char hexnum(unsigned char num){
            
     }
 }
+
 /*
 string hexb(unsigned char num){
     return (hexnum(num << 4) + hexnum(num & 15));
 }
 */
 
-/* -- function hex(num:word):string -- */
+/*
 string hex(unsigned short num){
     return(hexb(num << 8) + hexb(num & 255));
 }
+*/
 
-/* -- function valuer(i:string):real; -- */
 double valuer(string i){
     double s;
     s = stod(i);
