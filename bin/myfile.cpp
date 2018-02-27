@@ -7,15 +7,20 @@
 #include <string.h>
 #include <fstream>
 #include <iostream>
+#include <stdint.h>
+#include <cstdint>
+//uint8_t
+//int8_t
 using namespace std;
 
 
 
 
 //function prototypes
-long file_size          (char* fn);                                //returns filesize
-void delete_file        (char* fn);
-void rename_file        (char* fn, char* fn2);
+string lstr             (string s1, int l);                 //puts part of a string into lstr
+long file_size          (char* fn);                         //returns filesize
+void delete_file        (char* fn);                         //deletes a file 
+void rename_file        (char* fn, char* fn2);              //renames a file
 //void open_filein    (var h:word; fn:string);
 //void open_fileout   (var h:word; fn:string);
 //void open_fileboth  (var h:word; fn:string);
@@ -29,10 +34,21 @@ void rename_file        (char* fn, char* fn2);
 //void write_long     (h:word; ploc:pointer; var len:word);
 
 
+//Puts part of a string into a new string, which is later used for comparisons against rstr... not in this function
+string lstr(string s1, int length)
+{
+    
+    string lstr = "";
+    lstr.append(s1, 0, length); 
+    return lstr;
+}
+
 
 //Returns kilobyte filesize as long or double 
 long file_size(char* fn)
 {
+    if( ( fn ) == 0 )
+        perror( "Error, no file to give size of." );
     std::ifstream in(fn, std::ifstream::ate | std::ifstream::binary);
     return in.tellg(); 
 }
@@ -46,7 +62,7 @@ void delete_file(char* fn)
         puts( "File successfully deleted" );
 }
 
-// renames file fn to fn2, if both exist
+//renames file fn to fn2, if both exist
 void rename_file(char* fn, char* fn2)
 {
     int result = 0;
@@ -67,9 +83,13 @@ void rename_file(char* fn, char* fn2)
 
 int main() 
 {
-    long fs = file_size("test.txt");
-    cout <<"Size is: "<< fs << endl;
+    //string word2 ="";
+    //string word = "thanks for all the fish";
+    //word2 = lstr(word, 8);
+    //cout<<word2<<endl;
+    //long fs = file_size("test.txt");
+    //cout <<"Size is: "<< fs << endl;
     //delete_file("test.txt");
-    rename_file("test.txt", "testy.txt");
+    //rename_file("test.txt", "testy.txt");
     return 0; 
 }
