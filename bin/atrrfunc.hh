@@ -6,25 +6,25 @@
 
 using namespace std;
 
-long delay_per_sec;
-bool registered, graphix, sound_on;
-string reg_name;
-unsigned short int reg_num;
-double sint, cost[255];
+extern long delay_per_sec;
+extern bool registered, graphix, sound_on;
+extern string reg_name;
+extern unsigned short int reg_num;
+extern double sint, cost[255];
 
-char hexnum(unsigned char num);
-string hexb(unsigned char num);
-string hex(unsigned short num);
-double valuer(string i);
-long value(string i);
-string cstrr(double i);
-string cstr(long int i);
-string zero_pad(long n, long l);
-string zero_pads(string s, long l);
-string addfront(string b, int l);
-string uCase(string lString);
-string lcase(string s);
-string space(unsigned char i);
-string repchar(char c, unsigned char i);
+extern char hexnum(unsigned char num);
+extern string hexb(unsigned char num);
+extern string hex(unsigned short num);
+extern double valuer(string i);
+extern long value(string i);
+extern string cstrr(double i);
+extern string cstr(long int i);
+extern string zero_pad(long n, long l);
+extern string zero_pads(string s, long l);
+extern string addfront(string b, int l);
+extern string uCase(string lString);
+extern string lcase(string s);
+extern string space(unsigned char i);
+extern string repchar(char c, unsigned char i);
 
 #endif

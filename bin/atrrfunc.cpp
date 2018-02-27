@@ -1,7 +1,8 @@
 #include <iostream>
 #include <stdlib.h>
 #include <string>
-
+#include "atrrfunc.hh"
+#include "filelib.hh"
 
 /* -- This is a helper file for ATR2.PAS -- */
 

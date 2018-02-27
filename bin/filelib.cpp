@@ -2,6 +2,9 @@
 #include <fstream>
 #include <string>
 
+#include "filelib.hh"
+#include "atrrfunc.hh"
+
 
 //the attribs and file_length functions still need to be converted to c++;
 /* -- This unit contains functions useful for dealing with filenames. -- */

@@ -3,8 +3,8 @@
 #include <stdlib.h>
 
 #include "types.hh"
-#include "atrrfunc.cpp"
-#include "filelib.cpp"
+#include "atrrfunc.hh"
+#include "filelib.hh"
 
 using namespace std;
 
@@ -22,6 +22,11 @@ void do_mine(int n, int m);
 void do_missile(int n);
 void do_robot(int n);
 void draw_robot(int n);
+void reset_hardware(int n);
+void reset_software(int n);
+void setscreen();
+void init_debug_window();
+bool gameover();
 
 
 int main(int argc, char *argv[]){
@@ -124,7 +129,7 @@ void bout()
 	long timer;
 
 	played++;
-	//init_bout();
+	init_bout();
 	bout_over = false;
 
 	if(step_mode == 0){
@@ -186,7 +191,7 @@ void bout()
 						step_mode = 1;
 					}
 					step_count = -1;
-					//init_debug_window();
+					init_debug_window();
 				}
 			}
 			//ARTIFACT
@@ -249,7 +254,7 @@ void bout()
 			k = 100;
 		}
 		
-	}while(/* gameover() || */ bout_over);
+	}while(gameover() || bout_over);
 
 }
 
