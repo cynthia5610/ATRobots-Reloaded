@@ -14,6 +14,7 @@ FUNCTION HEADERS
 */
 
 void bout();
+void init();
 string operand (int n, int m);
 string mnemonic (int n, int m);
 void process_keypress(char c);
@@ -84,7 +85,7 @@ int main(int argc, char *argv[]){
 	}
 }
 
-void init
+void init()
 {
     int i;
     if(debugging_compiler || compile_by_line || show_code)
