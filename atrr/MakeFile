@@ -1,11 +1,29 @@
-#install linux dependancies
-installlinux:
+mac:
 
-#install mac dependancies
-installmac:
+	g++ ../bin/atrr2.cpp
+	g++ ../bin/atrrfunc.cpp
+	g++ ../bin/filelib.cpp
+	g++ -o atrr ../bin/atrr2.o ../bin/atrrfunc.o ../bin/filelib.o
 
-#compile and link libraries for linux
-atrl:
+linux:
 
-#compile and link libraries for mac
-atrm:
+	g++ Semi_Menu_Window.cpp  -o ATRLinux -I include -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
+	g++ ATRLOCK.cpp -o ATRLOCK 
+	g++ TriangleTest5.cpp -o animation -I include -lSDL2 
+
+
+installMac:
+	brew install sdl2
+	brew install sdl2_image
+	brew install sdl2_mixer
+	brew install sdl2_ttf
+
+installLinux:
+	sudo apt-get install libsdl2-dev
+	sudo apt-get install libsdl2-image-dev
+	sudo apt-get install libsdl2-mixer-dev
+	sudo apt-get install libsdl2-ttf-dev
+
+clean:
+	rm ATRmac
+	rm animation

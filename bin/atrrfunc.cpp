@@ -7,6 +7,27 @@
 
 using namespace std;
 
+/*
+FUNCTION HEADERS
+*/
+char hexnum(unsigned char num);
+string hexb(unsigned char num);
+string hex(unsigned short num);
+double valuer(string i);
+long value(string i);
+string cstrr(double i);
+string cstr(long i);
+string zero_pad(long n, long l);
+string zero_pads(string s, long l);
+string addfront(string b, int l);
+string uCase(string lString);
+string lcase(string s);
+string space(unsigned char i);
+string repchar(char c, unsigned char i);
+
+/* 
+VARIABLES
+*/
  long delay_per_sec;
  bool registered, graphix, sound_on;
  string reg_name;
@@ -38,11 +59,11 @@ char hexnum(unsigned char num){
            
     }
 }
-
-/* -- function hexb(num:byte):string -- */
+/*
 string hexb(unsigned char num){
     return (hexnum(num << 4) + hexnum(num & 15));
 }
+*/
 
 /* -- function hex(num:word):string -- */
 string hex(unsigned short num){
@@ -56,12 +77,13 @@ double valuer(string i){
     return s;
 }
 
-/* -- function value(i:string):longint; -- */
+/*
 long value(string i){
     long s;
     s = atol(i);
     return s;
 }
+*/
 
 /* -- cstrr(i:real):string; -- */
 string cstrr(double i){
@@ -71,7 +93,7 @@ string cstrr(double i){
 }
 
 /* -- cstr(i:longint):string -- */
-string cstr(long i){
+string cstr(long int i){
     string s1;
     s1 = i;
     return s1;

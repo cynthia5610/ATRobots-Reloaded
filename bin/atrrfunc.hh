@@ -18,7 +18,7 @@ string hex(unsigned short num);
 double valuer(string i);
 long value(string i);
 string cstrr(double i);
-string cstr(long i);
+string cstr(long int i);
 string zero_pad(long n, long l);
 string zero_pads(string s, long l);
 string addfront(string b, int l);

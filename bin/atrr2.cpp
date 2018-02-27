@@ -1,11 +1,28 @@
 #include <iostream>
 #include <string>
+#include <stdlib.h>
 
 #include "types.hh"
 #include "atrrfunc.hh"
 #include "filelib.hh"
 
 using namespace std;
+
+/*
+FUNCTION HEADERS
+*/
+
+void bout();
+string operand (int n, int m);
+string mnemonic (int n, int m);
+void process_keypress(char c);
+void graph_mode(bool on);
+void toggle_graphix();
+void do_mine(int n, int m);
+void do_missile(int n);
+void do_robot(int n);
+void draw_robot(int n);
+
 
 int main(int argc, char *argv[]){
 	
@@ -17,7 +34,7 @@ int main(int argc, char *argv[]){
 	
 	if(matches > 0){
 		for(i = 0; i < num_robots; i++){
-			bout;
+			bout();
 		}
 	}
 
@@ -32,7 +49,7 @@ int main(int argc, char *argv[]){
 
 		for(i = 0; i < num_robots; i++){
 			//with robot[i]^ do
-			if(robot[i] -> wins = w){
+			if(robot[i] -> wins == w){
 				k++;
 			}
 			if(robot[i] -> wins > w){
@@ -45,7 +62,7 @@ int main(int argc, char *argv[]){
 		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 
 		for(i = 0; i < num_robots; i++){
-			cout << addfront(cstr(i+1), 2) << " - " << addrear(robot[i] -> fn, 8) << 
+			cout << addfront(cstr(i+1), 2) << " - " /* << addrear(robot[i] -> fn, 8)*/ << 
 			addfront(cstr(robot[i] -> wins), 7) << addfront(cstr(robot[i] -> trials), 8) << 
 			addfront(cstr(robot[i] -> kills), 8) << addfront(cstr(robot[i] -> deaths), 8) <<
 			addfront(cstr(robot[i] -> shots_fired), 9);
@@ -70,7 +87,7 @@ void bout(){
 	//init_bout();
 	bout_over = false;
 
-	if(step_mode = 0){
+	if(step_mode == 0){
 		step_loop = false;
 	}
 	else{
@@ -133,6 +150,7 @@ void bout(){
 				}
 			}
 			//ARTIFACT
+			/*
 			case '+': case '=':
 			if(game_delay < 100){
 				switch(game_delay){
@@ -148,6 +166,7 @@ void bout(){
 					case 075 ... 100: game_delay = 100;
 				}
 			}
+			*/
 			case '-': case '_':
 			if(game_delay > 0){
 				switch(game_delay){
