@@ -23,7 +23,7 @@ for(int i=0;i<42;i++)
 
 // Testing valuer function
 cout << " " << endl;
-cout << "-valuer-" << endl
+cout << "-valuer-" << endl;
 double exampvaluer;
 exampvaluer = valuer("This will be converted from string to a real number");
 cout << exampvaluer << endl;
