@@ -89,13 +89,13 @@ void init_bout()
     game_cycle = 0;
     for(i = 0; i < max_missiles; i++)
     {
-        missiles[i]->a = 0;
-        missiles[i]->source = -1;
-        missiles[i]->x = 0;
-        missiles[i]->y = 0;
-        missiles[i]->lx = 0;
-        missiles[i]->ly = 0;
-        missiles[i]->mult = 1;
+        missile[i].a = 0;
+        missile[i].source = -1;
+        missile[i].x = 0;
+        missile[i].y = 0;
+        missile[i].lx = 0;
+        missile[i].ly = 0;
+        missile[i].mult = 1;
     }
     for(i = 0; i < num_robots; i++)
     {
