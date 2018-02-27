@@ -150,6 +150,3 @@ string repchar(char c, unsigned char i){
     }
     return s;
 }
-
-
-
