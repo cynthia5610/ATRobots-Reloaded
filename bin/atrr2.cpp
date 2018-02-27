@@ -3,6 +3,7 @@
 
 #include "types.hh"
 #include "atrrfunc.hh"
+#include "filelib.hh"
 
 using namespace std;
 
