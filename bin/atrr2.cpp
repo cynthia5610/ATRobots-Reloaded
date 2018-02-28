@@ -29,6 +29,11 @@ void reset_software(int n);
 void setscreen();
 void init_debug_window();
 bool gameover();
+void delete_compile_report();
+void write_compile_report();
+void check_registration();
+void prog_error(int n, string ss);
+void make_tables();
 
 
 int main(int argc, char *argv[]){
@@ -121,7 +126,7 @@ void init()
     game_cycle = 0;
     game_delay = default_delay;
     time_slice = default_slice;
-    for(i = 0; i < max_missiles, i++)
+    for(i = 0; i < max_missiles; i++)
     {
         missile[i].a = 0;
         missile[i].source = -1;
@@ -134,7 +139,7 @@ void init()
     
     registered = false; //ATRFUNC
     reg_name = "Unregistered"; //ATRFUNC/ATRT
-    reg_num = $FFFF //ATRFUNC/ATRT
+    reg_num = $FFFF; //ATRFUNC/ATRT
     check_registration(); //ATRFUNC/ATRT
     
     cout << endl;
@@ -150,23 +155,23 @@ void init()
     cout << endl;
     
     delete_compile_report(); //ATR2
-    if(paramcount > 0)
+    if(ParamCount() > 0)
     {
-        for(i = 0; i < paramcount; i++)
+        for(i = 0; i < ParamCount(); i++)
         {
-            parse_param(btrim(ucase(paramstr(i)))); //ATR2(ATRFUNC(ATRFUNC(SYSTEM::namespace))) *4
+            parse_param(btrim(ucase(ParamStr(i)))); //ATR2(ATRFUNC(ATRFUNC(SYSTEM::namespace))) *4
         }
     }
     else prog_error(5," "); //ATR2
     temp_mode = step_mode;
-    if(logging_errors)
+    /**if(logging_errors)
     {
         for(i = 0; i < num_robots; i++)
         {
             assign(robot[i]->errorlog, base_name(fn)+".ERR"); //base_name FILELIB //Need to see for assign func *5
             rewrite(errorlog); //OPENS file for writing
         }
-    }
+    }**/
     if(compile_only) write_compile_report(); //ATR2
     if(num_robots < 1) prog_error(4," "); //ATR2
     
@@ -194,7 +199,7 @@ void init()
     
     if(!graphix)
     {
-        cout << "Freemem: " << memavail << endl; //memavail *6
+        //cout << "Freemem: " << memavail << endl; //memavail *6
         cout << endl;
     }
 }

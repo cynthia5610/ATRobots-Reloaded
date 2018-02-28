@@ -52,17 +52,17 @@ const int max_mines = 63;
 const int mine_blast = 35;
 const int max_robot_lines = 8;
 //Simulator and graphic
-/**
+
 const float screen_scale = 0.46;
 const int screen_x = 5;
 const int screen_y = 5;
 const int robot_scale = 6;
 const int default_delay = 20;
-const int defauly_slice = 5;
-const float mine_circle = trunc(mine_blast * screen_scale) + 1;
+const int default_slice = 5;
+/**const float mine_circle = trunc(mine_blast * screen_scale) + 1;
 const float blast_circle = trunc(blast_radius * screen_scale) + 1;
-const int mis_radius = trunc(hit_range/2) + 1;
-=======SDL========
+const int mis_radius = trunc(hit_range/2) + 1;**/
+/**=======SDL========
  Gray50 : FillPatternType = ($AA, $55, $AA, $55,
                              $AA, $55, $AA, $55);
 **/
