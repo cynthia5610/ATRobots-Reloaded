@@ -66,28 +66,28 @@ int main(int argc, char *argv[]){
 
 		for(i = 0; i < num_robots; i++){
 			//with robot[i]^ do
-			if(robot[i] -> wins == w){
+			if(robot[i].wins == w){
 				k++;
 			}
-			if(robot[i] -> wins > w){
+			if(robot[i].wins > w){
 				k = 1;
 				n = i;
-				w = robot[i] -> wins;
+				w = robot[i].wins;
 			}
 		}
 		cout << "Robot           Wins  Matches  Kills  Deaths    Shots" << endl;
 		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 
 		for(i = 0; i < num_robots; i++){
-			cout << addfront(cstr(i+1), 2) << " - " /* << addrear(robot[i] -> fn, 8)*/ << 
-			addfront(cstr(robot[i] -> wins), 7) << addfront(cstr(robot[i] -> trials), 8) << 
-			addfront(cstr(robot[i] -> kills), 8) << addfront(cstr(robot[i] -> deaths), 8) <<
-			addfront(cstr(robot[i] -> shots_fired), 9);
+			cout << addfront(cstr(i+1), 2) << " - " /* << addrear(robot[i].fn, 8)*/ << 
+			addfront(cstr(robot[i].wins), 7) << addfront(cstr(robot[i]. trials), 8) << 
+			addfront(cstr(robot[i].kills), 8) << addfront(cstr(robot[i].deaths), 8) <<
+			addfront(cstr(robot[i].shots_fired), 9);
 		}
 		cout << endl;
 
 		if(k == 1){
-			cout << "Robot #" << n+1 << *robot[n] -> fn << "wins the bout! (Score: " << w << "/" << matches << ")" << endl;
+			cout << "Robot #" << n+1 << robot[n].fn << "wins the bout! (Score: " << w << "/" << matches << ")" << endl;
 		}
 		else{
 			cout << "There is no clear victor!" << endl;
@@ -129,8 +129,8 @@ void init()
     num_robots = -1;
     game_limit = 100000;
     game_cycle = 0;
-    game_delay = default_delay;
-    time_slice = default_slice;
+    //game_delay = default_delay;
+    //time_slice = default_slice;
     for(i = 0; i < max_missiles; i++)
     {
         missile[i].a = 0;
@@ -224,7 +224,7 @@ void init_bout()
     }
     for(i = 0; i < num_robots; i++)
     {
-        robot[i]->mem_watch = 128;
+        robot[i].mem_watch = 128;
         reset_hardware(i); //ATR2
         reset_software(i); //ATR2
     }
@@ -269,7 +269,7 @@ void bout()
 	do{
 		game_cycle++;
 		for(i = 0; i < num_robots; i++){
-			if(robot[i] -> armor > 0){
+			if(robot[i].armor > 0){
 				do_robot(i);
 			}
 		}
@@ -280,7 +280,7 @@ void bout()
 		}
 		for(i = 0; i < num_robots; i++){
 			for(k = 0; k < max_mines; k++){
-				if(robot[i] -> mine[k].yield > 0){
+				if(robot[i].mine[k].yield > 0){
 					do_mine(i, k);
 				}
 			}
@@ -299,11 +299,11 @@ void bout()
 
 		switch(c){
 			case 'X':
-			if(!robot[0] -> is_locked){
+			if(!robot[0].is_locked){
 				if(!graphix){
 					toggle_graphix();
 				}
-				if(robot[0] -> armor > 0){
+				if(robot[0].armor > 0){
 					if(temp_mode > 0){
 						step_mode = temp_mode;
 					}
