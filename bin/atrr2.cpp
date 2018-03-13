@@ -37,6 +37,9 @@ void prog_error(int n, string ss);
 
 int main(int argc, char *argv[]){
 
+	robot += 2;
+	init();
+
 	matches = 1;
 	num_robots = 1;
 	
@@ -244,12 +247,15 @@ void init_bout()
 
 void bout()
 {
+	cout << "IN BOUT" << endl;
 	int i, j, k, n;
 	char c;
 	long timer;
 
 	played++;
+	cout << "ENTERING INIT_BOUT" << endl;
 	init_bout();
+	cout << "LEAVING INIT_BOUT" << endl;
 	bout_over = false;
 
 	if(step_mode == 0){
@@ -296,7 +302,7 @@ void bout()
 		//	c = #255;
 		}
 		*/
-
+		cout << "ENTERING SWITCH CASE" << endl;
 		switch(c){
 			case 'X':
 			if(!robot[0].is_locked){
@@ -315,41 +321,60 @@ void bout()
 				}
 			}
 			//ARTIFACT
-			/*
 			case '+': case '=':
 			if(game_delay < 100){
 				switch(game_delay){
-					case 000 ... 004: game_delay = 005;
-					case 005 ... 009: game_delay = 010;
-					case 010 ... 014: game_delay = 015;
-					case 015 ... 019: game_delay = 020;
-					case 020 ... 029: game_delay = 030;
-					case 030 ... 039: game_delay = 040;
-					case 040 ... 049: game_delay = 050;
-					case 050 ... 059: game_delay = 060;
-					case 060 ... 079: game_delay = 075;
-					case 075 ... 100: game_delay = 100;
+					case 0 ... 4: game_delay = 5;
+					break;
+					case 5 ... 9: game_delay = 10;
+					break;
+					case 10 ... 14: game_delay = 15;
+					break;
+					case 15 ... 19: game_delay = 20;
+					break;
+					case 20 ... 29: game_delay = 30;
+					break;
+					case 30 ... 39: game_delay = 40;
+					break;
+					case 40 ... 49: game_delay = 50;
+					break;
+					case 50 ... 59: game_delay = 60;
+					break;
+					case 60 ... 79: game_delay = 75;
+					break;
+					case 80 ... 100: game_delay = 100;
+					break;
 				}
 			}
-			*/
 			case '-': case '_':
 			if(game_delay > 0){
 				switch(game_delay){
-					case 000 ... 005: game_delay = 000;
-					case 006 ... 010: game_delay = 005;
-					case 011 ... 015: game_delay = 010;
-					case 016 ... 020: game_delay = 015;
-					case 021 ... 030: game_delay = 020;
-					case 031 ... 040: game_delay = 030;
-					case 041 ... 050: game_delay = 040;
-					case 051 ... 060: game_delay = 050;
-					case 061 ... 075: game_delay = 060;
-					case 076 ... 100: game_delay = 075;
+					case 0 ... 5: game_delay = 0;
+					break;
+					case 6 ... 10: game_delay = 5;
+					break;
+					case 11 ... 15: game_delay = 10;
+					break;
+					case 16 ... 20: game_delay = 15;
+					break;
+					case 21 ... 30: game_delay = 20;
+					break;
+					case 31 ... 40: game_delay = 30;
+					break;
+					case 41 ... 50: game_delay = 40;
+					break;
+					case 51 ... 60: game_delay = 50;
+					break;
+					case 61 ... 75: game_delay = 60;
+					break;
+					case 76 ... 100: game_delay = 75;
+					break;
 				}
 			}
 			case 'G': toggle_graphix();
 			default: process_keypress(c);
 		}
+		cout << "LEAVING SWITCH CASE" << endl;
 		//flushkey();
 
 		if(game_delay < 0){
@@ -360,13 +385,13 @@ void bout()
 		}
 
 		switch(game_delay){
-			case 000 ... 001: k = 100;
-			case 002 ... 005: k = 50;
-			case 006 ... 010: k = 25;
-			case 011 ... 025: k = 20;
-			case 026 ... 040: k = 10;
-			case 041 ... 070: k = 5;
-			case 071 ... 32787: k = 1;
+			case 0 ... 1: k = 100;
+			case 2 ... 5: k = 50;
+			case 6 ... 10: k = 25;
+			case 11 ... 25: k = 20;
+			case 26 ... 40: k = 10;
+			case 41 ... 70: k = 5;
+			case 71 ... 32787: k = 1;
 			default: k = 10;
 		}
 		
