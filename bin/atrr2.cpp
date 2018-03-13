@@ -835,7 +835,25 @@ void shutdown()
 
 bool gameover()
 {
-    return true;
+    int n, i, j, k, l;
+    if((game_cycle >= game_limit) && (game_limit > 0))
+        return true;
+    if((game_cycle & 31) == 0)
+    {
+        k = 0;
+        for(n = 0; n < num_robots; n++)
+        {
+            if(robot[n].armor > 0)
+                k++;
+        }
+        if(k <= 1)
+            return true;
+        else
+            return false;
+    }
+    else
+        return false;
+    
 }
 
 string victor_string(int k, int n)
