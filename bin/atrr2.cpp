@@ -36,15 +36,21 @@ void prog_error(int n, string ss);
 
 
 int main(int argc, char *argv[]){
+
+	matches = 1;
+	num_robots = 1;
 	
+	cout << "ENTERING MAIN" << endl;
 	//loop variables
 	int i, j, k, l, n, w;
 	
 	//turning off graphics
 	graphix = false;
+	cout << "GRAPHICS TURNED OFF" << endl;
 	
 	if(matches > 0){
 		for(i = 0; i < num_robots; i++){
+			cout << "ENTERING BOUT" << endl;
 			bout();
 		}
 	}
