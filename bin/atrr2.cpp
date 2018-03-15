@@ -2,6 +2,7 @@
 #include <string>
 #include <stdlib.h>
 #include <ctime>
+#include <iomanip>
 
 #include "types.hh"
 #include "atrrfunc.hh"
@@ -32,6 +33,8 @@ bool gameover();
 void delete_compile_report();
 void write_compile_report();
 void prog_error(int n, string ss);
+void init_robot(int n);
+
 
 
 
@@ -40,20 +43,19 @@ int main(int argc, char *argv[]){
 	robot += 2;
 	init();
 
-	matches = 1;
-	num_robots = 1;
+	matches = 2;
+	num_robots = 2;
 	
-	cout << "ENTERING MAIN" << endl;
 	//loop variables
 	int i, j, k, l, n, w;
 	
 	//turning off graphics
 	graphix = false;
-	cout << "GRAPHICS TURNED OFF" << endl;
+	n = 0;
+	init_robot(n);
 	
 	if(matches > 0){
 		for(i = 0; i < num_robots; i++){
-			cout << "ENTERING BOUT" << endl;
 			bout();
 		}
 	}
@@ -68,7 +70,6 @@ int main(int argc, char *argv[]){
 		w = 0;
 
 		for(i = 0; i < num_robots; i++){
-			//with robot[i]^ do
 			if(robot[i].wins == w){
 				k++;
 			}
@@ -78,19 +79,22 @@ int main(int argc, char *argv[]){
 				w = robot[i].wins;
 			}
 		}
-		cout << "Robot           Wins  Matches  Kills  Deaths    Shots" << endl;
-		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		cout << "Robot           		Wins   Matches   Kill   Deaths   Shots" << endl;
+		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 
 		for(i = 0; i < num_robots; i++){
-			cout << addfront(cstr(i+1), 2) << " - " /* << addrear(robot[i].fn, 8)*/ << 
-			addfront(cstr(robot[i].wins), 7) << addfront(cstr(robot[i]. trials), 8) << 
-			addfront(cstr(robot[i].kills), 8) << addfront(cstr(robot[i].deaths), 8) <<
-			addfront(cstr(robot[i].shots_fired), 9);
+			cout << argv[i + 1] << 
+			setw(24) << robot[i].wins << 
+			setw(8) << robot[i].trials << 
+			setw(8) << robot[i].kills <<
+			setw(8) << robot[i].deaths <<
+			setw(8) << robot[i].shots_fired << 
+			endl;
 		}
 		cout << endl;
 
 		if(k == 1){
-			cout << "Robot #" << n+1 << robot[n].fn << "wins the bout! (Score: " << w << "/" << matches << ")" << endl;
+			cout << "Robot #" << n+1 << robot[n].fn << " wins the bout! (Score: " << w << "/" << matches << ")" << endl;
 		}
 		else{
 			cout << "There is no clear victor!" << endl;
@@ -132,8 +136,8 @@ void init()
     num_robots = -1;
     game_limit = 100000;
     game_cycle = 0;
-    //game_delay = default_delay;
-    //time_slice = default_slice;
+    game_delay = default_delay;
+    time_slice = default_slice;
     for(i = 0; i < max_missiles; i++)
     {
         missile[i].a = 0;
@@ -236,10 +240,8 @@ void init_bout()
     if(!graphix)
     {
         //textcolor(7);
-        /**
-         cout << "\r" << "Match " << played << " /" << matches << ", Battle in progress..." << endl;
+         cout << "\r" << "Match " << played << "/" << matches << ", Battle in progress..." << endl;
          cout << endl;
-         **/
     }
     // Comment out code Init_bout Line 3406
     return;
@@ -247,15 +249,12 @@ void init_bout()
 
 void bout()
 {
-	cout << "IN BOUT" << endl;
 	int i, j, k, n;
 	char c;
 	long timer;
 
 	played++;
-	cout << "ENTERING INIT_BOUT" << endl;
 	init_bout();
-	cout << "LEAVING INIT_BOUT" << endl;
 	bout_over = false;
 
 	if(step_mode == 0){
@@ -302,7 +301,6 @@ void bout()
 		//	c = #255;
 		}
 		*/
-		cout << "ENTERING SWITCH CASE" << endl;
 		switch(c){
 			case 'X':
 			if(!robot[0].is_locked){
@@ -374,7 +372,6 @@ void bout()
 			case 'G': toggle_graphix();
 			default: process_keypress(c);
 		}
-		cout << "LEAVING SWITCH CASE" << endl;
 		//flushkey();
 
 		if(game_delay < 0){
@@ -595,6 +592,18 @@ void do_robot(int n)
 
 void init_robot(int n)
 {
+	int i, j, k, l;
+	robot[n].wins = 0;
+	robot[n].trials = 0;
+	robot[n].kills = 0;
+	robot[n].shots_fired = 0;
+	robot[n].match_shots = 0;
+	robot[n].hits = 0;
+	robot[n].damage_total = 0;
+	robot[n].cycles_lived = 0;
+	robot[n].error_count = 0;
+	robot[n].plen = 0;
+	robot[n].max_time = 0;
     return;
 }
 

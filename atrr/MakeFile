@@ -25,5 +25,4 @@ installLinux:
 	sudo apt-get install libsdl2-ttf-dev
 
 clean:
-	rm ATRmac
-	rm animation
+	rm atrr atrr2.o atrrfunc.o filelib.o
