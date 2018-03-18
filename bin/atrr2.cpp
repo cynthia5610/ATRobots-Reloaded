@@ -35,6 +35,7 @@ void delete_compile_report();
 void write_compile_report();
 void prog_error(int n, string ss);
 void init_robot(int n);
+void init_missiles(double xx, double yy, double xxv, double yyv, int dir, int s, int blast, bool ob);
 void shutdown();
 
 
@@ -717,11 +718,58 @@ void log_error(int n, int i, string ov)
 
 void robot_error(int n, int i, string ov) //Contains graphics
 {
+    if(graph_check(n)) // and (step_mode <= 0);
+    {
+        if(stats_mode == 0)
+        {
+            //GRAPHICS
+        }
+        if(logging_errors)
+        {
+            log_error(n,i,ov);
+        }
+        robot[n].error_count++;
+    }
     return;
 }
 
 void prog_error(int n, string ss)
 {
+    string s;
+    graph_mode(false);
+    //textcolor(15);
+    cout << "Error #" << n << ": ";
+    switch(n)
+    {
+        case 0: s = ss; break;
+        case 1: s = "Invalid :label - \"" + ss + "\", silly mortal."; break;
+        case 2: s = "Undefined identifier - \"" + ss + "\". A typo perhaps?"; break;
+        case 3: s = "Memory access out of range - \"" + ss + "\""; break;
+        case 4: s = "Not enough robots for combat. Maybe we should just drive in circles."; break;
+        case 5: s = "Robot names and settings must be specified. An empty arena is no fun."; break;
+        case 6: s = "Config file not found - \""+ ss + "\""; break;
+        case 7: s = "Cannot access a config file from a config file - \""+ ss +"\""; break;
+        case 8: s = "Robot not found \"" + ss + "\". Perhaps you mistyped it?"; break;
+        case 9: s = "Insufficient RAM to load robot: \"" + ss + "\"... This is not good."; break;
+        case 10: s = "Too many robots! We can only handle " + cstr(max_robots+1) + "! Blah.. limits are limits."; break;
+        case 11: s = "You already have a perfectly good #def for \"" + ss + "\", silly."; break;
+        case 12: s = "Variable name too long! (Max:" + cstr(max_var_len) + ") \"" + ss + "\""; break;
+        case 13: s = "!Label already defined \"" + ss + "\", silly."; break;
+        case 14: s = "Too many variables! (Var Limit: " + cstr(max_vars) + ")"; break;
+        case 15: s = "Too many !labels! (!Label Limit: " + cstr(max_labels) + ")"; break;
+        case 16: s = "Robot program too long! Boldly we simplify, simplify along..." + ss; break;
+        case 17: s = "!Label missing error. !Label #" + ss + "."; break;
+        case 18: s = "!Label out of range: " + ss; break;
+        case 19: s = "!Label not found. " + ss; break;
+        case 20: s = "Invalid config option: \"" + ss + "\". Inventing a new device?"; break;
+        case 21: s = "Robot is attempting to cheat; Too many config points (" + ss + ")"; break;
+        case 22: s = "Insufficient data in data statement: \"" + ss + "\""; break;
+        case 23: s = "Too many asterisks: \"" + ss + "\""; break;
+        case 24: s = "Invalid step count: \"" + ss + "\". 1-9 are valid conditions."; break;
+        case 25: s = "\"" + ss + "\""; break;
+        default: s = ss;  break;
+    }
+    cout << s << endl;
     return;
 }
 
