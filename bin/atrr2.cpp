@@ -4,6 +4,7 @@
 #include <ctime>
 #include <iomanip>
 
+
 #include "types.hh"
 #include "atrrfunc.hh"
 #include "filelib.hh"
@@ -37,11 +38,12 @@ void init_robot(int n);
 void compile(int n, string filename);
 void robot_config(int n);
 void create_robot(int n, string filename);
-void init_robot(int n);
 
 config_rec config;
 prog_type code;
 
+void init_missiles(double xx, double yy, double xxv, double yyv, int dir, int s, int blast, bool ob);
+void shutdown();
 
 
 
@@ -108,6 +110,7 @@ int main(int argc, char *argv[]){
 			cout << "There is no clear victor!" << endl;
 		}
 	}
+    shutdown();
 }
 
 void init()
@@ -163,14 +166,14 @@ void init()
     //check_registration(); //ATRFUNC/ATRT
     
     cout << endl;
-    cout << progname << " " << version << " " << endl;
-    cout << cnotice1 << endl;
-    cout << cnotice2 << endl;
+    cout << "\033[36m" << progname << " " << version << " " << "\033[0m" <<endl;
+    cout << "\033[36m" << cnotice1 << "\033[0m" << endl;
+    cout << "\033[36m" << cnotice2 << "\033[0m" << endl;
     if(!registered) //ATRFUNC :: Boolean
     {
-        cout << "Unregistered version" << endl;
+        cout << "\033[31m" << "Unregistered version" << "\033[0m" << endl;
     }
-    else cout << "Resgister to: " << reg_name << endl;
+    else cout << "\033[31m" << "Resgister to: " << reg_name << "\033[0m" << endl;
     
     cout << endl;
     
@@ -248,7 +251,7 @@ void init_bout()
     if(!graphix)
     {
         //textcolor(7);
-         cout << "\r" << "Match " << played << "/" << matches << ", Battle in progress..." << endl;
+         cout << "\033[36m" <<"\r" << "Match " << played << "/" << matches << ", Battle in progress..." << "\033[0m" << endl;
          cout << endl;
     }
     // Comment out code Init_bout Line 3406
@@ -698,8 +701,69 @@ int count_missiles()
     return 0;
 }
 
-void init_missiles(float xx, float yy, float xxv, float yyv, int dir, int s, int blast, bool ob)
+void init_missiles(double xx, double yy, double xxv, double yyv, int dir, int s, int blast, bool ob)
 {
+    int i, j, k;
+    double m;
+    bool sound;
+    k = -1;
+    //click(); Not Used.. GRAPHICS
+    for(i = max_missiles; i >= 0; i--)
+    {
+        if(missile[i].a == 0)
+            k = i;
+    }
+    if(k >= 0)
+    {
+        missile[k].source = s;
+        missile[k].x = xx;
+        missile[k].lx = missile[k].x;
+        missile[k].y = yy;
+        missile[k].ly = missile[k].y;
+        missile[k].rad = 0;
+        missile[k].lrad = 0;
+        if(ob)
+            missile[k].mult = 1.25;
+        else
+            missile[k].mult = 1;
+        if(blast > 0)
+        {
+            missile[k].max_rad = blast;
+            missile[k].a = 2;
+        }
+        else
+        {
+            if(s >= 0 && s <= num_robots)
+                missile[k].mult = missile[k].mult * (robot[s].shotstrength);
+            m = missile[k].mult;
+            if(ob)
+                m = m + 0.25;
+            missile[k].mspd = missile_spd * missile[k].mult;
+            if(insane_missiles)
+                missile[k].mspd = 100 + (50 * insanity) * missile[k].mult;
+            if(s >= 0 && s <= num_robots)
+            {
+                //robot[s].heat , round (20 * m) liine 1831
+                robot[s].shots_fired++;
+                robot[s].match_shots++;
+            }
+            missile[k].a = 1;
+            missile[k].hd = dir;
+            missile[k].max_rad = mis_radius;
+            /**DEBUG
+             if(debug_info)
+             {
+                do
+                {
+                    cout << "\r" << zero_pad(game_cycle,5) << " F" << s << ": hd= " << hd << "'" << endl;
+                }while(keypressed);
+                flushkey;
+             }
+             **/
+        }
+    }
+    //(*The following was to see if teh missile array is big enough*)
+            //LINE COMMENT OUT 1842
     return;
 }
 
@@ -730,11 +794,58 @@ void log_error(int n, int i, string ov)
 
 void robot_error(int n, int i, string ov) //Contains graphics
 {
+    if(graph_check(n)) // and (step_mode <= 0);
+    {
+        if(stats_mode == 0)
+        {
+            //GRAPHICS
+        }
+        if(logging_errors)
+        {
+            log_error(n,i,ov);
+        }
+        robot[n].error_count++;
+    }
     return;
 }
 
 void prog_error(int n, string ss)
 {
+    string s;
+    graph_mode(false);
+    //textcolor(15);
+    cout << "Error #" << n << ": ";
+    switch(n)
+    {
+        case 0: s = ss; break;
+        case 1: s = "Invalid :label - \"" + ss + "\", silly mortal."; break;
+        case 2: s = "Undefined identifier - \"" + ss + "\". A typo perhaps?"; break;
+        case 3: s = "Memory access out of range - \"" + ss + "\""; break;
+        case 4: s = "Not enough robots for combat. Maybe we should just drive in circles."; break;
+        case 5: s = "Robot names and settings must be specified. An empty arena is no fun."; break;
+        case 6: s = "Config file not found - \""+ ss + "\""; break;
+        case 7: s = "Cannot access a config file from a config file - \""+ ss +"\""; break;
+        case 8: s = "Robot not found \"" + ss + "\". Perhaps you mistyped it?"; break;
+        case 9: s = "Insufficient RAM to load robot: \"" + ss + "\"... This is not good."; break;
+        case 10: s = "Too many robots! We can only handle " + cstr(max_robots+1) + "! Blah.. limits are limits."; break;
+        case 11: s = "You already have a perfectly good #def for \"" + ss + "\", silly."; break;
+        case 12: s = "Variable name too long! (Max:" + cstr(max_var_len) + ") \"" + ss + "\""; break;
+        case 13: s = "!Label already defined \"" + ss + "\", silly."; break;
+        case 14: s = "Too many variables! (Var Limit: " + cstr(max_vars) + ")"; break;
+        case 15: s = "Too many !labels! (!Label Limit: " + cstr(max_labels) + ")"; break;
+        case 16: s = "Robot program too long! Boldly we simplify, simplify along..." + ss; break;
+        case 17: s = "!Label missing error. !Label #" + ss + "."; break;
+        case 18: s = "!Label out of range: " + ss; break;
+        case 19: s = "!Label not found. " + ss; break;
+        case 20: s = "Invalid config option: \"" + ss + "\". Inventing a new device?"; break;
+        case 21: s = "Robot is attempting to cheat; Too many config points (" + ss + ")"; break;
+        case 22: s = "Insufficient data in data statement: \"" + ss + "\""; break;
+        case 23: s = "Too many asterisks: \"" + ss + "\""; break;
+        case 24: s = "Invalid step count: \"" + ss + "\". 1-9 are valid conditions."; break;
+        case 25: s = "\"" + ss + "\""; break;
+        default: s = ss;  break;
+    }
+    cout << s << endl;
     return;
 }
 
@@ -905,7 +1016,6 @@ void close_debug_window()
 
 /*
  ------ OTHER FUNCTIONS -----
- Empty and return void
  */
 
 void process_keypress(char c)
@@ -915,6 +1025,36 @@ void process_keypress(char c)
 
 void shutdown()
 {
+    int i, j, k;
+    graph_mode(false);
+    if(show_cnotice)
+    {
+        //textcolor(3)
+        cout << endl;
+        cout << "\033[31;1;4m" << progname << " " << version << "\033[0m" << endl;
+        cout << cnotice1 << endl;
+        cout << cnotice2 << endl;
+        cout << cnotice3 << endl;
+    }
+    //textcolor(7);
+    if(!registered)
+    {
+        //textcolor(4);
+        cout << "Unregistered version" << endl;
+    }
+    else
+    {
+        cout << "Registered to: " << reg_name << endl;
+    }
+    //textcolor(7);
+    /**if(logging_errors) //LOGGING ERRORS
+     {
+     for(i = 0; i < num_robots; i++)
+     {
+     cout << "Robot error-log created: ", base_name(robot[i].fn) + ".ERR" << endl;
+     close(robot[i].errorlog);
+     }
+     }**/
     return;
 }
 

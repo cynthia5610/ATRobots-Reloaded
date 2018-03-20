@@ -4,6 +4,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 using namespace std;
 
@@ -59,9 +60,9 @@ const int screen_y = 5;
 const int robot_scale = 6;
 const int default_delay = 20;
 const int default_slice = 5;
-/**const float mine_circle = trunc(mine_blast * screen_scale) + 1;
-const float blast_circle = trunc(blast_radius * screen_scale) + 1;
-const int mis_radius = trunc(hit_range/2) + 1;**/
+const double mine_circle = trunc(mine_blast * screen_scale) + 1; // Trunc is in the math lib... kinda like rounding
+const double blast_circle = trunc(blast_radius * screen_scale) + 1;
+const int mis_radius = trunc(hit_range/2) + 1;
 /**=======SDL========
  Gray50 : FillPatternType = ($AA, $55, $AA, $55,
                              $AA, $55, $AA, $55);
