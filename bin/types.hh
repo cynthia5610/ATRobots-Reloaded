@@ -86,6 +86,9 @@ typedef struct{
         mines;
 } config_rec;
 
+extern config_rec config;
+extern prog_type code;
+
 /* MINE RECORD */
 typedef struct{
     double x,
@@ -163,8 +166,8 @@ typedef struct{
          cycles_lived,
          error_count;
 
-    string     name[31],
-               fn[255];
+    string     name,
+               fn;
 
     bool is_locked,
          shields_up,
@@ -173,8 +176,6 @@ typedef struct{
          keepshift,
          cooling,
          won;
-        
-        //code:prog_type;
 
         /* FILE POINTER */
         FILE *errorlog;

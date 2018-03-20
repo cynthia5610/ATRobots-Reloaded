@@ -34,6 +34,13 @@ void delete_compile_report();
 void write_compile_report();
 void prog_error(int n, string ss);
 void init_robot(int n);
+void compile(int n, string filename);
+void robot_config(int n);
+void create_robot(int n, string filename);
+void init_robot(int n);
+
+config_rec config;
+prog_type code;
 
 
 
@@ -53,6 +60,7 @@ int main(int argc, char *argv[]){
 	graphix = false;
 	n = 0;
 	init_robot(n);
+	create_robot(num_robots, "SDUCK");
 	
 	if(matches > 0){
 		for(i = 0; i < num_robots; i++){
@@ -604,11 +612,79 @@ void init_robot(int n)
 	robot[n].error_count = 0;
 	robot[n].plen = 0;
 	robot[n].max_time = 0;
+	robot[n].speed = 0;
+	robot[n].arc_count = 0;
+	robot[n].sonar_count = 0;
+	robot[n].robot_time_limit = 0;
+	robot[n].scanrange = 1500;
+	robot[n].shotstrength = 1;
+	robot[n].damageadj = 1;
+	robot[n].speedadj = 1;
+	robot[n].mines = 0;
+
+	config.scanner = 5;
+	config.weapon = 2;
+	config.armor = 2;
+	config.engine = 2;
+	config.heatsinks = 1;
+	config.shield = 0;
+	config.mines = 0;
+
+	for(i = 0; i < max_ram; i++){
+		robot[n].ram[i] = 0;
+	}
+
+	robot[n].ram[71] = 768;
+
+	for(i = 0; i < max_code; i++){
+		for(k = 0; k < max_op; k++){
+			code[i].op[k] = 0;
+		}
+
+		reset_hardware(n);
+		reset_software(n);
+	}	
+	
     return;
 }
 
 void create_robot(int n, string filename)
 {
+	int i, j, k;
+
+	//if(maxavail < sizeof(robot_rec)) - then error
+	
+	//new(robot[n])
+	//first = (nodeptr) malloc(sizeof(node)); -> c++ translation
+	
+	robot[n] = (robot_ptr) malloc(sizeof(robot_rec));
+	
+	init_robot(n);
+
+	filename = uCase(filename);
+	
+	if(filename == base_name(filename)){
+		if(filename[1] == '?'){
+			filename = filename + locked_ext;
+		}
+		else{
+			filename = filename + robot_ext;
+		}
+	}
+
+	if(filename[1] == '?'){
+		filename = rstr(filename, (filename.length() - 1));
+	}
+
+	robot[n].fn = base_name(filename);
+	compile(n, filename);
+	robot_config(n);
+
+	k = config.scanner + config.armor + config.weapon + config.engine + config.heatsinks + config.shield + config.mines;
+	if(k > max_config_points){
+		cout << "ERROR: To many config points" << endl;
+	}
+
     return;
 }
 
