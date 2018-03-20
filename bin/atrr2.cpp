@@ -117,7 +117,8 @@ void init()
 {
     int i;
     if(debugging_compiler || compile_by_line || show_code)
-    {        cout << "!!! Warning !!! Compiler Debugging enabled !!!" << endl; //*1
+    {
+        cout << "!!! Warning !!! Compiler Debugging enabled !!!" << endl; //*1
     }
     step_mode = 0;
     logging_errors = false;
@@ -185,14 +186,13 @@ void init()
             parse_param(btrim(ucase(ParamStr(i)))); //ATR2(ATRFUNC(ATRFUNC(SYSTEM::namespace))) *4
         }
     }
-    else**/ prog_error(5," "); //ATR2
+    else prog_error(5," "); //ATR2**/
     temp_mode = step_mode;
     /**if(logging_errors)
     {
         for(i = 0; i < num_robots; i++)
         {
-            assign(robot[i]->errorlog, base_name(fn)+".ERR"); //base_name FILELIB //Need to see for assign func *5
-            rewrite(errorlog); //OPENS file for writing
+            robot[i].errorlog.open(base_name(fn)+".ERR");//assign(robot[i]->errorlog, base_name(fn)+".ERR"); //base_name FILELIB //Need to see for assign func *5
         }
     }**/
     if(compile_only) write_compile_report(); //ATR2
@@ -886,6 +886,22 @@ void reset_hardware(int n)
 
 void parse_param(string s)
 {
+    bool found;
+    found = false;
+    s = btrim(uCase(s));
+
+    if(s == "") return;
+    if(s[1] == ';') found = true;
+    else if(num_robots < max_robots && s != "")
+    {
+        num_robots++;
+        create_robot(num_robots,s);
+        found = true;
+        if(num_robots == max_robots)
+            cout << "Maximum number of robots reached." << endl;
+    }
+    else prog_error(10,"");
+    if(!found) prog_error(8,s);
     return;
 }
 
