@@ -119,7 +119,7 @@ void init()
     int i;
     if(debugging_compiler || compile_by_line || show_code)
     {
-        cout << "!!! Warning !!! Compiler Debugging enabled !!!" << endl; //*1
+        cout << "!!! Warning !!! Compiler Debugging enabled !!!" << endl; //flush key; read key;
     }
     step_mode = 0;
     logging_errors = false;
@@ -145,7 +145,7 @@ void init()
     kill_count = 0;
     maxcode = max_code;
     //make_tables(); // ATRFUNC;
-    srand(time(NULL)); //*2
+    srand(time(NULL));
     num_robots = -1;
     game_limit = 100000;
     game_cycle = 0;
@@ -189,13 +189,13 @@ void init()
     }
     else prog_error(5," "); //ATR2**/
     temp_mode = step_mode;
-    /**if(logging_errors)
+    if(logging_errors)
     {
         for(i = 0; i < num_robots; i++)
         {
-            robot[i].errorlog.open(base_name(fn)+".ERR");//assign(robot[i]->errorlog, base_name(fn)+".ERR"); //base_name FILELIB //Need to see for assign func *5
+            robot[i].errorlog.open(base_name(robot[i].fn) + ".ERR");//assign(robot[i]->errorlog, base_name(fn)+".ERR"); //base_name FILELIB
         }
-    }**/
+    }
     if(compile_only) write_compile_report(); //ATR2
     if(num_robots < 1) prog_error(4," "); //ATR2
     
@@ -1221,16 +1221,60 @@ bool gameover()
     }
     else
         return false;
-    
 }
 
 string victor_string(int k, int n)
 {
-    return " ";
+    string s;
+    s = "";
+    if(k == 1) s = "Robot #" + cstr(n+1) + " (" + robot[n].fn + ") wins!";
+    if(k == 0) s = "Simultaneous destruction, match is a tie.";
+    if(k > 1) s = "No clear victor, match is a tie.";
+    return s;
 }
 
 void show_statistics()
 {
+    int i, j, k, n, sx, sy;
+    if(!windoze) return;
+    if(graphix)
+    {
+        //graphics stuff
+    }
+    else
+    {
+        //textcolor(15);
+        cout << "\r" << space(79) << "\r" << endl;
+        cout << "Match " << played << "/" << matches << " results:" << endl;
+        cout << endl;
+        cout << "Robot            Scored   Wins  Matches  Armor  Kills  Deaths    Shots" << endl;
+        cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+        n = -1; k = 0;
+        for(i = 0; i < num_robots; i++)
+        {
+            if(robot[i].armor > 0 || robot[i].won)
+            {
+                k++;
+                n = i;
+            }
+        }
+        for(i = 0; i < num_robots; i++)
+        {
+            //textcolor(robot_color(i));
+            if(k == 1 && n == i)
+                j = 1;
+            else
+                j = 0;
+            cout << addfront(cstr(i+1),2) << " - " << addrear(robot[i].fn,15) << cstr(j) << addfront(cstr(robot[i].wins),8)
+            << addfront(cstr(robot[i].trials),8) << addfront(cstr(robot[i].armor)+'%',9) << addfront(cstr(robot[i].kills),7)
+            << addfront(cstr(robot[i].deaths),8) << addfront(cstr(robot[i].match_shots),9) << endl;
+        }
+        //textcolor(15); //white
+        cout << endl;
+        cout << victor_string(k,n) << endl;
+        cout << endl;
+        //{writeln('Press any key to continue...'); readkey;}
+    }
     return;
 }
 

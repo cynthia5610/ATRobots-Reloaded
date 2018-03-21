@@ -179,7 +179,8 @@ typedef struct{
          won;
 
         /* FILE POINTER */
-        FILE *errorlog;
+        //FILE * errorlog;
+        ofstream errorlog; //change to file stream //FILE * errorlog
 
 } robot_rec;
 
@@ -212,7 +213,7 @@ int num_robots;
 robot_ptr robot = (robot_ptr)malloc(sizeof(robot_ptr)*(max_robots-(-2)+1)); //HELP?
 missile_rec missile[max_missiles+1]; //+1
 //compiler variable
-FILE * f;
+FILE * f; //Needs to see where this is used //Parse_param creates another one //****
 int numvars, numlabels, maxcode, lock_pos, lock_dat;
 string varname [1+max_vars][1+max_var_len];
 int varloc[1+max_vars];
