@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <stdlib.h>
 #include <ctime>
@@ -886,12 +887,138 @@ void reset_hardware(int n)
 
 void parse_param(string s)
 {
+    ifstream f;
+    string fn, s1;
     bool found;
+    
     found = false;
     s = btrim(uCase(s));
 
     if(s == "") return;
-    if(s[1] == ';') found = true;
+    if(s[1] == '#')
+    {
+        fn = rstr(s,s.length()-1);
+        if(fn == base_name(fn)) fn = fn + config_ext;
+        if(!EXIST(fn)) prog_error(6,fn);
+        f.open(fn);
+        while(!f.eof())
+        {
+            getline(f,s1);
+            s1 = uCase(btrim(s1));
+            if(s1[1] == '#') prog_error(7,s1);
+            else parse_param(s1);
+        }
+        f.close();
+        found = true;
+    }
+    else if(s[1] == '/' || s[1] == '-' || s[1] == '=')
+    {
+        s1 = rstr(s,s.length()-1);
+        //Debugging
+        if(s1[1] == 'X')
+        {
+            step_mode = value(rstr(s1,s1.length()-1));
+            found = true;
+            if(step_mode == 0) step_mode = 1;
+            if(step_mode < 1 || step_mode > 9)
+                prog_error(24,rstr(s1,s1.length()-1));
+        }
+        //Debugging end
+        if(s1[1] == 'D')
+        {
+            game_delay = value(rstr(s1,s1.length()-1));
+            found = true;
+        }
+        if(s1[1] == 'T')
+        {
+            time_slice = value(rstr(s1,s1.length()-1));
+            found = true;
+        }
+        if(s1[1] == 'L')
+        {
+            game_limit = value(rstr(s1,s1.length()-1))*1000;
+            found = true;
+        }
+        if(s1[1] == 'Q')
+        {
+            sound_on = false;
+            found = true;
+        }
+        if(s1[1] == 'M')
+        {
+            matches = value(rstr(s1,s1.length()-1));
+            found = true;
+        }
+        if(s1[1] == 'S')
+        {
+            show_source = false;
+            found = true;
+        }
+        if(s1[1] == 'G')
+        {
+            no_gfx = true;
+            found = true;
+        }
+        if(s1[1] == 'R')
+        {
+            report = true;
+            found = true;
+            if(s1.length() > 1)
+                report_type = value(rstr(s1,s1.length()-1));
+        }
+        if(s1[1] == 'C')
+        {
+            compile_only = true;
+            found = true;
+        }
+        if(s1[1] == '^')
+        {
+            show_cnotice = false;
+            found = true;
+        }
+        if(s1[1] == 'A')
+        {
+            show_arcs = true;
+            found = true;
+        }
+        if(s1[1] == 'W')
+        {
+            windoze = false;
+            found = true;
+        }
+        if(s1[1] == '$')
+        {
+            debug_info = true;
+            found = true;
+        }
+        if(s1[1] == '#')
+        {
+            maxcode = value(rstr(s1,s1.length()-1))-1;
+            found = true;
+        }
+        if(s1[1] == '!')
+        {
+            insane_missiles = true;
+            if(s1.length() > 1)
+                insanity = value(rstr(s1,s1.length()-1));
+            found = true;
+        }
+        if(s1[1] == '@')
+        {
+            old_shields = true;
+            found = true;
+        }
+        if(s1[1] == 'E')
+        {
+            logging_errors = true;
+            found = true;
+        }
+        if(insanity < 0)
+            insanity = 0;
+        if(insanity > 15)
+            insanity = 15;
+    }
+    else if(s[1] == ';') found = true;
     else if(num_robots < max_robots && s != "")
     {
         num_robots++;
