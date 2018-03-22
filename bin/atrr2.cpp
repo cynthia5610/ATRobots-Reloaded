@@ -63,7 +63,6 @@ int main(int argc, char *argv[]){
 	graphix = false;
 	n = 0;
 	init_robot(n);
-	create_robot(num_robots, "SDUCK");
 	
 	if(matches > 0){
 		for(i = 0; i < num_robots; i++){
@@ -105,7 +104,7 @@ int main(int argc, char *argv[]){
 		cout << endl;
 
 		if(k == 1){
-			cout << "Robot #" << n+1 << robot[n]->fn << " wins the bout! (Score: " << w << "/" << matches << ")" << endl;
+			cout << "Robot #" << n+1 << " " << robot[n]->fn << " wins the bout! (Score: " << w << "/" << matches << ")" << endl;
 		}
 		else{
 			cout << "There is no clear victor!" << endl;
@@ -660,9 +659,6 @@ void create_robot(int n, string filename)
 
 	//if(maxavail < sizeof(robot_rec)) - then error
 	
-	//new(robot[n])
-	//first = (nodeptr) malloc(sizeof(node)); -> c++ translation
-	
 	robot[n] = (robot_ptr) malloc(sizeof(robot_rec));
 	
 	init_robot(n);
@@ -821,22 +817,22 @@ void prog_error(int n, string ss)
     switch(n)
     {
         case 0: s = ss; break;
-        case 1: s = "Invalid :label - \"" + ss + "\", silly mortal."; break;
-        case 2: s = "Undefined identifier - \"" + ss + "\". A typo perhaps?"; break;
+        case 1: s = "Invalid :label - \"" + ss + "\", silly mortal.\n"; break;
+        case 2: s = "Undefined identifier - \"" + ss + "\". A typo perhaps?\n"; break;
         case 3: s = "Memory access out of range - \"" + ss + "\""; break;
-        case 4: s = "Not enough robots for combat. Maybe we should just drive in circles."; break;
-        case 5: s = "Robot names and settings must be specified. An empty arena is no fun."; break;
+        case 4: s = "Not enough robots for combat. Maybe we should just drive in circles.\n"; break;
+        case 5: s = "Robot names and settings must be specified. An empty arena is no fun.\n"; break;
         case 6: s = "Config file not found - \""+ ss + "\""; break;
         case 7: s = "Cannot access a config file from a config file - \""+ ss +"\""; break;
-        case 8: s = "Robot not found \"" + ss + "\". Perhaps you mistyped it?"; break;
-        case 9: s = "Insufficient RAM to load robot: \"" + ss + "\"... This is not good."; break;
-        case 10: s = "Too many robots! We can only handle " + cstr(max_robots+1) + "! Blah.. limits are limits."; break;
-        case 11: s = "You already have a perfectly good #def for \"" + ss + "\", silly."; break;
+        case 8: s = "Robot not found \"" + ss + "\". Perhaps you mistyped it?\n"; break;
+        case 9: s = "Insufficient RAM to load robot: \"" + ss + "\"... This is not good.\n"; break;
+        case 10: s = "Too many robots! We can only handle " + cstr(max_robots+1) + "! Blah.. limits are limits.\n"; break;
+        case 11: s = "You already have a perfectly good #def for \"" + ss + "\", silly.\n"; break;
         case 12: s = "Variable name too long! (Max:" + cstr(max_var_len) + ") \"" + ss + "\""; break;
-        case 13: s = "!Label already defined \"" + ss + "\", silly."; break;
-        case 14: s = "Too many variables! (Var Limit: " + cstr(max_vars) + ")"; break;
-        case 15: s = "Too many !labels! (!Label Limit: " + cstr(max_labels) + ")"; break;
-        case 16: s = "Robot program too long! Boldly we simplify, simplify along..." + ss; break;
+        case 13: s = "!Label already defined \"" + ss + "\", silly.\n"; break;
+        case 14: s = "Too many variables! (Var Limit: " + cstr(max_vars) + ")\n"; break;
+        case 15: s = "Too many !labels! (!Label Limit: " + cstr(max_labels) + ")\n"; break;
+        case 16: s = "Robot program too long! Boldly we simplify, simplify along...\n" + ss; break;
         case 17: s = "!Label missing error. !Label #" + ss + "."; break;
         case 18: s = "!Label out of range: " + ss; break;
         case 19: s = "!Label not found. " + ss; break;
@@ -849,7 +845,7 @@ void prog_error(int n, string ss)
         default: s = ss;  break;
     }
     cout << s << endl;
-    return;
+    exit(EXIT_FAILURE);
 }
 
 void print_code(int n, int p)
@@ -915,7 +911,6 @@ void parse_param(string s)
     }
     else if(s[1] == '/' || s[1] == '-' || s[1] == '=')
     {
-        /*
         s1 = rstr(s,s.length()-1);
         //Debugging
         if(s1[1] == 'X')
@@ -1020,7 +1015,6 @@ void parse_param(string s)
             insanity = 0;
         if(insanity > 15)
             insanity = 15;
-        */
     }
     else if(s[1] == ';') found = true;
     else if(num_robots < max_robots && s != "")

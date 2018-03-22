@@ -80,13 +80,11 @@ double valuer(string i){
     return s;
 }
 
-/*
 long value(string i){
     long s;
-    s = atol(i);
+    s = stoi(i);
     return s;
 }
-*/
 
 /* -- cstrr(i:real):string; -- */
 string cstrr(double i){
