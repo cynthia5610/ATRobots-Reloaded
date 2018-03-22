@@ -210,7 +210,7 @@ typedef struct{
 //Variables
 //robot var
 int num_robots;
-robot_ptr robot = (robot_ptr)malloc(sizeof(robot_ptr)*(max_robots-(-2)+1)); //HELP?
+robot_ptr * robot = (robot_ptr *)malloc(sizeof(robot_ptr)*(max_robots-(-2)+1));
 missile_rec missile[max_missiles+1]; //+1
 //compiler variable
 FILE * f; //Needs to see where this is used //Parse_param creates another one //****

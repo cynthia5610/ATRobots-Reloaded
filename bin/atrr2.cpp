@@ -17,7 +17,7 @@ FUNCTION HEADERS
 */
 
 void bout();
-void init();
+void init(int ParamCount, char *Paramstr);
 string operand (int n, int m);
 string mnemonic (int n, int m);
 void process_keypress(char c);
@@ -39,6 +39,7 @@ void init_robot(int n);
 void compile(int n, string filename);
 void robot_config(int n);
 void create_robot(int n, string filename);
+void parse_param(string s);
 
 config_rec config;
 prog_type code;
@@ -51,10 +52,9 @@ void shutdown();
 int main(int argc, char *argv[]){
 
 	robot += 2;
-	init();
+	init(argc, *argv);
 
 	matches = 2;
-	num_robots = 2;
 	
 	//loop variables
 	int i, j, k, l, n, w;
@@ -81,13 +81,13 @@ int main(int argc, char *argv[]){
 		w = 0;
 
 		for(i = 0; i < num_robots; i++){
-			if(robot[i].wins == w){
+			if(robot[i]->wins == w){
 				k++;
 			}
-			if(robot[i].wins > w){
+			if(robot[i]->wins > w){
 				k = 1;
 				n = i;
-				w = robot[i].wins;
+				w = robot[i]->wins;
 			}
 		}
 		cout << "Robot           		Wins   Matches   Kill   Deaths   Shots" << endl;
@@ -95,17 +95,17 @@ int main(int argc, char *argv[]){
 
 		for(i = 0; i < num_robots; i++){
 			cout << argv[i + 1] << 
-			setw(24) << robot[i].wins << 
-			setw(8) << robot[i].trials << 
-			setw(8) << robot[i].kills <<
-			setw(8) << robot[i].deaths <<
-			setw(8) << robot[i].shots_fired << 
+			setw(24) << robot[i]->wins << 
+			setw(8) << robot[i]->trials << 
+			setw(8) << robot[i]->kills <<
+			setw(8) << robot[i]->deaths <<
+			setw(8) << robot[i]->shots_fired << 
 			endl;
 		}
 		cout << endl;
 
 		if(k == 1){
-			cout << "Robot #" << n+1 << robot[n].fn << " wins the bout! (Score: " << w << "/" << matches << ")" << endl;
+			cout << "Robot #" << n+1 << robot[n]->fn << " wins the bout! (Score: " << w << "/" << matches << ")" << endl;
 		}
 		else{
 			cout << "There is no clear victor!" << endl;
@@ -114,7 +114,7 @@ int main(int argc, char *argv[]){
     shutdown();
 }
 
-void init()
+void init(int ParamCount, char *ParamStr)
 {
     int i;
     if(debugging_compiler || compile_by_line || show_code)
@@ -180,20 +180,22 @@ void init()
     cout << endl;
     
     delete_compile_report(); //ATR2
-    /**if(ParamCount() > 0)
+    if(ParamCount > 0)
     {
-        for(i = 0; i < ParamCount(); i++)
+        ParamStr++;
+        for(i = 0; i < ParamCount; i++)
         {
-            parse_param(btrim(ucase(ParamStr(i)))); //ATR2(ATRFUNC(ATRFUNC(SYSTEM::namespace))) *4
+            parse_param(uCase(ParamStr)); //ATR2(ATRFUNC(ATRFUNC(SYSTEM::namespace))) *4
+            ParamStr++;
         }
     }
-    else prog_error(5," "); //ATR2**/
+    else prog_error(5," "); //ATR2
     temp_mode = step_mode;
     if(logging_errors)
     {
         for(i = 0; i < num_robots; i++)
         {
-            robot[i].errorlog.open(base_name(robot[i].fn) + ".ERR");//assign(robot[i]->errorlog, base_name(fn)+".ERR"); //base_name FILELIB
+            robot[i]->errorlog.open(base_name(robot[i]->fn) + ".ERR");//assign(robot[i]->errorlog, base_name(fn)+".ERR"); //base_name FILELIB
         }
     }
     if(compile_only) write_compile_report(); //ATR2
@@ -243,7 +245,7 @@ void init_bout()
     }
     for(i = 0; i < num_robots; i++)
     {
-        robot[i].mem_watch = 128;
+        robot[i]->mem_watch = 128;
         reset_hardware(i); //ATR2
         reset_software(i); //ATR2
     }
@@ -286,7 +288,7 @@ void bout()
 	do{
 		game_cycle++;
 		for(i = 0; i < num_robots; i++){
-			if(robot[i].armor > 0){
+			if(robot[i]->armor > 0){
 				do_robot(i);
 			}
 		}
@@ -297,7 +299,7 @@ void bout()
 		}
 		for(i = 0; i < num_robots; i++){
 			for(k = 0; k < max_mines; k++){
-				if(robot[i].mine[k].yield > 0){
+				if(robot[i]->mine[k].yield > 0){
 					do_mine(i, k);
 				}
 			}
@@ -315,11 +317,11 @@ void bout()
 		*/
 		switch(c){
 			case 'X':
-			if(!robot[0].is_locked){
+			if(!robot[0]->is_locked){
 				if(!graphix){
 					toggle_graphix();
 				}
-				if(robot[0].armor > 0){
+				if(robot[0]->armor > 0){
 					if(temp_mode > 0){
 						step_mode = temp_mode;
 					}
@@ -605,26 +607,26 @@ void do_robot(int n)
 void init_robot(int n)
 {
 	int i, j, k, l;
-	robot[n].wins = 0;
-	robot[n].trials = 0;
-	robot[n].kills = 0;
-	robot[n].shots_fired = 0;
-	robot[n].match_shots = 0;
-	robot[n].hits = 0;
-	robot[n].damage_total = 0;
-	robot[n].cycles_lived = 0;
-	robot[n].error_count = 0;
-	robot[n].plen = 0;
-	robot[n].max_time = 0;
-	robot[n].speed = 0;
-	robot[n].arc_count = 0;
-	robot[n].sonar_count = 0;
-	robot[n].robot_time_limit = 0;
-	robot[n].scanrange = 1500;
-	robot[n].shotstrength = 1;
-	robot[n].damageadj = 1;
-	robot[n].speedadj = 1;
-	robot[n].mines = 0;
+	robot[n]->wins = 0;
+	robot[n]->trials = 0;
+	robot[n]->kills = 0;
+	robot[n]->shots_fired = 0;
+	robot[n]->match_shots = 0;
+	robot[n]->hits = 0;
+	robot[n]->damage_total = 0;
+	robot[n]->cycles_lived = 0;
+	robot[n]->error_count = 0;
+	robot[n]->plen = 0;
+	robot[n]->max_time = 0;
+	robot[n]->speed = 0;
+	robot[n]->arc_count = 0;
+	robot[n]->sonar_count = 0;
+	robot[n]->robot_time_limit = 0;
+	robot[n]->scanrange = 1500;
+	robot[n]->shotstrength = 1;
+	robot[n]->damageadj = 1;
+	robot[n]->speedadj = 1;
+	robot[n]->mines = 0;
 
 	config.scanner = 5;
 	config.weapon = 2;
@@ -635,10 +637,10 @@ void init_robot(int n)
 	config.mines = 0;
 
 	for(i = 0; i < max_ram; i++){
-		robot[n].ram[i] = 0;
+		robot[n]->ram[i] = 0;
 	}
 
-	robot[n].ram[71] = 768;
+	robot[n]->ram[71] = 768;
 
 	for(i = 0; i < max_code; i++){
 		for(k = 0; k < max_op; k++){
@@ -680,7 +682,7 @@ void create_robot(int n, string filename)
 		filename = rstr(filename, (filename.length() - 1));
 	}
 
-	robot[n].fn = base_name(filename);
+	robot[n]->fn = base_name(filename);
 	compile(n, filename);
 	robot_config(n);
 
@@ -735,7 +737,7 @@ void init_missiles(double xx, double yy, double xxv, double yyv, int dir, int s,
         else
         {
             if(s >= 0 && s <= num_robots)
-                missile[k].mult = missile[k].mult * (robot[s].shotstrength);
+                missile[k].mult = missile[k].mult * (robot[s]->shotstrength);
             m = missile[k].mult;
             if(ob)
                 m = m + 0.25;
@@ -745,8 +747,8 @@ void init_missiles(double xx, double yy, double xxv, double yyv, int dir, int s,
             if(s >= 0 && s <= num_robots)
             {
                 //robot[s].heat , round (20 * m) liine 1831
-                robot[s].shots_fired++;
-                robot[s].match_shots++;
+                robot[s]->shots_fired++;
+                robot[s]->match_shots++;
             }
             missile[k].a = 1;
             missile[k].hd = dir;
@@ -805,7 +807,7 @@ void robot_error(int n, int i, string ov) //Contains graphics
         {
             log_error(n,i,ov);
         }
-        robot[n].error_count++;
+        robot[n]->error_count++;
     }
     return;
 }
@@ -892,7 +894,7 @@ void parse_param(string s)
     bool found;
     
     found = false;
-    s = btrim(uCase(s));
+    s = uCase(s);
 
     if(s == "") return;
     if(s[1] == '#')
@@ -904,7 +906,7 @@ void parse_param(string s)
         while(!f.eof())
         {
             getline(f,s1);
-            s1 = uCase(btrim(s1));
+            s1 = uCase(s1);
             if(s1[1] == '#') prog_error(7,s1);
             else parse_param(s1);
         }
@@ -913,6 +915,7 @@ void parse_param(string s)
     }
     else if(s[1] == '/' || s[1] == '-' || s[1] == '=')
     {
+        /*
         s1 = rstr(s,s.length()-1);
         //Debugging
         if(s1[1] == 'X')
@@ -1017,6 +1020,7 @@ void parse_param(string s)
             insanity = 0;
         if(insanity > 15)
             insanity = 15;
+        */
     }
     else if(s[1] == ';') found = true;
     else if(num_robots < max_robots && s != "")
@@ -1211,7 +1215,7 @@ bool gameover()
         k = 0;
         for(n = 0; n < num_robots; n++)
         {
-            if(robot[n].armor > 0)
+            if(robot[n]->armor > 0)
                 k++;
         }
         if(k <= 1)
@@ -1227,7 +1231,7 @@ string victor_string(int k, int n)
 {
     string s;
     s = "";
-    if(k == 1) s = "Robot #" + cstr(n+1) + " (" + robot[n].fn + ") wins!";
+    if(k == 1) s = "Robot #" + cstr(n+1) + " (" + robot[n]->fn + ") wins!";
     if(k == 0) s = "Simultaneous destruction, match is a tie.";
     if(k > 1) s = "No clear victor, match is a tie.";
     return s;
@@ -1252,7 +1256,7 @@ void show_statistics()
         n = -1; k = 0;
         for(i = 0; i < num_robots; i++)
         {
-            if(robot[i].armor > 0 || robot[i].won)
+            if(robot[i]->armor > 0 || robot[i]->won)
             {
                 k++;
                 n = i;
@@ -1265,9 +1269,9 @@ void show_statistics()
                 j = 1;
             else
                 j = 0;
-            cout << addfront(cstr(i+1),2) << " - " << addrear(robot[i].fn,15) << cstr(j) << addfront(cstr(robot[i].wins),8)
-            << addfront(cstr(robot[i].trials),8) << addfront(cstr(robot[i].armor)+'%',9) << addfront(cstr(robot[i].kills),7)
-            << addfront(cstr(robot[i].deaths),8) << addfront(cstr(robot[i].match_shots),9) << endl;
+            cout << addfront(cstr(i+1),2) << " - " << addrear(robot[i]->fn,15) << cstr(j) << addfront(cstr(robot[i]->wins),8)
+            << addfront(cstr(robot[i]->trials),8) << addfront(cstr(robot[i]->armor)+'%',9) << addfront(cstr(robot[i]->kills),7)
+            << addfront(cstr(robot[i]->deaths),8) << addfront(cstr(robot[i]->match_shots),9) << endl;
         }
         //textcolor(15); //white
         cout << endl;

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <string>
+#include <algorithm>
 #include "atrrfunc.hh"
 #include "filelib.hh"
 
@@ -174,3 +175,18 @@ string repchar(char c, unsigned char i){
     }
     return s;
 }
+
+/*
+string btrim(string s1){
+    return ltrim(rtrim(s1));
+}
+
+string ltrim(string s1){
+    int i;
+    while( (s1.length() > 0) && ))
+}
+
+string rtrim(string s1){
+    return;
+}
+*/
