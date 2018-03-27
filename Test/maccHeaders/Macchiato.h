@@ -449,9 +449,9 @@ namespace Macchiato {
 		// Some CLI options/flags
 		for(int i = 0; i < argc; i++) {
 			//std::cout << argv[i] << std::endl;
-			if(strcmp(argv[i], "--no-color") == 0) {
-				Macchiato::MacchiatoSettings.useAnsiColor = false;
-			}
+//			if(strcmp(argv[i], "--no-color") == 0) {
+//				Macchiato::MacchiatoSettings.useAnsiColor = false;
+//			}
 		}
 	};
 
