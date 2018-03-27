@@ -1,2 +1,0 @@
-This is just a sample file.
-If the exist function takes in another file type please feel free to change from .txt to whatever.
