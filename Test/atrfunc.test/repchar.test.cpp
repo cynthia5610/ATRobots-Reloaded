@@ -1,7 +1,7 @@
 #include <string>
 #include <iostream>
 #include "../maccHeaders/Macchiato.h"
-#include "../atrfiles/atrrfunc.hh"
+#include "../../bin/atrrfunc.hh"
 using namespace Macchiato;
 
 void repchar_test();

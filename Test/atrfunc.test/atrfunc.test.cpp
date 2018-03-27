@@ -14,7 +14,7 @@
 #include "lcase.test.cpp"
 #include "space.test.cpp"
 #include "repchar.test.cpp"
-#include "../atrfiles/atrrfunc.hh"
+#include "../../bin/atrrfunc.hh"
 #include "../maccHeaders/Macchiato.h"
 
 using namespace Macchiato;
