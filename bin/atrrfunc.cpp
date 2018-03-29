@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdlib.h>
-#include <string>
+#include <string.h>
+#include <ctype.h>
 #include <algorithm>
 #include "atrrfunc.hh"
 #include "filelib.hh"
@@ -21,7 +22,7 @@ char* zero_pad(long n, long l);
 char* zero_pads(char* s, long l);
 char* addfront(char* b, int l);
 char* uCase(char* lString);
-char* lcase(char* s);
+char* lCase(char* s);
 char* space(unsigned char i);
 char* repchar(char c, unsigned char i);
 
@@ -61,29 +62,40 @@ char hexnum(unsigned char num){
 }
 
 double valuer(char *i){
-    double s = atof(i);
-    return s;
+    char* end;
+    double result;
+
+    result = strtod(i, &end);
+
+    return result;
 }
 
 long value(char *i){
-    long s = atoi(i);
-    return s;
+    char* end;
+    long result;
+
+    result = strtol(i, &end, 10);
+
+    return result;
 }
 
 /* -- cstrr(i:real):string; -- */
 char* cstrr(double i){
-    char* s1;
-    char* num_ptr = s1;
-    s1 = i;
-    return s1;
+
+    char* result;
+    sprintf(result, "%f", i);
+
+    return result;
+
 }
 
 /* -- cstr(i:longint):string -- */
 char* cstr(long int i){
-    char* s1;
-
-    s1 = i;
-    return s1;
+    
+    char* result;
+    sprintf(result, "%ld", i);
+    
+    return result;
 }
 
 /* -- zero_pad(n,l:longint):string -- */
@@ -116,20 +128,22 @@ char* addfront(char* b, int l){
 
 /* -- ucase(s:string):string -- */
 char* uCase(char* lString){
-    char* uString;
 
-    transform(lString.begin(), lString.end(),lString.begin(), ::toupper);
-    uString = lString;
+    while(*lString != '\0'){
+        *lString = toupper((unsigned char)*lString);
+        ++lString;
+    }
 
-    return uString;
+    return lString;
 }
 
 /* -- lcase(s:string):string -- */
-char* lcase(char* s){
-    char* uString;
+char* lCase(char* uString){
 
-    transform(s.begin(), s.end(), s.begin(), ::tolower);
-    uString = s;
+    while(*uString != '\0'){
+        *uString = toupper((unsigned char)*uString);
+        ++uString;
+    }
 
     return uString;
 }
