@@ -5,18 +5,18 @@
 
 using namespace std;
 
-extern string addfront(string b, int l);
-extern string addrear(string b, int l);
-extern string lstr(string s1, int l);
-extern string rstr(string s1, int l);
-extern bool EXIST(string thisfile);
-extern bool VALID(string thisfile);
-extern string name_form(string name);
-extern string exten(string name);
-extern string base_name(string name);
-extern string attribs(int byte);
-extern string path(string fn);
-extern string no_path(string fn);
-extern long file_length(string fn);
+extern char* addfront(char* b, int l);
+extern char* addrear(char* b, int l);
+extern char* lstr(char* s1, int l);
+extern char* rstr(char* s1, int l);
+extern bool EXIST(char* thisfile);
+extern bool VALID(char* thisfile);
+extern char* name_form(char* name);
+extern char* exten(char* name);
+extern char* base_name(char* name);
+extern char* attribs(int byte);
+extern char* path(char* fn);
+extern char* no_path(char* fn);
+extern long file_length(char* fn);
 
 #endif
