@@ -12,18 +12,18 @@
 
 using namespace std;
 
-char* addfront(char* b, int l);
+//char* addfront(char* b, int l);
 char* addrear(char* b, int l);
 char* lstr(char *s1, int l);
 char* rstr(char *s1, int l);
 bool EXIST(char* thisfile);
-bool VALID(char* thisfile);
+//bool VALID(char* thisfile);
 char* name_form(char* name);
 char* exten(char* name);
 char* base_name(char* name);
-char* attribs(int byte);
+//char* attribs(int byte);
 char* path(char* fn);
-char* no_path(char* fn);
+//char* no_path(char* fn);
 long file_length(char* fn);
 
 
@@ -100,18 +100,16 @@ bool EXIST(char* thisfile)
 
 char* name_form(char* name){
     int i, j, k, l;
-    char* s1, s2, s3;
-    s1 = '';
-    s2 = '';
+    char *s1, *s2, *s3;
     k = 0;
-    if (name[strlen(name)] == "." || name[strlen(name)] == "..")
+    if (name[strlen(name)] == '.' || name[strlen(name)] == '..')
     {
         return addrear(name,12);
     }
     while(k <= strlen(name) && name[k] != '.')
     {
         //s1 = s1 + name[k];
-        strcat(s1,name[k]);
+        strncat(s1, name, k);
         k++;
     }
     if (k < strlen(name))
@@ -119,24 +117,22 @@ char* name_form(char* name){
         k++;
         while (k < strlen(name) && name[k] != '.'){
             //s2 = s2 + name[k];
-            strcat(s2,name[k]);
+            strncat(s2,name, k);
             k++;
         }
     }
-    return (addrear(s1,9) + addrear (s2,3));
+    return strcat(addrear(s1,9),addrear(s2,3));
 }
 
 char* exten (char* name)
 {
     int i, j, k, l;
-    char* s1, s2, s3;
-    s1 = '';
-    s2 = '';
+    char *s1, *s2, *s3;
     k = 0;
     while(k < strlen(name) && name[k] != '.')
     {
         //s1 = s1 + name[k];
-        strcat(s1,name[k]);
+        strncat(s1, name, k);
         k++;
     }
     if (k < strlen(name))
@@ -144,7 +140,7 @@ char* exten (char* name)
         k++;
         while (k < strlen(name) && name[k] != '.'){
             //s2 = s2 + name[k];
-            strcat(s2,name[k]);
+            strncat(s2, name, k);
             k++;
         }
     }
@@ -154,13 +150,11 @@ char* exten (char* name)
 char* base_name(char* name)
 {
     int i, j, k, l;
-    char* s1, s2, s3;
-    s1 = '';
-    s2 = '';
+    char *s1, *s2, *s3;
     k = 0;
     while(k <= strlen(name) && name[k] != '.'){
         //s1 = s1 + name[k];
-        strcat(s1,name[k]);
+        strncat(s1, name, k);
         k++;
     }
     return s1;
@@ -186,7 +180,7 @@ char* path(char* fn){
     }
     else
     {
-        return '';
+        return;
     }  
 }
 
