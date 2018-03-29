@@ -31,7 +31,7 @@ VARIABLES
 */
  long delay_per_sec;
  bool registered, graphix, sound_on;
- char * reg_name;
+ string reg_name;
  unsigned short int reg_num;
  double sint, cost[255];
 

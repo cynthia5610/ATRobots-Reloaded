@@ -18,8 +18,8 @@ FUNCTION HEADERS
 
 void bout();
 void init(int ParamCount, char *Paramstr);
-string operand (int n, int m);
-string mnemonic (int n, int m);
+char* operand (int n, int m);
+char* mnemonic (int n, int m);
 void process_keypress(char c);
 void graph_mode(bool on);
 void toggle_graphix();
@@ -34,11 +34,11 @@ void init_debug_window();
 bool gameover();
 void delete_compile_report();
 void write_compile_report();
-void prog_error(int n, string ss);
+void prog_error(int n, char* ss);
 void init_robot(int n);
-void compile(int n, string filename);
+void compile(int n, char* filename);
 void robot_config(int n);
-void create_robot(int n, string filename);
+void create_robot(int n, char* filename);
 void parse_param(char * s);
 
 config_rec config;
@@ -191,7 +191,6 @@ void init(int ParamCount, char *ParamStr)
         ParamStr++;
         for(i = 0; i < ParamCount; i++)
         {
-            cout << "ENTERING PARSE_PARAM" << endl;
             parse_param(ParamStr); //ATR2(ATRFUNC(ATRFUNC(SYSTEM::namespace))) *4
             ParamStr++;
         }
@@ -202,7 +201,7 @@ void init(int ParamCount, char *ParamStr)
     {
         for(i = 0; i < num_robots; i++)
         {
-            robot[i]->errorlog.open(base_name(robot[i]->fn) + ".ERR");//assign(robot[i]->errorlog, base_name(fn)+".ERR"); //base_name FILELIB
+            robot[i]->errorlog.open(strcat(base_name(robot[i]->fn), ".ERR'"));
         }
     }
     if(compile_only) write_compile_report(); //ATR2
@@ -421,82 +420,82 @@ void bout()
 
 }
 
-string operand (int n, int m)
+char* operand (int n, int m)
 {
-    string s;
+    char* s;
     s = cstr(n);
     switch(m & 7)
     {
-        case 1: s = "@" + s; break;
-        case 2: s = ":" + s; break;
-        case 3: s = "$" + s; break;
-        case 4: s = "!" + s; break;
+        case 1: strcpy(s, strcat("@", s)); break;
+        case 2: strcpy(s, strcat(":", s)); break;
+        case 3: strcpy(s, strcat("$", s)); break;
+        case 4: strcpy(s, strcat("!", s)); break;
         default: s = cstr(n); break;
     }
     if((m & 8) > 0)
     {
-        s = "[" + s + "]";
+        strcpy(s,strcat("[",strcat(s,"]"))); //s = "[" + s + "]";
     }
     return s;
 }
 
 
-string mnemonic (int n, int m)
+char* mnemonic (int n, int m)
 {
-	string s;
+	char* s;
 	s = cstr(n);
 	if(m == 0)
 	{
 		switch(n)
 		{
-			case 0:  s = "NOP"; break;
-   			case 1:  s = "ADD"; break;
-   			case 2:  s = "SUB"; break;
-   			case 3:  s = "OR"; break;
- 		 	case 4:  s = "AND"; break;
-   			case 5:  s = "XOR"; break;
-   			case 6:  s = "NOT"; break;
-			case 7:  s = "MPY"; break;
-        	case 8:  s = "DIV"; break;
-   			case 9:  s = "MOD"; break;
-      		case 10:  s = "RET"; break; 
-   			case 11:  s = "CALL"; break; 
-			case 12:  s = "JMP"; break;
-   			case 13:  s = "JLS"; break;
-   			case 14:  s = "JGR"; break;
-   			case 15:  s = "JNE"; break;
-			case 16:  s = "JE"; break;
-   			case 17:  s = "SWAP"; break;
-   			case 18:  s = "DO"; break;
-   			case 19:  s = "LOOP"; break;
-			case 20:  s = "CMP"; break;
-   			case 21:  s = "TEST"; break;
-   			case 22:  s = "MOV"; break;
-   			case 23:  s = "LOC"; break;
-			case 24:  s = "GET"; break;
-         	case 25:  s = "PUT"; break;
-   			case 26:  s = "INT"; break;
-   			case 27:  s = "IPO"; break;
-			case 28:  s = "OPO"; break;
-   			case 29:  s = "DELAY"; break;
-   			case 30:  s = "PUSH"; break;
-   			case 31:  s = "POP"; break;
-			case 32:  s = "ERR"; break;
-   			case 33:  s = "INC"; break;
-   			case 34:  s = "DEC"; break;
-   			case 35:  s = "SHL"; break;
-			case 36:  s = "SHR"; break;
-  	 	   	case 37:  s = "ROL"; break;
- 			case 38:  s = "ROR"; break;
-         	case 39:  s = "JZ"; break;
-  			case 40:  s = "JNZ"; break;
-   			case 41:  s = "JGE"; break;
-   			case 42:  s = "JLE"; break;
-  		 	case 43:  s = "SAL"; break;
-   			case 44:  s = "SAR"; break;
-   			case 45:  s = "NEG"; break;
-   			case 46:  s = "JTL"; break;
-   			default:  s = "XXX"; break;
+			case 0:  strcpy(s, "NOP"); break;
+   			case 1:  strcpy(s,"ADD"); break;
+   			case 2:  strcpy(s, "SUB"); break;
+   			case 3:  strcpy(s, "OR"); break;
+ 		 	case 4:  strcpy(s, "AND"); break;
+   			case 5:  strcpy(s, "XOR"); break;
+   			case 6:  strcpy(s, "NOT"); break;
+			case 7:  strcpy(s, "MPY"); break;
+        	case 8:  strcpy(s, "DIV"); break;
+   			case 9:  strcpy(s, "MOD"); break;
+      		case 10:  strcpy(s, "RET"); break; 
+   			case 11:  strcpy(s, "CALL"); break; 
+			case 12:  strcpy(s, "JMP"); break;
+   			case 13:  strcpy(s, "JLS"); break;
+   			case 14:  strcpy(s, "JGR"); break;
+   			case 15:  strcpy(s, "JNE"); break;
+			case 16:  strcpy(s, "JE"); break;
+   			case 17:  strcpy(s, "SWAP"); break;
+   			case 18:  strcpy(s, "DO"); break;
+   			case 19:  strcpy(s, "LOOP"); break;
+			case 20:  strcpy(s, "CMP"); break;
+   			case 21:  strcpy(s, "TEST"); break;
+   			case 22:  strcpy(s, "MOV"); break;
+   			case 23:  strcpy(s, "LOC"); break;
+			case 24:  strcpy(s, "GET"); break;
+         	case 25:  strcpy(s, "PUT"); break;
+   			case 26:  strcpy(s, "INT"); break;
+   			case 27:  strcpy(s, "IPO"); break;
+			case 28:  strcpy(s, "OPO"); break;
+   			case 29:  strcpy(s, "DELAY"); break;
+   			case 30:  strcpy(s, "PUSH"); break;
+   			case 31:  strcpy(s, "POP"); break;
+			case 32:  strcpy(s, "ERR"); break;
+   			case 33:  strcpy(s, "INC"); break;
+   			case 34:  strcpy(s, "DEC"); break;
+   			case 35:  strcpy(s, "SHL"); break;
+			case 36:  strcpy(s, "SHR"); break;
+  	 	   	case 37:  strcpy(s, "ROL"); break;
+ 			case 38:  strcpy(s, "ROR"); break;
+         	case 39:  strcpy(s, "JZ"); break;
+  			case 40:  strcpy(s, "JNZ"); break;
+   			case 41:  strcpy(s, "JGE"); break;
+   			case 42:  strcpy(s, "JLE"); break;
+  		 	case 43:  strcpy(s, "SAL"); break;
+   			case 44:  strcpy(s, "SAR"); break;
+   			case 45:  strcpy(s, "NEG"); break;
+   			case 46:  strcpy(s, "JTL"); break;
+   			default:  strcpy(s, "XXX"); break;
 		}
 	}
 	else
@@ -661,7 +660,7 @@ void init_robot(int n)
     return;
 }
 
-void create_robot(int n, string filename)
+void create_robot(int n, char* filename)
 {
 	int i, j, k;
 
@@ -675,15 +674,15 @@ void create_robot(int n, string filename)
 	
 	if(filename == base_name(filename)){
 		if(filename[1] == '?'){
-			filename = filename + locked_ext;
+			filename = strcat(filename, locked_ext);
 		}
 		else{
-			filename = filename + robot_ext;
+			filename = strcat(filename, robot_ext);
 		}
 	}
 
 	if(filename[1] == '?'){
-		filename = rstr(filename, (filename.length() - 1));
+		filename = rstr(filename, (strlen(filename) - 1));
 	}
 
 	robot[n]->fn = base_name(filename);
@@ -816,41 +815,41 @@ void robot_error(int n, int i, string ov) //Contains graphics
     return;
 }
 
-void prog_error(int n, string ss)
+void prog_error(int n, char* ss)
 {
-    string s;
+    char* s;
     graph_mode(false);
     //textcolor(15);
     cout << "Error #" << n << ": ";
     switch(n)
     {
-        case 0: s = ss; break;
-        case 1: s = "Invalid :label - \"" + ss + "\", silly mortal.\n"; break;
-        case 2: s = "Undefined identifier - \"" + ss + "\". A typo perhaps?\n"; break;
-        case 3: s = "Memory access out of range - \"" + ss + "\""; break;
-        case 4: s = "Not enough robots for combat. Maybe we should just drive in circles.\n"; break;
-        case 5: s = "Robot names and settings must be specified. An empty arena is no fun.\n"; break;
-        case 6: s = "Config file not found - \""+ ss + "\""; break;
-        case 7: s = "Cannot access a config file from a config file - \""+ ss +"\""; break;
-        case 8: s = "Robot not found \"" + ss + "\". Perhaps you mistyped it?\n"; break;
-        case 9: s = "Insufficient RAM to load robot: \"" + ss + "\"... This is not good.\n"; break;
-        case 10: s = "Too many robots! We can only handle " + cstr(max_robots+1) + "! Blah.. limits are limits.\n"; break;
-        case 11: s = "You already have a perfectly good #def for \"" + ss + "\", silly.\n"; break;
-        case 12: s = "Variable name too long! (Max:" + cstr(max_var_len) + ") \"" + ss + "\""; break;
-        case 13: s = "!Label already defined \"" + ss + "\", silly.\n"; break;
-        case 14: s = "Too many variables! (Var Limit: " + cstr(max_vars) + ")\n"; break;
-        case 15: s = "Too many !labels! (!Label Limit: " + cstr(max_labels) + ")\n"; break;
-        case 16: s = "Robot program too long! Boldly we simplify, simplify along...\n" + ss; break;
-        case 17: s = "!Label missing error. !Label #" + ss + "."; break;
-        case 18: s = "!Label out of range: " + ss; break;
-        case 19: s = "!Label not found. " + ss; break;
-        case 20: s = "Invalid config option: \"" + ss + "\". Inventing a new device?"; break;
-        case 21: s = "Robot is attempting to cheat; Too many config points (" + ss + ")"; break;
-        case 22: s = "Insufficient data in data statement: \"" + ss + "\""; break;
-        case 23: s = "Too many asterisks: \"" + ss + "\""; break;
-        case 24: s = "Invalid step count: \"" + ss + "\". 1-9 are valid conditions."; break;
-        case 25: s = "\"" + ss + "\""; break;
-        default: s = ss;  break;
+        case 0: strcpy(s, ss); break;
+        case 1: strcpy(s, strcat("Invalid :label - \"", strcat(ss, "\", silly mortal.\n"))); break;
+        case 2: strcpy(s, strcat("Undefined identifier - \"", strcat(ss, "\". A typo perhaps?\n"))); break;
+        case 3: strcpy(s, strcat("Memory access out of range - \"", strcat(ss, "\""))); break;
+        case 4: strcpy(s, "Not enough robots for combat. Maybe we should just drive in circles.\n"); break;
+        case 5: strcpy(s, "Robot names and settings must be specified. An empty arena is no fun.\n"); break;
+        case 6: strcpy(s, strcat("Config file not found - \"", strcat(ss, "\""))); break;
+        case 7: strcpy(s, strcat("Cannot access a config file from a config file - \"", strcat(ss, "\""))); break;
+        case 8: strcpy(s, strcat("Robot not found \"", strcat(ss, "\". Perhaps you mistyped it?\n"))); break;
+        case 9: strcpy(s, strcat("Insufficient RAM to load robot: \"", strcat(ss, "\"... This is not good.\n"))); break;
+        case 10: strcpy(s, strcat("Too many robots! We can only handle ", strcat(cstr(max_robots+1),  "! Blah.. limits are limits.\n"))); break;
+        case 11: strcpy(s, strcat("You already have a perfectly good #def for \"", strcat(ss, "\", silly.\n"))); break;
+        case 12: strcpy(s, strcat("Variable name too long! (Max:",strcat(cstr(max_var_len),strcat(") \"",strcat(ss, "\""))))); break;
+        case 13: strcpy(s, strcat("!Label already defined \"", strcat(ss, "\", silly.\n"))); break;
+        case 14: strcpy(s, strcat("Too many variables! (Var Limit: ", strcat(cstr(max_vars), ")\n"))); break;
+        case 15: strcpy(s, strcat("Too many !labels! (!Label Limit: ", strcat(cstr(max_labels), ")\n"))); break;
+        case 16: strcpy(s, strcat("Robot program too long! Boldly we simplify, simplify along...\n", ss)); break;
+        case 17: strcpy(s, strcat("!Label missing error. !Label #", strcat(ss, "."))); break;
+        case 18: strcpy(s, strcat("!Label out of range: ", ss)); break;
+        case 19: strcpy(s, strcat("!Label not found. ", ss)); break;
+        case 20: strcpy(s, strcat("Invalid config option: \"", strcat(ss, "\". Inventing a new device?"))); break;
+        case 21: strcpy(s, strcat("Robot is attempting to cheat; Too many config points (", strcat(ss, ")"))); break;
+        case 22: strcpy(s, strcat("Insufficient data in data statement: \"", strcat(ss, "\""))); break;
+        case 23: strcpy(s, strcat("Too many asterisks: \"", strcat(ss, "\""))); break;
+        case 24: strcpy(s, strcat("Invalid step count: \"", strcat(ss, "\". 1-9 are valid conditions."))); break;
+        case 25: strcpy(s, strcat("\"", strcat(ss, "\""))); break;
+        default: strcpy(s,ss);  break;
     }
     cout << s << endl;
     exit(EXIT_FAILURE);
@@ -871,7 +870,7 @@ void check_plen(int plen)
     return;
 }
 
-void compile(int n, string filename)
+void compile(int n, char* filename)
 {
     return;
 }
@@ -893,9 +892,8 @@ void reset_hardware(int n)
 
 void parse_param(char * s)
 {
-    cout << "IN PARSE_PARAM" << endl;
     ifstream f;
-    string fn;
+    char * fn;
     char * s1;
     bool found;
     
@@ -906,7 +904,7 @@ void parse_param(char * s)
     if(s[1] == '#')
     {
         fn = rstr(s,strlen(s)-1);
-        if(fn == base_name(fn)) fn = fn + config_ext;
+        if(fn == base_name(fn)) fn = strcat(fn, config_ext);
         if(!EXIST(fn)) prog_error(6,fn);
         f.open(fn);
         while(!f.eof())
@@ -1231,13 +1229,12 @@ bool gameover()
         return false;
 }
 
-string victor_string(int k, int n)
+char* victor_string(int k, int n)
 {
-    string s;
-    s = "";
-    if(k == 1) s = "Robot #" + cstr(n+1) + " (" + robot[n]->fn + ") wins!";
-    if(k == 0) s = "Simultaneous destruction, match is a tie.";
-    if(k > 1) s = "No clear victor, match is a tie.";
+    char* s;
+    if(k == 1) strcpy(s, strcat("Robot #", strcat(cstr(n+1), strcat(" (", strcat(robot[n]->fn, ") wins!")))));
+    if(k == 0) strcpy(s, "Simultaneous destruction, match is a tie.");
+    if(k > 1) strcpy(s, "No clear victor, match is a tie.");
     return s;
 }
 

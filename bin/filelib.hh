@@ -14,7 +14,7 @@ extern bool VALID(char* thisfile);
 extern char* name_form(char* name);
 extern char* exten(char* name);
 extern char* base_name(char* name);
-extern char* attribs(int byte);
+//extern char* attribs(int byte);
 extern char* path(char* fn);
 extern char* no_path(char* fn);
 extern long file_length(char* fn);

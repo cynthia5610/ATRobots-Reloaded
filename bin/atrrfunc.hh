@@ -9,7 +9,7 @@ using namespace std;
 
 extern long delay_per_sec;
 extern bool registered, graphix, sound_on;
-extern char* reg_name;
+extern string reg_name;
 extern unsigned short int reg_num;
 extern double sint, cost[255];
 

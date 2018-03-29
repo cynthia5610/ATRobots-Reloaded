@@ -167,8 +167,8 @@ typedef struct{
          cycles_lived,
          error_count;
 
-    char *     name,
-               fn;
+    char      *name,
+               *fn;
 
     bool is_locked,
          shields_up,

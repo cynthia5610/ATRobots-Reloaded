@@ -180,7 +180,7 @@ char* path(char* fn){
     }
     else
     {
-        return;
+        return NULL;
     }  
 }
 
