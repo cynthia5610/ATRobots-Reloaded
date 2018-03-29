@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cstring>
 
 #include "filelib.hh"
 #include "atrrfunc.hh"
@@ -13,8 +14,8 @@ using namespace std;
 
 string addfront(string b, int l);
 string addrear(string b, int l);
-string lstr(string s1, int l);
-string rstr(string s1, int l);
+char* lstr(char *s1, int l);
+char* rstr(char *s1, int l);
 bool EXIST(string thisfile);
 bool VALID(string thisfile);
 string name_form(string name);
@@ -32,26 +33,22 @@ string addrear(string b, int l){
     return b;
 }
 
-string lstr(string s1, int l){
-    if(s1.length() <= l){
+char* lstr(char *s1, int l){
+    if(strlen(s1) <= l){
         return s1;
     }
     else{
-        char temp[s1.length()];
-        s1.copy(temp, l, 0);
-        s1 = temp;
+        s1[strlen(s1) - l] = '\0';
         return s1;
-    }
+    } 
 }
 
-string rstr(string s1, int l){
-    if(s1.length() <= l){
+char* rstr(char *s1, int l){
+    if(strlen(s1) <= l){
         return s1;
     }
     else{
-        char temp[s1.length()];
-        s1.copy(temp, l, s1.length() - l);
-        s1 = temp;
+        s1[strlen(s1) - l] = '\0';
         return s1;
     } 
 }
@@ -115,8 +112,9 @@ string exten (string name){
 string base_name(string name){
     int i, j, k, l;
     string s1, s2, s3;
+
     k = 0;
-    while(k < name.length() && name[k] != '.'){
+    while(k <= name.length() && name[k] != '.'){
         s1 = s1 + name[k];
         k++;
     }
@@ -143,6 +141,7 @@ string path(string fn){
     }  
 }
 
+/*
 string no_path(string fn){
     int i, k;
     k = 0;
@@ -162,3 +161,4 @@ string no_path(string fn){
 long file_length(string fn){
 
 }
+*/

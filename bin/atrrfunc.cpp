@@ -13,26 +13,24 @@ using namespace std;
 FUNCTION HEADERS
 */
 char hexnum(unsigned char num);
-string hexb(unsigned char num);
-string hex(unsigned short num);
-double valuer(string i);
-long value(string i);
-string cstrr(double i);
-string cstr(long i);
-string zero_pad(long n, long l);
-string zero_pads(string s, long l);
-string addfront(string b, int l);
-string uCase(string lString);
-string lcase(string s);
-string space(unsigned char i);
-string repchar(char c, unsigned char i);
+double valuer(char* i);
+long value(char* i);
+char* cstrr(double i);
+char* cstr(long i);
+char* zero_pad(long n, long l);
+char* zero_pads(char* s, long l);
+char* addfront(char* b, int l);
+char* uCase(char* lString);
+char* lcase(char* s);
+char* space(unsigned char i);
+char* repchar(char c, unsigned char i);
 
 /* 
 VARIABLES
 */
  long delay_per_sec;
  bool registered, graphix, sound_on;
- string reg_name;
+ char * reg_name;
  unsigned short int reg_num;
  double sint, cost[255];
 
@@ -62,75 +60,63 @@ char hexnum(unsigned char num){
     }
 }
 
-/*
-string hexb(unsigned char num){
-    return (hexnum(num << 4) + hexnum(num & 15));
-}
-*/
-
-/*
-string hex(unsigned short num){
-    return(hexb(num << 8) + hexb(num & 255));
-}
-*/
-
-double valuer(string i){
-    double s;
-    s = stod(i);
+double valuer(char *i){
+    double s = atof(i);
     return s;
 }
 
-long value(string i){
-    long s;
-    s = stoi(i);
+long value(char *i){
+    long s = atoi(i);
     return s;
 }
 
 /* -- cstrr(i:real):string; -- */
-string cstrr(double i){
-    string s1;
+char* cstrr(double i){
+    char* s1;
+    char* num_ptr = s1;
     s1 = i;
     return s1;
 }
 
 /* -- cstr(i:longint):string -- */
-string cstr(long int i){
-    string s1;
+char* cstr(long int i){
+    char* s1;
+
     s1 = i;
     return s1;
 }
 
 /* -- zero_pad(n,l:longint):string -- */
-string zero_pad(long n, long l){
-    string s;
+char* zero_pad(long n, long l){
+    char* s;
     s = cstr(n);
-    while(s.length() < l){
+    while(strlen(s) < l){
         s = '0' + s;
     }
     return s;
 }
 
 /* -- zero_pads(s:string; l:longint):string; -- */
-string zero_pads(string s, long l){
-    string s1;
+char* zero_pads(char* s, long l){
+    char* s1;
     s1 = s;
-    while(s1.length() < l){
+    while(strlen(s1) < l){
         s1 = '0' + s1;
     }
     return s1;
 }
 
 /* -- addfront(b:string; l:integer):string -- */
-string addfront(string b, int l){
-    while(b.length() < l){
+char* addfront(char* b, int l){
+    while(strlen(b) < l){
         b = ' ' + b;
     }
     return b;
 }
 
 /* -- ucase(s:string):string -- */
-string uCase(string lString){
-    string uString;
+char* uCase(char* lString){
+    char* uString;
 
     transform(lString.begin(), lString.end(),lString.begin(), ::toupper);
     uString = lString;
@@ -139,8 +125,8 @@ string uCase(string lString){
 }
 
 /* -- lcase(s:string):string -- */
-string lcase(string s){
-    string uString;
+char* lcase(char* s){
+    char* uString;
 
     transform(s.begin(), s.end(), s.begin(), ::tolower);
     uString = s;
@@ -149,8 +135,8 @@ string lcase(string s){
 }
 
 /* -- space(i:byte):string -- */
-string space(unsigned char i){
-    string s;
+char* space(unsigned char i){
+    char* s;
     int k;
 
     if(i > 0){
@@ -162,8 +148,8 @@ string space(unsigned char i){
 }
 
 /* -- repchar(c:char; i:byte):string -- */
-string repchar(char c, unsigned char i){
-    string s;
+char* repchar(char c, unsigned char i){
+    char* s;
     int k;
 
     if(i > 0){
@@ -173,18 +159,3 @@ string repchar(char c, unsigned char i){
     }
     return s;
 }
-
-/*
-string btrim(string s1){
-    return ltrim(rtrim(s1));
-}
-
-string ltrim(string s1){
-    int i;
-    while( (s1.length() > 0) && ))
-}
-
-string rtrim(string s1){
-    return;
-}
-*/

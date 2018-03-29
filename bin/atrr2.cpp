@@ -39,7 +39,7 @@ void init_robot(int n);
 void compile(int n, string filename);
 void robot_config(int n);
 void create_robot(int n, string filename);
-void parse_param(string s);
+void parse_param(char * s);
 
 config_rec config;
 prog_type code;
@@ -51,9 +51,13 @@ void shutdown();
 
 int main(int argc, char *argv[]){
 
+    //move the robot array up by two to account for the negative index
 	robot += 2;
+
+    //send the robots & flags
 	init(argc, *argv);
 
+    //set number of matches -- currently hard coded
 	matches = 2;
 	
 	//loop variables
@@ -62,10 +66,13 @@ int main(int argc, char *argv[]){
 	//turning off graphics
 	graphix = false;
 	n = 0;
+
+    //inicialize robots
 	init_robot(n);
 	
+    //if matches > 0, run fights
 	if(matches > 0){
-		for(i = 0; i < num_robots; i++){
+		for(i = 0; i < matches; i++){
 			bout();
 		}
 	}
@@ -184,7 +191,8 @@ void init(int ParamCount, char *ParamStr)
         ParamStr++;
         for(i = 0; i < ParamCount; i++)
         {
-            parse_param(uCase(ParamStr)); //ATR2(ATRFUNC(ATRFUNC(SYSTEM::namespace))) *4
+            cout << "ENTERING PARSE_PARAM" << endl;
+            parse_param(ParamStr); //ATR2(ATRFUNC(ATRFUNC(SYSTEM::namespace))) *4
             ParamStr++;
         }
     }
@@ -883,26 +891,28 @@ void reset_hardware(int n)
     return;
 }
 
-void parse_param(string s)
+void parse_param(char * s)
 {
+    cout << "IN PARSE_PARAM" << endl;
     ifstream f;
-    string fn, s1;
+    string fn;
+    char * s1;
     bool found;
     
     found = false;
-    s = uCase(s);
+    //s = uCase(s);
 
-    if(s == "") return;
+    if(s == NULL) return;
     if(s[1] == '#')
     {
-        fn = rstr(s,s.length()-1);
+        fn = rstr(s,strlen(s)-1);
         if(fn == base_name(fn)) fn = fn + config_ext;
         if(!EXIST(fn)) prog_error(6,fn);
         f.open(fn);
         while(!f.eof())
         {
-            getline(f,s1);
-            s1 = uCase(s1);
+            //getline(f,s1); MUST FIX
+            //s1 = uCase(s1);
             if(s1[1] == '#') prog_error(7,s1);
             else parse_param(s1);
         }
@@ -911,30 +921,30 @@ void parse_param(string s)
     }
     else if(s[1] == '/' || s[1] == '-' || s[1] == '=')
     {
-        s1 = rstr(s,s.length()-1);
+        s1 = rstr(s,strlen(s)-1);
         //Debugging
         if(s1[1] == 'X')
         {
-            step_mode = value(rstr(s1,s1.length()-1));
+            step_mode = value(rstr(s1,strlen(s)-1));
             found = true;
             if(step_mode == 0) step_mode = 1;
             if(step_mode < 1 || step_mode > 9)
-                prog_error(24,rstr(s1,s1.length()-1));
+                prog_error(24,rstr(s1,strlen(s1)-1));
         }
         //Debugging end
         if(s1[1] == 'D')
         {
-            game_delay = value(rstr(s1,s1.length()-1));
+            game_delay = value(rstr(s1,strlen(s1)-1));
             found = true;
         }
         if(s1[1] == 'T')
         {
-            time_slice = value(rstr(s1,s1.length()-1));
+            time_slice = value(rstr(s1,strlen(s1)-1));
             found = true;
         }
         if(s1[1] == 'L')
         {
-            game_limit = value(rstr(s1,s1.length()-1))*1000;
+            game_limit = value(rstr(s1,strlen(s1)-1))*1000;
             found = true;
         }
         if(s1[1] == 'Q')
@@ -944,7 +954,7 @@ void parse_param(string s)
         }
         if(s1[1] == 'M')
         {
-            matches = value(rstr(s1,s1.length()-1));
+            matches = value(rstr(s1,strlen(s1)-1));
             found = true;
         }
         if(s1[1] == 'S')
@@ -961,8 +971,8 @@ void parse_param(string s)
         {
             report = true;
             found = true;
-            if(s1.length() > 1)
-                report_type = value(rstr(s1,s1.length()-1));
+            if(strlen(s1) > 1)
+                report_type = value(rstr(s1,strlen(s1)-1));
         }
         if(s1[1] == 'C')
         {
@@ -991,14 +1001,14 @@ void parse_param(string s)
         }
         if(s1[1] == '#')
         {
-            maxcode = value(rstr(s1,s1.length()-1))-1;
+            maxcode = value(rstr(s1,strlen(s1)-1))-1;
             found = true;
         }
         if(s1[1] == '!')
         {
             insane_missiles = true;
-            if(s1.length() > 1)
-                insanity = value(rstr(s1,s1.length()-1));
+            if(strlen(s1) > 1)
+                insanity = value(rstr(s1,strlen(s1)-1));
             found = true;
         }
         if(s1[1] == '@')
@@ -1017,7 +1027,7 @@ void parse_param(string s)
             insanity = 15;
     }
     else if(s[1] == ';') found = true;
-    else if(num_robots < max_robots && s != "")
+    else if(num_robots < max_robots && s != NULL)
     {
         num_robots++;
         create_robot(num_robots,s);
