@@ -818,13 +818,14 @@ void robot_error(int n, int i, string ov) //Contains graphics
 void prog_error(int n, char* ss)
 {
     char* s;
+    const char* test;
     graph_mode(false);
     //textcolor(15);
     cout << "Error #" << n << ": ";
     switch(n)
     {
         case 0: strcpy(s, ss); break;
-        case 1: strcpy(s, strcat("Invalid :label - \"", strcat(ss, "\", silly mortal.\n"))); break;
+        case 1: strcpy(s, strcat("Invalid :label - \"", strcat(ss, "\", silly mortal.\n"))); break; // sizeof(s)); s[sizeof(s) - 1] = '\0'; ???
         case 2: strcpy(s, strcat("Undefined identifier - \"", strcat(ss, "\". A typo perhaps?\n"))); break;
         case 3: strcpy(s, strcat("Memory access out of range - \"", strcat(ss, "\""))); break;
         case 4: strcpy(s, "Not enough robots for combat. Maybe we should just drive in circles.\n"); break;
