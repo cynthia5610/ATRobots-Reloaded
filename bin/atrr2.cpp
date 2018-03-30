@@ -205,7 +205,7 @@ void init(int ParamCount, char *ParamStr)
         }
     }
     if(compile_only) write_compile_report(); //ATR2
-    if(num_robots < 1) prog_error(4," "); //ATR2
+    if(num_robots < 2) prog_error(4," "); //ATR2
     
     if(!no_gfx) graph_mode(true); //ATR2
     
@@ -817,42 +817,40 @@ void robot_error(int n, int i, string ov) //Contains graphics
 
 void prog_error(int n, char* ss)
 {
-    char* s;
     const char* test;
     graph_mode(false);
     //textcolor(15);
     cout << "Error #" << n << ": ";
     switch(n)
     {
-        case 0: strcpy(s, ss); break;
-        case 1: strcpy(s, strcat("Invalid :label - \"", strcat(ss, "\", silly mortal.\n"))); break; // sizeof(s)); s[sizeof(s) - 1] = '\0'; ???
-        case 2: strcpy(s, strcat("Undefined identifier - \"", strcat(ss, "\". A typo perhaps?\n"))); break;
-        case 3: strcpy(s, strcat("Memory access out of range - \"", strcat(ss, "\""))); break;
-        case 4: strcpy(s, "Not enough robots for combat. Maybe we should just drive in circles.\n"); break;
-        case 5: strcpy(s, "Robot names and settings must be specified. An empty arena is no fun.\n"); break;
-        case 6: strcpy(s, strcat("Config file not found - \"", strcat(ss, "\""))); break;
-        case 7: strcpy(s, strcat("Cannot access a config file from a config file - \"", strcat(ss, "\""))); break;
-        case 8: strcpy(s, strcat("Robot not found \"", strcat(ss, "\". Perhaps you mistyped it?\n"))); break;
-        case 9: strcpy(s, strcat("Insufficient RAM to load robot: \"", strcat(ss, "\"... This is not good.\n"))); break;
-        case 10: strcpy(s, strcat("Too many robots! We can only handle ", strcat(cstr(max_robots+1),  "! Blah.. limits are limits.\n"))); break;
-        case 11: strcpy(s, strcat("You already have a perfectly good #def for \"", strcat(ss, "\", silly.\n"))); break;
-        case 12: strcpy(s, strcat("Variable name too long! (Max:",strcat(cstr(max_var_len),strcat(") \"",strcat(ss, "\""))))); break;
-        case 13: strcpy(s, strcat("!Label already defined \"", strcat(ss, "\", silly.\n"))); break;
-        case 14: strcpy(s, strcat("Too many variables! (Var Limit: ", strcat(cstr(max_vars), ")\n"))); break;
-        case 15: strcpy(s, strcat("Too many !labels! (!Label Limit: ", strcat(cstr(max_labels), ")\n"))); break;
-        case 16: strcpy(s, strcat("Robot program too long! Boldly we simplify, simplify along...\n", ss)); break;
-        case 17: strcpy(s, strcat("!Label missing error. !Label #", strcat(ss, "."))); break;
-        case 18: strcpy(s, strcat("!Label out of range: ", ss)); break;
-        case 19: strcpy(s, strcat("!Label not found. ", ss)); break;
-        case 20: strcpy(s, strcat("Invalid config option: \"", strcat(ss, "\". Inventing a new device?"))); break;
-        case 21: strcpy(s, strcat("Robot is attempting to cheat; Too many config points (", strcat(ss, ")"))); break;
-        case 22: strcpy(s, strcat("Insufficient data in data statement: \"", strcat(ss, "\""))); break;
-        case 23: strcpy(s, strcat("Too many asterisks: \"", strcat(ss, "\""))); break;
-        case 24: strcpy(s, strcat("Invalid step count: \"", strcat(ss, "\". 1-9 are valid conditions."))); break;
-        case 25: strcpy(s, strcat("\"", strcat(ss, "\""))); break;
-        default: strcpy(s,ss);  break;
+        case 0: ss = ss; break; 
+        case 1: cout <<"Invalid :label - \"" << ss << "\", silly mortal.\n"<< endl; break;; 
+        case 2: cout <<"Undefined identifier - \"" << ss << "\". A typo perhaps?\n"<< endl; break;; 
+        case 3: cout <<"Memory access out of range - \"" << ss << "\""<< endl; break;; 
+        case 4: cout <<"Not enough robots for combat. Maybe we should just drive in circles.\n"<< endl; break;; 
+        case 5: cout <<"Robot names and settings must be specified. An empty arena is no fun.\n"<< endl; break;; 
+        case 6: cout <<"Config file not found - \""<< ss << "\""<< endl; break;; 
+        case 7: cout <<"Cannot access a config file from a config file - \""<< ss <<"\""<< endl; break;; 
+        case 8: cout <<"Robot not found \"" << ss << "\". Perhaps you mistyped it?\n"<< endl; break;; 
+        case 9: cout <<"Insufficient RAM to load robot: \"" << ss << "\"... This is not good.\n"<< endl; break;; 
+        case 10: cout <<"Too many robots! We can only handle " << cstr(max_robots<<1) << "! Blah.. limits are limits.\n"<< endl; break;; 
+        case 11: cout <<"You already have a perfectly good #def for \"" << ss << "\", silly.\n"<< endl; break;; 
+        case 12: cout <<"Variable name too long! (Max:" << cstr(max_var_len) << ") \"" << ss << "\""<< endl; break;; 
+        case 13: cout <<"!Label already defined \"" << ss << "\", silly.\n"<< endl; break;; 
+        case 14: cout <<"Too many variables! (Var Limit: " << cstr(max_vars) << ")\n"<< endl; break;; 
+        case 15: cout <<"Too many !labels! (!Label Limit: " << cstr(max_labels) << ")\n"<< endl; break;; 
+        case 16: cout <<"Robot program too long! Boldly we simplify, simplify along...\n" << ss<< endl; break;; 
+        case 17: cout <<"!Label missing error. !Label #" << ss << "."<< endl; break;; 
+        case 18: cout <<"!Label out of range: " << ss<< endl; break;; 
+        case 19: cout <<"!Label not found. " << ss<< endl; break;; 
+        case 20: cout <<"Invalid config option: \"" << ss << "\". Inventing a new device?"<< endl; break;; 
+        case 21: cout <<"Robot is attempting to cheat; Too many config points (" << ss << ")"<< endl; break;; 
+        case 22: cout <<"Insufficient data in data statement: \"" << ss << "\""<< endl; break;; 
+        case 23: cout <<"Too many asterisks: \"" << ss << "\""<< endl; break;; 
+        case 24: cout <<"Invalid step count: \"" << ss << "\". 1-9 are valid conditions."<< endl; break;; 
+        case 25: cout <<"\"" << ss << "\"" << endl; break;; 
+        default: cout <<ss;  break;
     }
-    cout << s << endl;
     exit(EXIT_FAILURE);
 }
 
