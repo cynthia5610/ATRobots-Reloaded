@@ -96,7 +96,7 @@ string cstrr(double i){
 /* -- cstr(i:longint):string -- */
 string cstr(long int i){
     string s1;
-    s1 = i;
+    s1 = to_string(i);
     return s1;
 }
 
