@@ -4,6 +4,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <algorithm>
+#include <math.h>
 
 using namespace std;
 
@@ -27,5 +28,6 @@ extern char* uCase(char* lString);
 extern char* lcase(char* s);
 extern char* space(unsigned char i);
 extern char* repchar(char c, unsigned char i);
+double distance(double x1, double y1, double x2, double y2);
 
 #endif

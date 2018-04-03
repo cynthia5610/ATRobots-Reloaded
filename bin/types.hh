@@ -87,9 +87,6 @@ typedef struct{
         mines;
 } config_rec;
 
-extern config_rec config;
-extern prog_type code;
-
 /* MINE RECORD */
 typedef struct{
     double x,
@@ -181,6 +178,8 @@ typedef struct{
         /* FILE POINTER */
         //FILE * errorlog;
         ofstream errorlog; //change to file stream //FILE * errorlog
+        config_rec config;
+        prog_type code;
 
 } robot_rec;
 

@@ -3,6 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <algorithm>
+#include <math.h>
 #include "atrrfunc.hh"
 #include "filelib.hh"
 
@@ -25,6 +26,7 @@ char* uCase(char* lString);
 char* lCase(char* s);
 char* space(unsigned char i);
 char* repchar(char c, unsigned char i);
+double distance(double x1, double y1, double x2, double y2);
 
 /* 
 VARIABLES
@@ -172,4 +174,9 @@ char* repchar(char c, unsigned char i){
         }
     }
     return s;
+}
+
+double distance(double x1, double y1, double x2, double y2)
+{
+    return abs(sqrt(pow(y1-y2,2)+pow(x1-x2,2)));
 }

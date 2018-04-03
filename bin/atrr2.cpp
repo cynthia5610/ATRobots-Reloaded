@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <ctime>
 #include <iomanip>
+#include <climits> //FOR INT_MAX
 
 
 #include "types.hh"
@@ -700,12 +701,35 @@ void create_robot(int n, char* filename)
 
 void init_mine(int n, int detectrange, int size)
 {
+    int i, j, k;
+    k = -1;
+    for(i = 0; i < max_mines; i++)
+    {
+        if((robot[n]->mine[i].x < 0) || (robot[n]->mine[i].x > 1000) || (robot[n]->mine[i].y < 0) || (robot[n]->mine[i].x > 1000) || (robot[n]->mine[i].yield <= 0) && (k < 0))
+            k = i;
+    }
+    if(k>=0)
+    {
+        robot[n]->mine[k].x = robot[n]->x; //where is the x from? Robot rec? HELP
+        robot[n]->mine[k].y = robot[n]->y;
+        robot[n]->mine[k].detect = detectrange;
+        robot[n]->mine[k].yield = size;
+        robot[n]->mine[k].detonate = false;
+        //click(); ATRFUNC
+    }
     return;
 }
 
 int count_missiles()
 {
-    return 0;
+    int i, k;
+    k = 0;
+    for(i = 0; i < max_missiles; i++)
+    {
+        if(missile[i].a > 0)
+            k++;
+    }
+    return k;
 }
 
 void init_missiles(double xx, double yy, double xxv, double yyv, int dir, int s, int blast, bool ob)
@@ -776,11 +800,92 @@ void init_missiles(double xx, double yy, double xxv, double yyv, int dir, int s,
 
 void damage(int n, int d, bool physical)
 {
+    int i, k, h, dd;
+    double m; //REAL
+    if(n < 0 || n > num_robots || robot[n]->armor <= 0)
+        return;
+    if(config.shield < 3)
+        robot[n]->shields_up = false;
+    h = 0;
+    if(robot[n]->shields_up && (!physical))
+    {
+        dd = d;
+        if(old_shields && robot[n]->config.shield > 3)
+        {
+            d = 0;
+            h = 0;
+        }
+        else
+        {
+            switch(robot[n]->config.shield)
+            {
+                case 3: d = round(dd*2/3);
+                    if(d <1) d = 1;
+                    h = round(dd*2/3);
+                    break;
+                case 4: h = trunc(dd/2);
+                    d = dd-h;
+                    break;
+                case 5: d = round(dd*1/3);
+                    if(d < 1) d = 1;
+                    h = round(dd*1/3);
+                    if(h < 1) h = 1;
+                    break;
+            }
+        }
+    }
+    if(d < 0) d = 0;
+    if(debug_info)
+    {
+        //LINE 1879
+    }
+    if(d > 0)
+    {
+        d = round(d*robot[n]->damageadj);
+        if(d < 1) d = 1;
+    }
+    robot[n]->armor = robot[n]->armor - d;
+    robot[n]->heat = robot[n]->heat + h;
+    robot[n]->last_damage = 0;
+    if(robot[n]->armor <= 0)
+    {
+        robot[n]->armor = 0;
+        update_armor(n);
+        robot[n]->heat = 500;
+        update_heat(n);
+        robot[n]->armor = 0;
+        kill_count++;
+        robot[n]->deaths++;
+        update_lives(n);
+       /** if(graphix && timing)
+            time_delay(10); **/ //GRAPHICS
+        draw_robot(n);
+        robot[n]->heat = 0;
+        update_heat(n);
+        init_missiles(robot[n]->x,robot[n]->y,0,0,0,n,blast_circle,false);
+        if(robot[n]->overburn) m = 1.3;
+        else m = 1;
+        for(i = 0; i < num_robots; i++)
+        {
+            if(i!=n && robot[i]->armor > 0)
+            {
+                k = round(distance(robot[n]->x,robot[n]->y,robot[i]->x,robot[i]->y)); //distance ATRFUNC
+                if(k < blast_radius)
+                    damage(i,round(abs(blast_radius-k)*m),false); //Check the math func
+            }
+        }
+    }
     return;
 }
 
 int scan(int n)
 {
+    double r, d, acc;
+    int dir, range, i, j, k, l, nn, xx, yy, sign;
+    nn = -1;
+    range = INT_MAX;
+    if(!(n >= 0 && n <= num_robots)) return 0; //HELP. What do i return?
+    //LINE 1921
     return 0;
 }
 
@@ -871,6 +976,80 @@ void check_plen(int plen)
 
 void compile(int n, char* filename)
 {
+  /**  parsetype pp;
+    char* s;
+    char* s1;
+    char* s2;
+    char* s3;
+    char* orig_s;
+    char* msg;
+    int i, j, k, l, linecount, mask, locktype;
+    char ss [max_op][16]; //HELP
+    char c, lc;
+    
+    lock_code = '';
+    lock_pos = 0;
+    locktype = 0;
+    lock_dat = 0;
+    
+    if(!EXIST(filename)) prog_error(8,filename);
+    //textcolor(robot_color(n));
+    cout << "Compiling robot #" << n+1 << ": " << filename << endl;
+    is_locked = false;
+    //textcolor(robot_color(n));
+    numvars = 0;
+    numlabels = 0;
+    for(k = 0; k < max_code; k++)
+    {
+        for(i = 0; i < max_op; i++)
+        {
+            code[k].op[i] = 0;
+        }
+        robot[k]->plen = 0;
+        //assign(f,filename);
+        //reset(f);
+        s = '';
+        linecount = 0;
+        
+        //First pass, compile
+        while(!EOF(f) && s!= '#END') //&& plen <= maxcode
+        {
+            //readln(f,s);
+            linecount++;
+            if(locktype < 3) lock_pos = 0;
+            if(lock_code != '')
+            {
+                for(i = 0; i < strlen(s); i++)
+                {
+                    lock_pos++;
+                    if(lock_pos > strlen(lock_code)) lock_pos = 1;
+                    switch(locktype)
+                    {
+                        case 3: s[i] = char((ord(s[i])-1) xor (ord(lock_code[lock_pos]) xor lock_dat)); break;
+                        case 2: s[i] = char(ord(s[i]) xor (ord(lock_code[lock_pos]) xor 1)); break;
+                        default: s[i] = char(ord(s[i]) xor ord(lock_code[lock_pos])); break;
+                    }
+                    lock_dat = ord(s[i]) & 15;
+                }
+                strcpy(s, btrim(s)); //HELP?
+                strcpy(orig_s, s);
+                for(i = 0; i < srtlen(s); i++)
+                {
+                    if(s[i] == #0..#32 || s[i] == ',' || s[i] == #128..#255)
+                        s[i] = ' ';
+                }
+                if(show_source && ((lock_code = '') || debugging_compiler))
+                    cout << zero_pad(linecount,3) << ":" << zero_pad(plen,3) << " " << s << endl;
+                if(debugging_compiler)
+                {
+                    if(readkey = #27) exit(EXIT_FAILURE); //HELP?
+                    k = 0;
+                    //line 938
+                }
+            }
+        }
+    }**/
+    
     return;
 }
 
