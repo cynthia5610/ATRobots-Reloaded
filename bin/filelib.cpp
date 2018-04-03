@@ -56,7 +56,7 @@ char* lstr(char *s1, int l)
     {
         s1[strlen(s1) - l] = '\0';
         return s1;
-    } 
+    }
 }
 
 char* rstr(char *s1, int l)
@@ -69,7 +69,7 @@ char* rstr(char *s1, int l)
     {
         s1[strlen(s1) - l] = '\0';
         return s1;
-    } 
+    }
 }
 
 bool EXIST(char* thisfile)
@@ -91,7 +91,7 @@ bool EXIST(char* thisfile)
 {
     file afile;
     bool check;
-    
+
     if (!EXIST(thisfile)){
 
     }
@@ -149,15 +149,10 @@ char* exten (char* name)
 
 char* base_name(char* name)
 {
-    int i, j, k, l;
-    char *s1, *s2, *s3;
-    k = 0;
-    while(k <= strlen(name) && name[k] != '.'){
-        //s1 = s1 + name[k];
-        strncat(s1, name, k);
-        k++;
-    }
-    return s1;
+    char * s1;
+    s1 = strrchr(name, '.');
+    name[strlen(name)-strlen(s1)] = '\0';
+    return name;
 }
 
 /**string attribs(int b){
@@ -181,7 +176,7 @@ char* path(char* fn){
     else
     {
         return NULL;
-    }  
+    }
 }
 
 /*
@@ -198,7 +193,7 @@ string no_path(string fn){
     }
     else{
         return fn;
-    }  
+    }
 }
 
 long file_length(string fn){

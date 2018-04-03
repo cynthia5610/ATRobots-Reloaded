@@ -41,10 +41,6 @@ void compile(int n, char* filename);
 void robot_config(int n);
 void create_robot(int n, char* filename);
 void parse_param(char * s);
-
-config_rec config;
-prog_type code;
-
 void init_missiles(double xx, double yy, double xxv, double yyv, int dir, int s, int blast, bool ob);
 void shutdown();
 
@@ -67,9 +63,6 @@ int main(int argc, char *argv[]){
 	//turning off graphics
 	graphix = false;
 	n = 0;
-
-    //inicialize robots
-	init_robot(n);
 	
     //if matches > 0, run fights
 	if(matches > 0){
@@ -100,8 +93,8 @@ int main(int argc, char *argv[]){
 		cout << "Robot           		Wins   Matches   Kill   Deaths   Shots" << endl;
 		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 
-		for(i = 0; i < num_robots; i++){
-			cout << argv[i + 1] << 
+		for(i = 0; i <= num_robots; i++){
+			cout << robot[i]->fn << 
 			setw(24) << robot[i]->wins << 
 			setw(8) << robot[i]->trials << 
 			setw(8) << robot[i]->kills <<
@@ -139,7 +132,7 @@ void init(int ParamCount, char **ParamStr)
     no_gfx = false;
     sound_on = true;
     timing = true;
-    matches = 1;
+    matches = 0;
     played = 0;
     old_shields = false;
     quit = false;
@@ -198,6 +191,9 @@ void init(int ParamCount, char **ParamStr)
         }
     }
     else prog_error(5, "\0"); //ATR2
+    if(matches == 0){
+        prog_error(25, "\0");
+    }
     temp_mode = step_mode;
     if(logging_errors)
     {
@@ -207,7 +203,7 @@ void init(int ParamCount, char **ParamStr)
         }
     }
     if(compile_only) write_compile_report(); //ATR2
-    if(num_robots < 2) prog_error(4, "\0"); //ATR2
+    if(num_robots < 1) prog_error(4, "\0"); //ATR2
     
     if(!no_gfx) graph_mode(true); //ATR2
     
@@ -636,13 +632,13 @@ void init_robot(int n)
 	robot[n]->speedadj = 1;
 	robot[n]->mines = 0;
 
-	config.scanner = 5;
-	config.weapon = 2;
-	config.armor = 2;
-	config.engine = 2;
-	config.heatsinks = 1;
-	config.shield = 0;
-	config.mines = 0;
+	robot[n]->config.scanner = 5;
+	robot[n]->config.weapon = 2;
+	robot[n]->config.armor = 2;
+	robot[n]->config.engine = 2;
+	robot[n]->config.heatsinks = 1;
+	robot[n]->config.shield = 0;
+	robot[n]->config.mines = 0;
 
 	for(i = 0; i < max_ram; i++){
 		robot[n]->ram[i] = 0;
@@ -652,7 +648,7 @@ void init_robot(int n)
 
 	for(i = 0; i < max_code; i++){
 		for(k = 0; k < max_op; k++){
-			code[i].op[k] = 0;
+			robot[n]->code[i].op[k] = 0;
 		}
 
 		reset_hardware(n);
@@ -691,7 +687,7 @@ void create_robot(int n, char* filename)
 	compile(n, filename);
 	robot_config(n);
 
-	k = config.scanner + config.armor + config.weapon + config.engine + config.heatsinks + config.shield + config.mines;
+	k = robot[n]->config.scanner + robot[n]->config.armor + robot[n]->config.weapon + robot[n]->config.engine + robot[n]->config.heatsinks + robot[n]->config.shield + robot[n]->config.mines;
 	if(k > max_config_points){
 		cout << "ERROR: To many config points" << endl;
 	}
@@ -774,7 +770,7 @@ void init_missiles(double xx, double yy, double xxv, double yyv, int dir, int s,
                 missile[k].mspd = 100 + (50 * insanity) * missile[k].mult;
             if(s >= 0 && s <= num_robots)
             {
-                //robot[s].heat , round (20 * m) liine 1831
+                robot[s]->heat+=round (20 * m);
                 robot[s]->shots_fired++;
                 robot[s]->match_shots++;
             }
@@ -804,7 +800,7 @@ void damage(int n, int d, bool physical)
     double m; //REAL
     if(n < 0 || n > num_robots || robot[n]->armor <= 0)
         return;
-    if(config.shield < 3)
+    if(robot[n]->config.shield < 3)
         robot[n]->shields_up = false;
     h = 0;
     if(robot[n]->shields_up && (!physical))
@@ -869,7 +865,7 @@ void damage(int n, int d, bool physical)
         {
             if(i!=n && robot[i]->armor > 0)
             {
-                k = round(distance(robot[n]->x,robot[n]->y,robot[i]->x,robot[i]->y)); //distance ATRFUNC
+                k = round(getDistance(robot[n]->x,robot[n]->y,robot[i]->x,robot[i]->y)); //distance ATRFUNC
                 if(k < blast_radius)
                     damage(i,round(abs(blast_radius-k)*m),false); //Check the math func
             }
@@ -929,31 +925,32 @@ void prog_error(int n, const char* ss)
     switch(n)
     {
         case 0: ss = ss; break; 
-        case 1: cout <<"Invalid :label - \"" << ss << "\", silly mortal.\n"<< endl; break;; 
-        case 2: cout <<"Undefined identifier - \"" << ss << "\". A typo perhaps?\n"<< endl; break;; 
-        case 3: cout <<"Memory access out of range - \"" << ss << "\""<< endl; break;; 
-        case 4: cout <<"Not enough robots for combat. Maybe we should just drive in circles.\n"<< endl; break;; 
-        case 5: cout <<"Robot names and settings must be specified. An empty arena is no fun.\n"<< endl; break;; 
-        case 6: cout <<"Config file not found - \""<< ss << "\""<< endl; break;; 
-        case 7: cout <<"Cannot access a config file from a config file - \""<< ss <<"\""<< endl; break;; 
-        case 8: cout <<"Robot not found \"" << ss << "\". Perhaps you mistyped it?\n"<< endl; break;; 
-        case 9: cout <<"Insufficient RAM to load robot: \"" << ss << "\"... This is not good.\n"<< endl; break;; 
-        case 10: cout <<"Too many robots! We can only handle " << cstr(max_robots<<1) << "! Blah.. limits are limits.\n"<< endl; break;; 
-        case 11: cout <<"You already have a perfectly good #def for \"" << ss << "\", silly.\n"<< endl; break;; 
-        case 12: cout <<"Variable name too long! (Max:" << cstr(max_var_len) << ") \"" << ss << "\""<< endl; break;; 
-        case 13: cout <<"!Label already defined \"" << ss << "\", silly.\n"<< endl; break;; 
-        case 14: cout <<"Too many variables! (Var Limit: " << cstr(max_vars) << ")\n"<< endl; break;; 
-        case 15: cout <<"Too many !labels! (!Label Limit: " << cstr(max_labels) << ")\n"<< endl; break;; 
-        case 16: cout <<"Robot program too long! Boldly we simplify, simplify along...\n" << ss<< endl; break;; 
-        case 17: cout <<"!Label missing error. !Label #" << ss << "."<< endl; break;; 
-        case 18: cout <<"!Label out of range: " << ss<< endl; break;; 
-        case 19: cout <<"!Label not found. " << ss<< endl; break;; 
-        case 20: cout <<"Invalid config option: \"" << ss << "\". Inventing a new device?"<< endl; break;; 
-        case 21: cout <<"Robot is attempting to cheat; Too many config points (" << ss << ")"<< endl; break;; 
-        case 22: cout <<"Insufficient data in data statement: \"" << ss << "\""<< endl; break;; 
-        case 23: cout <<"Too many asterisks: \"" << ss << "\""<< endl; break;; 
-        case 24: cout <<"Invalid step count: \"" << ss << "\". 1-9 are valid conditions."<< endl; break;; 
-        case 25: cout <<"\"" << ss << "\"" << endl; break;; 
+        case 1: cout <<"Invalid :label - \"" << ss << "\", silly mortal.\n"<< endl; break;
+        case 2: cout <<"Undefined identifier - \"" << ss << "\". A typo perhaps?\n"<< endl; break;
+        case 3: cout <<"Memory access out of range - \"" << ss << "\""<< endl; break;
+        case 4: cout <<"Not enough robots for combat. Maybe we should just drive in circles.\n"<< endl; break;
+        case 5: cout <<"Robot names and settings must be specified. An empty arena is no fun.\n"<< endl; break;
+        case 6: cout <<"Config file not found - \""<< ss << "\""<< endl; break;
+        case 7: cout <<"Cannot access a config file from a config file - \""<< ss <<"\""<< endl; break;
+        case 8: cout <<"Robot not found \"" << ss << "\". Perhaps you mistyped it?\n"<< endl; break;
+        case 9: cout <<"Insufficient RAM to load robot: \"" << ss << "\"... This is not good.\n"<< endl; break;
+        case 10: cout <<"Too many robots! We can only handle " << cstr(max_robots<<1) << "! Blah.. limits are limits.\n"<< endl; break; 
+        case 11: cout <<"You already have a perfectly good #def for \"" << ss << "\", silly.\n"<< endl; break;
+        case 12: cout <<"Variable name too long! (Max:" << cstr(max_var_len) << ") \"" << ss << "\""<< endl; break;
+        case 13: cout <<"!Label already defined \"" << ss << "\", silly.\n"<< endl; break;
+        case 14: cout <<"Too many variables! (Var Limit: " << cstr(max_vars) << ")\n"<< endl; break;
+        case 15: cout <<"Too many !labels! (!Label Limit: " << cstr(max_labels) << ")\n"<< endl; break;
+        case 16: cout <<"Robot program too long! Boldly we simplify, simplify along...\n" << ss<< endl; break;
+        case 17: cout <<"!Label missing error. !Label #" << ss << "."<< endl; break;
+        case 18: cout <<"!Label out of range: " << ss<< endl; break;
+        case 19: cout <<"!Label not found. " << ss<< endl; break;
+        case 20: cout <<"Invalid config option: \"" << ss << "\". Inventing a new device?"<< endl; break;
+        case 21: cout <<"Robot is attempting to cheat; Too many config points (" << ss << ")"<< endl; break;
+        case 22: cout <<"Insufficient data in data statement: \"" << ss << "\""<< endl; break;
+        case 23: cout <<"Too many asterisks: \"" << ss << "\""<< endl; break;
+        case 24: cout <<"Invalid step count: \"" << ss << "\". 1-9 are valid conditions."<< endl; break;
+        case 25: cout <<"Not enough matches set! Usage: /M(number of matches)" << endl; break;
+        case 26: cout <<"\"" << ss << "\"" << endl; break;
         default: cout <<ss;  break;
     }
     exit(EXIT_FAILURE);
@@ -1076,13 +1073,12 @@ void parse_param(char * s)
     bool found;
     
     found = false;
-    //s = uCase(s);
-    cout << s << endl;
+    s = uCase(s);
 
     if(s == NULL){
         return;
     }
-    if(s[1] == '#')
+    if(s[0] == '#')
     {
         fn = rstr(s,strlen(s)-1);
         if(fn == base_name(fn)) fn = strcat(fn, config_ext);
@@ -1133,7 +1129,7 @@ void parse_param(char * s)
         }
         if(s[1] == 'M')
         {
-            matches = s[2];//value(rstr(s,strlen(s)-1));
+            matches = value(&s[2]);
             found = true;
         }
         if(s[1] == 'S')
@@ -1205,7 +1201,7 @@ void parse_param(char * s)
         if(insanity > 15)
             insanity = 15;
     }
-    else if(s[1] == ';'){
+    else if(s[0] == ';'){
         found = true;
     }
     else if(num_robots < max_robots && s != NULL)

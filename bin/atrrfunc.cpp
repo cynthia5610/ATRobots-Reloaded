@@ -26,7 +26,7 @@ char* uCase(char* lString);
 char* lCase(char* s);
 char* space(unsigned char i);
 char* repchar(char c, unsigned char i);
-double distance(double x1, double y1, double x2, double y2);
+double getDistance(double x1, double y1, double x2, double y2);
 
 /* 
 VARIABLES
@@ -131,22 +131,18 @@ char* addfront(char* b, int l){
 /* -- ucase(s:string):string -- */
 char* uCase(char* lString){
 
-    while(*lString != '\0'){
-        *lString = toupper((unsigned char)*lString);
-        ++lString;
-    }
-
+    for(int i=0;i<strlen(lString);i++) {
+            lString[i] = toupper(lString[i]);
+        }
     return lString;
 }
 
 /* -- lcase(s:string):string -- */
 char* lCase(char* uString){
 
-    while(*uString != '\0'){
-        *uString = toupper((unsigned char)*uString);
-        ++uString;
-    }
-
+    for(int i=0;i<strlen(uString);i++) {
+            uString[i] = tolower(uString[i]);
+        }
     return uString;
 }
 
@@ -176,7 +172,7 @@ char* repchar(char c, unsigned char i){
     return s;
 }
 
-double distance(double x1, double y1, double x2, double y2)
+double getDistance(double x1, double y1, double x2, double y2)
 {
     return abs(sqrt(pow(y1-y2,2)+pow(x1-x2,2)));
 }
