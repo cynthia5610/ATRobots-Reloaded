@@ -17,7 +17,7 @@ FUNCTION HEADERS
 */
 
 void bout();
-void init(int ParamCount, char *Paramstr);
+void init(int ParamCount, char **Paramstr);
 char* operand (int n, int m);
 char* mnemonic (int n, int m);
 void process_keypress(char c);
@@ -34,7 +34,7 @@ void init_debug_window();
 bool gameover();
 void delete_compile_report();
 void write_compile_report();
-void prog_error(int n, char* ss);
+void prog_error(int n, const char* ss);
 void init_robot(int n);
 void compile(int n, char* filename);
 void robot_config(int n);
@@ -55,10 +55,10 @@ int main(int argc, char *argv[]){
 	robot += 2;
 
     //send the robots & flags
-	init(argc, *argv);
+	init(argc, argv);
 
     //set number of matches -- currently hard coded
-	matches = 2;
+	//matches = 2;
 	
 	//loop variables
 	int i, j, k, l, n, w;
@@ -120,7 +120,7 @@ int main(int argc, char *argv[]){
     shutdown();
 }
 
-void init(int ParamCount, char *ParamStr)
+void init(int ParamCount, char **ParamStr)
 {
     int i;
     if(debugging_compiler || compile_by_line || show_code)
@@ -186,16 +186,17 @@ void init(int ParamCount, char *ParamStr)
     cout << endl;
     
     delete_compile_report(); //ATR2
+
     if(ParamCount > 0)
     {
         ParamStr++;
         for(i = 0; i < ParamCount; i++)
         {
-            parse_param(ParamStr); //ATR2(ATRFUNC(ATRFUNC(SYSTEM::namespace))) *4
-            ParamStr++;
+            if(ParamStr[i] == NULL) break;
+            parse_param(ParamStr[i]); //ATR2(ATRFUNC(ATRFUNC(SYSTEM::namespace))) *4
         }
     }
-    else prog_error(5," "); //ATR2
+    else prog_error(5, "\0"); //ATR2
     temp_mode = step_mode;
     if(logging_errors)
     {
@@ -205,7 +206,7 @@ void init(int ParamCount, char *ParamStr)
         }
     }
     if(compile_only) write_compile_report(); //ATR2
-    if(num_robots < 2) prog_error(4," "); //ATR2
+    if(num_robots < 2) prog_error(4, "\0"); //ATR2
     
     if(!no_gfx) graph_mode(true); //ATR2
     
@@ -815,9 +816,8 @@ void robot_error(int n, int i, string ov) //Contains graphics
     return;
 }
 
-void prog_error(int n, char* ss)
+void prog_error(int n, const char* ss)
 {
-    const char* test;
     graph_mode(false);
     //textcolor(15);
     cout << "Error #" << n << ": ";
@@ -898,8 +898,11 @@ void parse_param(char * s)
     
     found = false;
     //s = uCase(s);
+    cout << s << endl;
 
-    if(s == NULL) return;
+    if(s == NULL){
+        return;
+    }
     if(s[1] == '#')
     {
         fn = rstr(s,strlen(s)-1);
@@ -916,104 +919,104 @@ void parse_param(char * s)
         f.close();
         found = true;
     }
-    else if(s[1] == '/' || s[1] == '-' || s[1] == '=')
+    else if(s[0] == '/' || s[0] == '-' || s[0] == '=')
     {
-        s1 = rstr(s,strlen(s)-1);
+        //s1 = rstr(s,strlen(s)-1);
         //Debugging
-        if(s1[1] == 'X')
+        if(s[1] == 'X')
         {
-            step_mode = value(rstr(s1,strlen(s)-1));
+            step_mode = value(rstr(s,strlen(s)-1));
             found = true;
             if(step_mode == 0) step_mode = 1;
             if(step_mode < 1 || step_mode > 9)
-                prog_error(24,rstr(s1,strlen(s1)-1));
+                prog_error(24,rstr(s,strlen(s)-1));
         }
         //Debugging end
-        if(s1[1] == 'D')
+        if(s[1] == 'D')
         {
-            game_delay = value(rstr(s1,strlen(s1)-1));
+            game_delay = value(rstr(s,strlen(s)-1));
             found = true;
         }
-        if(s1[1] == 'T')
+        if(s[1] == 'T')
         {
-            time_slice = value(rstr(s1,strlen(s1)-1));
+            time_slice = value(rstr(s,strlen(s)-1));
             found = true;
         }
-        if(s1[1] == 'L')
+        if(s[1] == 'L')
         {
-            game_limit = value(rstr(s1,strlen(s1)-1))*1000;
+            game_limit = value(rstr(s,strlen(s)-1))*1000;
             found = true;
         }
-        if(s1[1] == 'Q')
+        if(s[1] == 'Q')
         {
             sound_on = false;
             found = true;
         }
-        if(s1[1] == 'M')
+        if(s[1] == 'M')
         {
-            matches = value(rstr(s1,strlen(s1)-1));
+            matches = s[2];//value(rstr(s,strlen(s)-1));
             found = true;
         }
-        if(s1[1] == 'S')
+        if(s[1] == 'S')
         {
             show_source = false;
             found = true;
         }
-        if(s1[1] == 'G')
+        if(s[1] == 'G')
         {
             no_gfx = true;
             found = true;
         }
-        if(s1[1] == 'R')
+        if(s[1] == 'R')
         {
             report = true;
             found = true;
-            if(strlen(s1) > 1)
-                report_type = value(rstr(s1,strlen(s1)-1));
+            if(strlen(s) > 1)
+                report_type = value(rstr(s,strlen(s)-1));
         }
-        if(s1[1] == 'C')
+        if(s[1] == 'C')
         {
             compile_only = true;
             found = true;
         }
-        if(s1[1] == '^')
+        if(s[1] == '^')
         {
             show_cnotice = false;
             found = true;
         }
-        if(s1[1] == 'A')
+        if(s[1] == 'A')
         {
             show_arcs = true;
             found = true;
         }
-        if(s1[1] == 'W')
+        if(s[1] == 'W')
         {
             windoze = false;
             found = true;
         }
-        if(s1[1] == '$')
+        if(s[1] == '$')
         {
             debug_info = true;
             found = true;
         }
-        if(s1[1] == '#')
+        if(s[1] == '#')
         {
-            maxcode = value(rstr(s1,strlen(s1)-1))-1;
+            maxcode = value(rstr(s,strlen(s)-1))-1;
             found = true;
         }
-        if(s1[1] == '!')
+        if(s[1] == '!')
         {
             insane_missiles = true;
-            if(strlen(s1) > 1)
-                insanity = value(rstr(s1,strlen(s1)-1));
+            if(strlen(s) > 1)
+                insanity = value(rstr(s,strlen(s)-1));
             found = true;
         }
-        if(s1[1] == '@')
+        if(s[1] == '@')
         {
             old_shields = true;
             found = true;
         }
-        if(s1[1] == 'E')
+        if(s[1] == 'E')
         {
             logging_errors = true;
             found = true;
@@ -1023,7 +1026,9 @@ void parse_param(char * s)
         if(insanity > 15)
             insanity = 15;
     }
-    else if(s[1] == ';') found = true;
+    else if(s[1] == ';'){
+        found = true;
+    }
     else if(num_robots < max_robots && s != NULL)
     {
         num_robots++;
