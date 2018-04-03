@@ -89,7 +89,7 @@ long value(string i){
 /* -- cstrr(i:real):string; -- */
 string cstrr(double i){
     string s1;
-    s1 = i;
+    s1 = to_string(i);
     return s1;
 }
 
