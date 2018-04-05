@@ -100,9 +100,10 @@ bool EXIST(char* thisfile)
 
 char* name_form(char* name){
     int i, j, k, l;
-    char *s1, *s2, *s3;
+    char *s1; 
+    char *s2;
     k = 0;
-    if (name[strlen(name)] == '.' || name[strlen(name)] == '..')
+    if (name[strlen(name)] == '.' /* || name[strlen(name)] == '..'*/)
     {
         return addrear(name,12);
     }

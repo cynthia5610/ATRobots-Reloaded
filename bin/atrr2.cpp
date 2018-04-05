@@ -104,7 +104,7 @@ int main(int argc, char *argv[]){
 		}
 		cout << endl;
 
-		if(k == 1){
+		if(k > 1){ //this might have to be (k == 1);
 			cout << "Robot #" << n+1 << " " << robot[n]->fn << " wins the bout! (Score: " << w << "/" << matches << ")" << endl;
 		}
 		else{
@@ -424,15 +424,17 @@ char* operand (int n, int m)
     s = cstr(n);
     switch(m & 7)
     {
-        case 1: strcpy(s, strcat("@", s)); break;
-        case 2: strcpy(s, strcat(":", s)); break;
-        case 3: strcpy(s, strcat("$", s)); break;
-        case 4: strcpy(s, strcat("!", s)); break;
+        case 1: snprintf(s, strlen(s), "@");    //strcpy(s, strcat("@", s)); break;
+        case 2: snprintf(s, strlen(s), ":");    //strcpy(s, strcat(":", s)); break;
+        case 3: snprintf(s, strlen(s), "$");    //strcpy(s, strcat("$", s)); break;
+        case 4: snprintf(s, strlen(s), "!");    //strcpy(s, strcat("!", s)); break;
         default: s = cstr(n); break;
     }
     if((m & 8) > 0)
     {
-        strcpy(s,strcat("[",strcat(s,"]"))); //s = "[" + s + "]";
+        snprintf(s, strlen(s), "[");    //s = "[" + s + "]";
+        //snprintf(s, strlen(s), (const char *)s);
+        snprintf(s, strlen(s), "]");  
     }
     return s;
 }
@@ -701,7 +703,7 @@ void init_mine(int n, int detectrange, int size)
     k = -1;
     for(i = 0; i < max_mines; i++)
     {
-        if((robot[n]->mine[i].x < 0) || (robot[n]->mine[i].x > 1000) || (robot[n]->mine[i].y < 0) || (robot[n]->mine[i].x > 1000) || (robot[n]->mine[i].yield <= 0) && (k < 0))
+        if((robot[n]->mine[i].x < 0) || (robot[n]->mine[i].x > 1000) || (robot[n]->mine[i].y < 0) || (robot[n]->mine[i].x > 1000) || ((robot[n]->mine[i].yield <= 0) && (k < 0)))
             k = i;
     }
     if(k>=0)
@@ -1107,91 +1109,91 @@ void parse_param(char * s)
                 prog_error(24,rstr(s,strlen(s)-1));
         }
         //Debugging end
-        if(s[1] == 'D')
+        else if(s[1] == 'D')
         {
             game_delay = value(rstr(s,strlen(s)-1));
             found = true;
         }
-        if(s[1] == 'T')
+        else if(s[1] == 'T')
         {
             time_slice = value(rstr(s,strlen(s)-1));
             found = true;
         }
-        if(s[1] == 'L')
+        else if(s[1] == 'L')
         {
             game_limit = value(rstr(s,strlen(s)-1))*1000;
             found = true;
         }
-        if(s[1] == 'Q')
+        else if(s[1] == 'Q')
         {
             sound_on = false;
             found = true;
         }
-        if(s[1] == 'M')
+        else if(s[1] == 'M')
         {
             matches = value(&s[2]);
             found = true;
         }
-        if(s[1] == 'S')
+        else if(s[1] == 'S')
         {
             show_source = false;
             found = true;
         }
-        if(s[1] == 'G')
+        else if(s[1] == 'G')
         {
             no_gfx = true;
             found = true;
         }
-        if(s[1] == 'R')
+        else if(s[1] == 'R')
         {
             report = true;
             found = true;
             if(strlen(s) > 1)
                 report_type = value(rstr(s,strlen(s)-1));
         }
-        if(s[1] == 'C')
+        else if(s[1] == 'C')
         {
             compile_only = true;
             found = true;
         }
-        if(s[1] == '^')
+        else if(s[1] == '^')
         {
             show_cnotice = false;
             found = true;
         }
-        if(s[1] == 'A')
+        else if(s[1] == 'A')
         {
             show_arcs = true;
             found = true;
         }
-        if(s[1] == 'W')
+        else if(s[1] == 'W')
         {
             windoze = false;
             found = true;
         }
-        if(s[1] == '$')
+        else if(s[1] == '$')
         {
             debug_info = true;
             found = true;
         }
-        if(s[1] == '#')
+        else if(s[1] == '#')
         {
             maxcode = value(rstr(s,strlen(s)-1))-1;
             found = true;
         }
-        if(s[1] == '!')
+        else if(s[1] == '!')
         {
             insane_missiles = true;
             if(strlen(s) > 1)
                 insanity = value(rstr(s,strlen(s)-1));
             found = true;
         }
-        if(s[1] == '@')
+        else if(s[1] == '@')
         {
             old_shields = true;
             found = true;
         }
-        if(s[1] == 'E')
+        else if(s[1] == 'E')
         {
             logging_errors = true;
             found = true;
@@ -1411,7 +1413,13 @@ bool gameover()
 char* victor_string(int k, int n)
 {
     char* s;
-    if(k == 1) strcpy(s, strcat("Robot #", strcat(cstr(n+1), strcat(" (", strcat(robot[n]->fn, ") wins!")))));
+    if(k == 1){
+      snprintf(s, strlen(s), "Robot # ");
+      strcpy(s, cstr(n+1));
+      snprintf(s, strlen(s), " (");
+      strcpy(s, robot[n]->fn);
+      snprintf(s, strlen(s), ") Wins!!!");  
+    } 
     if(k == 0) strcpy(s, "Simultaneous destruction, match is a tie.");
     if(k > 1) strcpy(s, "No clear victor, match is a tie.");
     return s;
@@ -1450,7 +1458,7 @@ void show_statistics()
             else
                 j = 0;
             cout << addfront(cstr(i+1),2) << " - " << addrear(robot[i]->fn,15) << cstr(j) << addfront(cstr(robot[i]->wins),8)
-            << addfront(cstr(robot[i]->trials),8) << addfront(cstr(robot[i]->armor)+'%',9) << addfront(cstr(robot[i]->kills),7)
+            << addfront(cstr(robot[i]->trials),8) << addfront(cstr(robot[i]->armor) ,9) << '%' << addfront(cstr(robot[i]->kills),7)
             << addfront(cstr(robot[i]->deaths),8) << addfront(cstr(robot[i]->match_shots),9) << endl;
         }
         //textcolor(15); //white

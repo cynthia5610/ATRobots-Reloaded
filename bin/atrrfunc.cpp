@@ -105,7 +105,7 @@ char* zero_pad(long n, long l){
     char* s;
     s = cstr(n);
     while(strlen(s) < l){
-        s = '0' + s;
+        snprintf(s, strlen(s), "0");    //s = '0' + s;
     }
     return s;
 }
@@ -115,7 +115,7 @@ char* zero_pads(char* s, long l){
     char* s1;
     s1 = s;
     while(strlen(s1) < l){
-        s1 = '0' + s1;
+       snprintf(s1, strlen(s1), "0"); //s1 = '0' + s1;
     }
     return s1;
 }
@@ -123,7 +123,7 @@ char* zero_pads(char* s, long l){
 /* -- addfront(b:string; l:integer):string -- */
 char* addfront(char* b, int l){
     while(strlen(b) < l){
-        b = ' ' + b;
+        snprintf(b, strlen(b), " "); //b = ' ' + b;
     }
     return b;
 }
@@ -153,13 +153,13 @@ char* space(unsigned char i){
 
     if(i > 0){
         for(k = 0; k < i; k++){
-            s = s + ' ';
+            snprintf(s, strlen(s), " "); //s = s + ' ';
         }
     }
     return s;
 }
 
-/* -- repchar(c:char; i:byte):string -- */
+/* -- repchar(c:char; i:byte):string --
 char* repchar(char c, unsigned char i){
     char* s;
     int k;
@@ -171,6 +171,7 @@ char* repchar(char c, unsigned char i){
     }
     return s;
 }
+*/
 
 double getDistance(double x1, double y1, double x2, double y2)
 {
