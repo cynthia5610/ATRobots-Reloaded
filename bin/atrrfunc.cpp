@@ -27,6 +27,8 @@ char* lCase(char* s);
 char* space(unsigned char i);
 char* repchar(char c, unsigned char i);
 double getDistance(double x1, double y1, double x2, double y2);
+int robot_color(int n);
+void textcolor(int num);
 
 /* 
 VARIABLES
@@ -176,4 +178,57 @@ char* repchar(char c, unsigned char i){
 double getDistance(double x1, double y1, double x2, double y2)
 {
     return abs(sqrt(pow(y1-y2,2)+pow(x1-x2,2)));
+}
+
+int robot_color(int n)
+{
+    int k;
+    k = 7;
+    switch(n % 14)
+    {
+        case 0: k = 10; break;
+        case 1: k = 12; break;
+        case 2: k = 9; break;
+        case 3: k = 11; break;
+        case 4: k = 13; break;
+        case 5: k = 14; break;
+        case 6: k = 7; break;
+        case 7: k = 6; break;
+        case 8: k = 2; break;
+        case 9: k = 4; break;
+        case 10: k = 1; break;
+        case 11: k = 3; break;
+        case 12: k = 5; break;
+        case 13: k = 15; break;
+        default: k = 15; break;
+    }
+    return k;
+}
+
+void textcolor(int num)
+{
+    string s = "\033[";
+    switch(num)
+    {
+        case 0: s = s + "30"; break; //black
+        case 1: s = s + "31"; break; //red
+        case 2: s = s + "32"; break; //green
+        case 3: s = s + "33"; break; //yellow
+        case 4: s = s + "34"; break; //blue
+        case 5: s = s + "35"; break; //magenta
+        case 6: s = s + "36"; break; //cyan
+        case 7: s = s + "37"; break; //white
+        case 8: s = s + "30;1"; break; //bright black
+        case 9: s = s + "31;1"; break; //bright red
+        case 10: s = s + "32;1"; break; //bright green
+        case 11: s = s + "33;1"; break; //bright yellow
+        case 12: s = s + "34;1"; break; //bright blue
+        case 13: s = s + "35;1"; break; //bright magenta
+        case 14: s = s + "36;1"; break; //bright cyan
+        case 15: s = s + "37;1"; break; //bright white
+        case 16: s = s + "0"; break; //reset
+    }
+    s = s + "m";
+    cout << s;
+    return;
 }
