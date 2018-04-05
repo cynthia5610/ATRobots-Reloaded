@@ -975,79 +975,439 @@ void check_plen(int plen)
 
 void compile(int n, char* filename)
 {
-  /**  parsetype pp;
-    char* s;
-    char* s1;
-    char* s2;
-    char* s3;
-    char* orig_s;
-    char* msg;
+  //Greg is working on this right now
+void compile(int n, string filename)
+{
+    /*
+    string s, s1, s2, s3, orig_s, msg;
     int i, j, k, l, linecount, mask, locktype;
-    char ss [max_op][16]; //HELP
-    char c, lc;
+    char c,lc;
+    char ss [max_op][16];
+    parsetype pp;
     
-    lock_code = '';
+    //code starts
+    lock_code ='';
     lock_pos = 0;
     locktype = 0;
     lock_dat = 0;
     
-    if(!EXIST(filename)) prog_error(8,filename);
-    //textcolor(robot_color(n));
-    cout << "Compiling robot #" << n+1 << ": " << filename << endl;
-    is_locked = false;
-    //textcolor(robot_color(n));
+    
+    if(filename != file)  
+    {
+        prog_error(8,filename);
+    }
+    textcolor(robot_color(n));
+    cout >> ("Compiling robot #", n + 1, ": ",filename);
+    //robot[n];                                                         //check this later
+    is_locked = false; 
+    textcolor(robot_color(n));                                          //check this later
     numvars = 0;
     numlabels = 0;
     for(k = 0; k < max_code; k++)
     {
         for(i = 0; i < max_op; i++)
         {
-            robot[n]->code[k].op[i] = 0;
+            code[k].op[i] = 0;
         }
-        robot[n]->plen = 0;
-        //assign(f,filename); //Change to filestream and work around it
-        //reset(f);
-        s = '';
-        linecount = 0;
-        
-        //First pass, compile
-        while(!EOF(f) && s!= '#END') //&& plen <= maxcode //This was comment out already
+    }
+    plen = 0;
+    assign(f,filename);
+    reset(f);
+    s = '';
+    linecount = 0;
+
+    
+    //Main compile loop, while not end of file and not end tag, and under max code limit, continue
+    while (!(f.eof()) && (s != '#END') && (plen <= maxcode))
+    {
+        readln(f,s);
+        inc(linecount);
+        if(locktype < 3)
         {
-            //readln(f,s);
-            linecount++;
-            if(locktype < 3) lock_pos = 0;
-            if(lock_code != '')
+            lock_pos = 0;
+        }
+        if(lock_code != '')
+        {
+            for(i = 1; i < length(s); i++)
             {
-                for(i = 0; i < strlen(s); i++)
+                inc(lock_pos);
+                if(lock_pos > length(lock_code))
                 {
-                    lock_pos++;
-                    if(lock_pos > strlen(lock_code)) lock_pos = 1;
-                    switch(locktype)
-                    {
-                        case 3: s[i] = char((ord(s[i])-1) xor (ord(lock_code[lock_pos]) xor lock_dat)); break;
-                        case 2: s[i] = char(ord(s[i]) xor (ord(lock_code[lock_pos]) xor 1)); break;
-                        default: s[i] = char(ord(s[i]) xor ord(lock_code[lock_pos])); break;
-                    }
-                    lock_dat = ord(s[i]) & 15;
+                    lock_pos = 1;
                 }
-                strcpy(s, btrim(s)); //HELP?
-                strcpy(orig_s, s); // Help
-                for(i = 0; i < srtlen(s); i++) //Help
+                switch(locktype)
                 {
-                    if(s[i] == #0..#32 || s[i] == ',' || s[i] == #128..#255) //Help
-                        s[i] = ' '; //Help
-                }
-                if(show_source && ((lock_code = '') || debugging_compiler))
-                    cout << zero_pad(linecount,3) << ":" << zero_pad(robot[n]->plen,3) << " " << s << endl;
-                if(debugging_compiler)
-                {
-                    if(readkey = #27) exit(EXIT_FAILURE); //HELP? needs the readkeys and flushkeys
-                    k = 0;
-                    //line 938
+                    case '3':
+                        //s[i] = char((ord(s[i])-1) xor (ord(lock_code[lock_pos]) xor lock_dat));
+                    case '2':
+                        //s[i] = char(ord(s[i]) xor (ord(lock_code[lock_pos]) xor 1));
+                    default:
+                        //s[i] = char(ord(s[i]) xor ord(lock_code[lock_pos]));
                 }
             }
+            //lock_dat = ord(s[i]) && 15;
         }
-    }**/
+    }
+        s = btrim(s);
+        orig_s = s;
+        for(i = 1; i < length(s); i++)
+        {
+            if (s[i] in [#0..#32,',',#128..#255] )                                                  //check this later
+            {
+                s[i] = ' ';
+            }
+            if (show_source && ((lock_code == '') || debugging_compiler))
+            {
+                writeln(zero_pad(linecount,3)+':'+zero_pad(plen,3)+' ',s);
+            }
+            if (debugging_compiler)                                                                  //check this later
+            {
+                if(readkey == #27)                                                                  //check this later
+                {
+                    exit;
+                }
+            }
+            k = 0;
+            for(i = length(s); i > 0; i--)
+            {
+                if ( s[i] = ';')
+                {
+                    k = i;
+                }
+            }
+            if (k > 0 )
+            {
+                s = lstr( s , k - 1);
+            }
+            s = btrim(ucase(s));
+            for ( i = 0; i < max_op; i++)
+            {
+                pp[i] = '';
+            }
+            if ((length(s) > 0) && (s[1] != ';'))
+            {
+                case(s[1] == '#')
+                {
+                    s1 = ucase(btrim(rstr(s,length(s)-1)));
+                    msg = btrim(rstr(orig_s,length(orig_s)-5));
+                    k = 0;
+                    for (i = 1; i <= length(s1); i++)
+                    {
+                        if ((k = 0) && (s1[i] = ' '))
+                        {
+                            k = i;
+                        }
+                        dec(k);
+                        if (k > 1)
+                        {
+                            s2 = lstr(s1,k);
+                            s3 = ucase(btrim(rstr(s1,length(s1) - k)));
+                            k = 0;
+                            if (numvars > 0 )
+                            {
+                                for (i = 1; i <= numvars; i++)
+                                {
+                                    if (s3 = varname[i])
+                                    {
+                                        k = i;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((s2 == 'DEF') && (numvars < max_vars))
+                    {
+                        if (length(s3) > max_var_len)
+                        {
+                            prog_error(12,s3)
+                        }
+                        else if (k > 0) 
+                        {    
+                            prog_error(11,s3)
+                        }
+                        else
+                        {
+                            inc(numvars);
+                            if (numvars > max_vars)
+                            {    
+                                prog_error(14,'')
+                            }
+                            else 
+                            {
+                                varname[numvars] = s3;
+                                varloc [numvars] = 127 + numvars;
+                            }
+                        }
+                    }
+                    else if (lstr(s2,4) == 'LOCK') then
+                    {
+                        is_locked = true; 
+                        if (length(s2) > 4)
+                        {
+                            locktype = value(rstr(s2,length(s2)-4));
+                        }
+                        lock_code = btrim(ucase(s3));
+                        writeln('Robot is of LOCKed format from this point forward. [',locktype,']');
+                        for (i = 1; i < length(lock_code); i++)
+                        {   
+                            lock_code[i] = char(ord(lock_code[i])-65);
+                        }
+                    }
+                    else if (s2 == 'MSG') 
+                    {
+                        name = msg;
+                    }
+                    else if (s2 == 'TIME') 
+                    {
+                        robot_time_limit = value(s3);
+                        if (robot_time_limit < 0) 
+                        {
+                            robot_time_limit = 0;
+                        }
+                    }
+                    else if (s2 == 'CONFIG')
+                    {
+                        if (lstr(s3,8) == 'SCANNER=') 
+                            config.scanner = value(rstr(s3,length(s3)-8));
+                        else if (lstr(s3,7) == 'SHIELD=') 
+                            config.shield=value(rstr(s3,length(s3)-7));
+                        else if (lstr(s3,7) == 'WEAPON=') 
+                            config.weapon = value(rstr(s3,length(s3)-7));
+                        else if (lstr(s3,6) == 'ARMOR=') 
+                            config.armor = value(rstr(s3,length(s3)-6));
+                        else if (lstr(s3,7) == 'ENGINE=') 
+                            config.engine = value(rstr(s3,length(s3)-7));
+                        else if (lstr(s3,10) == 'HEATSINKS=') 
+                            config.heatsinks = value(rstr(s3,length(s3)-10));
+                        else if (lstr(s3,6) == 'MINES=') 
+                            config.mines = value(rstr(s3,length(s3)-6));
+                        else 
+                            prog_error(20,s3);
+                        //replace                                                  //check this later
+                        {
+                            if ( scanner < 0 )
+                                scanner = 0; 
+                            if ( scanner>5 )
+                                scanner = 5;
+                            if ( shield < 0 ) 
+                                shield = 0;   
+                            if ( shield>5 )
+                                shield = 5;
+                            if ( weapon < 0 )
+                                weapon = 0;   
+                            if ( weapon>5 )
+                                weapon = 5;
+                            if ( armor < 0 )
+                                armor = 0;     
+                            if ( armor > 5 ) 
+                                armor = 5;
+                            if ( engine < 0 )
+                                engine = 0;   
+                            if ( engine > 5 ) 
+                                engine = 5;
+                            if ( heatsinks < 0 ) 
+                                heatsinks = 0; 
+                            if ( heatsinks > 5 ) 
+                                heatsinks = 5;
+                            if ( mines < 0 )
+                                mines = 0;     
+                            if ( mines > 5 )
+                                mines = 5;
+                        }
+                    }
+                    else
+                    {
+                        writeln('Warning: unknown directive "'+s2+'"');
+                    }
+                }
+            }
+    
+            case(s[1] == '*')
+            {
+                
+                check_plen(plen);
+                for (i = 0; i < max_op; i++) 
+                {
+                    pp[i] = '';
+                }
+                for (i = 2; i < length(s); i++)
+                {
+                    if ( s[i]='*' ) 
+                    {
+                        prog_error(23,s);
+                        k = 0; 
+                        i = 1; 
+                        s1 = '';
+                    }
+                    if (length(s) <= 2 )
+                    {
+                        prog_error(22,s);
+                    }
+                    while (( i < length(s)) && (k <= max_op))
+                    {
+                        inc(i);
+                        if ( ord(s[i]) in [33..41,43..127] ) 
+                            pp[k] = pp[k] + s[i];
+                        
+                        else if ((ord(s[i]) in [0..32,128..255]) && (ord(s[i-1]) in [33..41,43..127]) )                                                  //check this later
+                            inc(k);
+                    }
+                    for (i = 0; i < max_op; i++)
+                    {
+                        code[plen].op[i] = str2int(pp[i]);
+                        inc(plen);
+                    }
+                }
+            }
+            case(s[1] == ':')
+            {
+                check_plen(plen);
+                s1 = rstr(s,length(s)-1);
+                for (i = 1; i < length(s1); i++)
+                {
+                    if  (!(s1[i] in ['0'..'9']))                                                  //check this later
+                    {
+                        prog_error(1,s);
+                    }
+                    code[plen].op[0] = str2int(s1);
+                    code[plen].op[max_op] = 2;
+                    if (show_code)                                                              //check this later
+                    {
+                        print_code(n,plen);
+                    }
+                    inc(plen);
+                }
+            }
+            case(s[1] == '!')
+            {
+                
+                check_plen(plen);
+                s1 = btrim(rstr(s,length(s)-1));
+                k = 0;
+                for (i = length(s1); i >= 1; i--)
+                {
+                    if (s1[i] in [';',#8,#9,#10,' ',','])                                       //check this later
+                    {
+                        k = i;
+                    }
+                    if ( k > 0 ) 
+                    {
+                        s1 = lstr(s1,k-1);
+                        k = 0;
+                    }
+                }
+                for (i = 1; i < numlabels; i++)
+                {
+                    if ( labelname[i] = s1) 
+                    {
+                        if (labelnum[i] >= 0) 
+                            prog_error(13,'"!' + s1 + '" ('+cstr(labelnum[i])+')');
+                            k = i;
+                    }
+                    if (k = 0) 
+                    {
+                        inc(numlabels);
+                        if (numlabels > max_labels) 
+                        {    
+                            prog_error(15,'');
+                        }
+                        k = numlabels;
+                    }
+                        labelname[k] = s1;
+                        labelnum [k] = plen;
+                }
+            }
+            else
+            {
+                check_plen(plen);
+                k = 0;
+                for (i = length(s); i >= 1; i--)
+                {
+                    if (s[i] == ';') 
+                    {
+                        k = i;
+                    }
+                    if (k > 0)
+                    {
+                        s = lstr(s,k-1);
+                    }
+                    k = 0;
+                }
+                for (j = 0; j < max_op; j++)
+                {
+                    pp[j] = '';
+                }
+                for (j = 1; j < length(s); j++)
+                {
+                    c = s[j];
+                    if (!(c in [' ',#8,#9,#10,','])) && (k <= max_op)                                                   //check this later
+                    {
+                        pp[k] = pp[k]+c;
+                    }
+                    else if (!(lc in [' ',#8,#9,#10,',']))                                                   //check this later
+                    {
+                        k = k + 1;
+                    }
+                    lc = c;
+                }
+                parse1(n,plen,pp);
+                inc(plen);
+            }
+            
+        }
+    
+
+ 
+        if ( plen <= maxcode)
+        {
+            for (i = 0;  i < max_op; i++) 
+            {
+                pp[i] = '';
+            }
+            pp[0] = 'NOP';
+            parse1(n,plen,pp);
+        }
+        else
+        {
+            dec(plen); 
+        }
+        if ( numlabels > 0 )
+        {
+            for ( i = 0; i < plen; i++)
+            {
+                for (j = 0; j < (max_op-1); j++)
+                {
+                    if (code[i].op[max_op] shr (j*4) == 3)                                                  //check this later
+                    {
+                        k = code[i].op[j];
+                        if (( k>0) && (k <= numlabels ))
+                        {
+                            l = labelnum[k];
+                            if (l < 0) 
+                            {    
+                                prog_error(19,'"!' + labelname[k] + '" ('+cstr(l)+')');
+                            }
+                            if (l < 0) or (l > maxcode)
+                            {
+                                prog_error(18,'"!'+labelname[k]+'" ('+cstr(l)+')');
+                            }
+                            else
+                            {
+                                code[i].op[j] = l;
+                                mask = !($F shl (j*4));
+                                code[i].op[max_op] = (code[i].op[max_op] && mask) or (4 shl (j*4));
+                            }
+                        }
+                        else
+                        {
+                            prog_error(17,cstr(k));
+                        }
+                    }
+                }
+            textcolor(7);
+            }
+        }
+    }*/
     
     return;
 }
