@@ -1002,16 +1002,16 @@ void compile(int n, char* filename)
     {
         for(i = 0; i < max_op; i++)
         {
-            code[k].op[i] = 0;
+            robot[n]->code[k].op[i] = 0;
         }
-        robot[k]->plen = 0;
-        //assign(f,filename);
+        robot[n]->plen = 0;
+        //assign(f,filename); //Change to filestream and work around it
         //reset(f);
         s = '';
         linecount = 0;
         
         //First pass, compile
-        while(!EOF(f) && s!= '#END') //&& plen <= maxcode
+        while(!EOF(f) && s!= '#END') //&& plen <= maxcode //This was comment out already
         {
             //readln(f,s);
             linecount++;
@@ -1031,17 +1031,17 @@ void compile(int n, char* filename)
                     lock_dat = ord(s[i]) & 15;
                 }
                 strcpy(s, btrim(s)); //HELP?
-                strcpy(orig_s, s);
-                for(i = 0; i < srtlen(s); i++)
+                strcpy(orig_s, s); // Help
+                for(i = 0; i < srtlen(s); i++) //Help
                 {
-                    if(s[i] == #0..#32 || s[i] == ',' || s[i] == #128..#255)
-                        s[i] = ' ';
+                    if(s[i] == #0..#32 || s[i] == ',' || s[i] == #128..#255) //Help
+                        s[i] = ' '; //Help
                 }
                 if(show_source && ((lock_code = '') || debugging_compiler))
-                    cout << zero_pad(linecount,3) << ":" << zero_pad(plen,3) << " " << s << endl;
+                    cout << zero_pad(linecount,3) << ":" << zero_pad(robot[n]->plen,3) << " " << s << endl;
                 if(debugging_compiler)
                 {
-                    if(readkey = #27) exit(EXIT_FAILURE); //HELP?
+                    if(readkey = #27) exit(EXIT_FAILURE); //HELP? needs the readkeys and flushkeys
                     k = 0;
                     //line 938
                 }
@@ -1127,16 +1127,19 @@ void parse_param(char * s)
         else if(s[1] == 'Q')
         {
             sound_on = false;
+            cout << "SOUND IS OFF" << endl;
             found = true;
         }
         else if(s[1] == 'M')
         {
             matches = value(&s[2]);
+            cout << "MATCHES = " << matches << endl;
             found = true;
         }
         else if(s[1] == 'S')
         {
             show_source = false;
+            cout << "SOURCE IS OFF" << endl;
             found = true;
         }
         else if(s[1] == 'G')
@@ -1159,6 +1162,7 @@ void parse_param(char * s)
         else if(s[1] == '^')
         {
             show_cnotice = false;
+            cout << "CNOTICE IS OFF" << endl;
             found = true;
         }
         else if(s[1] == 'A')
@@ -1174,6 +1178,7 @@ void parse_param(char * s)
         else if(s[1] == '$')
         {
             debug_info = true;
+            cout << "SHOW DEBUG INFO" << endl;
             found = true;
         }
         else if(s[1] == '#')
