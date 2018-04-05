@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include "Macchiato.h"
-#include "filelib.h"
+#include "filelib.hh"
 // Optionally use the namespace to do `describe` instead of `Macchiato::describe`, etc
 using namespace Macchiato;
 
@@ -37,7 +37,7 @@ void exten_test() {
 
 	describe("exten", [&]() {
 			it("Will make a string less than 12 = 12 and end when encountering .", [&]() {
-				return expect(exten("wow.")).to->equal("    ")->getResult();
+				return expect(exten(".wow...")).to->equal("wow")->getResult();
 			});
 
 	});
@@ -46,5 +46,5 @@ void exten_test() {
 
 	std::cout << Macchiato::GetResultantTestOutput() << std::endl;
 
-	return 0;
+	
 }

@@ -1,6 +1,6 @@
 #include <iostream>
 #include "Macchiato.h"
-#include "filelib.h"
+#include "filelib.hh"
 // Optionally use the namespace to do `describe` instead of `Macchiato::describe`, etc
 using namespace Macchiato;
 
@@ -19,18 +19,12 @@ string rstr(string s1, int l){
 void rstr_test() {
 
 
-
-
 	describe("rstr", [&]() {
 			it("should reduce examples to one char on right 's' should be output", [&]() {
 				return expect(rstr("examples",1)).to->equal("s")->getResult();
 			});
 
 	});
-
-    
-
-	
 
 	
 }

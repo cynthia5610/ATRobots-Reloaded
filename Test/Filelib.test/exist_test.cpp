@@ -31,7 +31,7 @@ void exist_test() {
 
     
 
-	std::cout << Macchiato::GetResultantTestOutput() << std::endl;
+	
 
-	return 0;
+	
 }

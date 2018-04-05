@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include "Macchiato.h"
-#include "filelib.h"
+#include "filelib.hh"
 // Optionally use the namespace to do `describe` instead of `Macchiato::describe`, etc
 using namespace Macchiato;
 
@@ -33,16 +33,11 @@ string path(string fn){
     }  
 }
 
-
-
 void path_test() {
 
-   
-   
-
-	describe("exten", [&]() {
+	describe("pathtest", [&]() {
 			it("Will make string empty if the line does not have a ':' or '//' ", [&]() {
-				return expect(path("wowwo")).to->equal("")->getResult();
+				return expect(path("wow:wo")).to->equal("wowwo")->getResult();
 			});
 
 	});
