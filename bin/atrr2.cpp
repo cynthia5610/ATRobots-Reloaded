@@ -75,6 +75,7 @@ int main(int argc, char *argv[]){
 		cout << endl;
 		cout << endl;
 
+        textcolor(15);
 		cout << "Bout Complete! (" << matches << " matches)" << endl;
 
 		k = 0;
@@ -94,6 +95,7 @@ int main(int argc, char *argv[]){
 		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 
 		for(i = 0; i <= num_robots; i++){
+            textcolor(robot_color(i));
 			cout << robot[i]->fn << 
 			setw(24) << robot[i]->wins << 
 			setw(8) << robot[i]->trials << 
@@ -103,8 +105,9 @@ int main(int argc, char *argv[]){
 			endl;
 		}
 		cout << endl;
+        textcolor(15);
 
-		if(k > 1){ //this might have to be (k == 1);
+		if(k == 1){ //this might have to be (k == 1);
 			cout << "Robot #" << n+1 << " " << robot[n]->fn << " wins the bout! (Score: " << w << "/" << matches << ")" << endl;
 		}
 		else{
@@ -112,6 +115,7 @@ int main(int argc, char *argv[]){
 		}
 	}
     shutdown();
+    textcolor(16);
 }
 
 void init(int ParamCount, char **ParamStr)
@@ -257,8 +261,8 @@ void init_bout()
     if (graphix && step_mode > 0) init_debug_window();
     if(!graphix)
     {
-        //textcolor(7);
-         cout << "\033[36m" <<"\r" << "Match " << played << "/" << matches << ", Battle in progress..." << "\033[0m" << endl;
+        textcolor(7);
+         cout << "\r" << "Match " << played << "/" << matches << ", Battle in progress..." << endl;
          cout << endl;
     }
     // Comment out code Init_bout Line 3406
@@ -922,7 +926,7 @@ void robot_error(int n, int i, string ov) //Contains graphics
 void prog_error(int n, const char* ss)
 {
     graph_mode(false);
-    //textcolor(15);
+    textcolor(15);
     cout << "Error #" << n << ": ";
     switch(n)
     {
@@ -1724,24 +1728,24 @@ void shutdown()
     graph_mode(false);
     if(show_cnotice)
     {
-        //textcolor(3)
+        textcolor(3);
         cout << endl;
-        cout << "\033[31;1;4m" << progname << " " << version << "\033[0m" << endl;
+        cout << progname << " " << version << endl;
         cout << cnotice1 << endl;
         cout << cnotice2 << endl;
         cout << cnotice3 << endl;
     }
-    //textcolor(7);
+    textcolor(7);
     if(!registered)
     {
-        //textcolor(4);
+        textcolor(4);
         cout << "Unregistered version" << endl;
     }
     else
     {
         cout << "Registered to: " << reg_name << endl;
     }
-    //textcolor(7);
+    textcolor(7);
     /**if(logging_errors) //LOGGING ERRORS
      {
      for(i = 0; i < num_robots; i++)
@@ -1800,7 +1804,7 @@ void show_statistics()
     }
     else
     {
-        //textcolor(15);
+        textcolor(15);
         cout << "\r" << space(79) << "\r" << endl;
         cout << "Match " << played << "/" << matches << " results:" << endl;
         cout << endl;
@@ -1817,7 +1821,7 @@ void show_statistics()
         }
         for(i = 0; i < num_robots; i++)
         {
-            //textcolor(robot_color(i));
+            textcolor(robot_color(i));
             if(k == 1 && n == i)
                 j = 1;
             else
@@ -1826,7 +1830,7 @@ void show_statistics()
             << addfront(cstr(robot[i]->trials),8) << addfront(cstr(robot[i]->armor) ,9) << '%' << addfront(cstr(robot[i]->kills),7)
             << addfront(cstr(robot[i]->deaths),8) << addfront(cstr(robot[i]->match_shots),9) << endl;
         }
-        //textcolor(15); //white
+        textcolor(15); //white
         cout << endl;
         cout << victor_string(k,n) << endl;
         cout << endl;
