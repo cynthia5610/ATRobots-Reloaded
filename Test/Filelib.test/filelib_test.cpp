@@ -6,6 +6,7 @@
 #include "rstr_test.cpp"
 #include "lstr_test.cpp"
 #include "exten_test.cpp"
+#include "basename_test.cpp"
 #include "addrear_test.cpp"
 
 using namespace Macchiato;
@@ -17,6 +18,7 @@ int main()
 exist_test();
 path_test();
 valid_test();
+basename_test();
 rstr_test();
 lstr_test();
 exten_test();
