@@ -210,12 +210,12 @@ void textcolor(int num)
     string s = "\033[";
     switch(num)
     {
-        case 0: s = s + "30"; break; //black
-        case 1: s = s + "34"; break; //blue
-        case 2: s = s + "32"; break; //green
-        case 3: s = s + "36"; break; //cyan
-        case 4: s = s + "31"; break; //red
-        case 5: s = s + "35"; break; //magenta
+        case 0: s = s + "0;30"; break; //black
+        case 1: s = s + "0;34"; break; //blue
+        case 2: s = s + "0;32"; break; //green
+        case 3: s = s + "0;36"; break; //cyan
+        case 4: s = s + "0;31"; break; //red
+        case 5: s = s + "0;35"; break; //magenta
         case 6: s = s + "38;5;94"; break; //brown
         case 7: s = s + "37"; break; //white
         case 8: s = s + "38;5;246"; break; //grey
