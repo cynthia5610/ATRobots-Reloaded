@@ -968,7 +968,46 @@ void print_code(int n, int p)
 }
 
 void parse1(int n, int p, parsetype s)
-{
+{/**
+    int i, j ,k, l, opcode, microcode;
+    bool found, indirect;
+    char * ss;
+    
+    for(i = 0; i < max_op-1; i++)
+    {
+        k = 0;
+        found = false;
+        opcode = 0;
+        microcode = 0;
+        s[i] = uCase(s[i]); //Got rid of btrim
+        indirect = false;
+        
+        (*
+         Microcode:
+         0 = instruction, number, constant
+         1 = variable, memory access
+         2 = :label
+         3 = !label (unresolved)
+         4 = !label (resolved)
+         8h mask = inderect addressing (enclosed in [])
+         *)
+        
+        if(s[i] == '')
+        {
+            opcode = 0;
+            microcode = 0;
+            found = true;
+        }
+        
+        if(lstr(s[i],1) == '[' && rstr(s[i],1) == ']'))
+        {
+            s[i] = copy(s[i],2,length(s[i])-2); // change/check
+            indirect = true;
+        }
+        
+        //!labels
+        
+    }**/
     return;
 }
 
@@ -978,9 +1017,6 @@ void check_plen(int plen)
 }
 
 void compile(int n, char* filename)
-{
-  //Greg is working on this right now
-void compile(int n, string filename)
 {
     /*
     string s, s1, s2, s3, orig_s, msg;

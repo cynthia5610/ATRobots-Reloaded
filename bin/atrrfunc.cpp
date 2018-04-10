@@ -211,20 +211,20 @@ void textcolor(int num)
     switch(num)
     {
         case 0: s = s + "30"; break; //black
-        case 1: s = s + "31"; break; //red
+        case 1: s = s + "34"; break; //blue
         case 2: s = s + "32"; break; //green
-        case 3: s = s + "33"; break; //yellow
-        case 4: s = s + "34"; break; //blue
+        case 3: s = s + "36"; break; //cyan
+        case 4: s = s + "31"; break; //red
         case 5: s = s + "35"; break; //magenta
-        case 6: s = s + "36"; break; //cyan
+        case 6: s = s + "38;5;94"; break; //brown
         case 7: s = s + "37"; break; //white
-        case 8: s = s + "30;1"; break; //bright black
-        case 9: s = s + "31;1"; break; //bright red
-        case 10: s = s + "32;1"; break; //bright green
-        case 11: s = s + "33;1"; break; //bright yellow
-        case 12: s = s + "34;1"; break; //bright blue
-        case 13: s = s + "35;1"; break; //bright magenta
-        case 14: s = s + "36;1"; break; //bright cyan
+        case 8: s = s + "38;5;246"; break; //grey
+        case 9: s = s + "34;1"; break; //light blue
+        case 10: s = s + "32;1"; break; //light green
+        case 11: s = s + "36;1"; break; //light cyan
+        case 12: s = s + "31;1"; break; //light red
+        case 13: s = s + "35;1"; break; //light magenta
+        case 14: s = s + "33"; break; //yellow
         case 15: s = s + "37;1"; break; //bright white
         case 16: s = s + "0"; break; //reset
     }
