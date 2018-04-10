@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -6,29 +7,28 @@
 #include <iomanip>
 #include <climits> //FOR INT_MAX
 
-#include "types.hh"
-#include "atrrfunc.hh"
-#include "filelib.hh"
-
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL_ttf.h>
 
+#include "types.hh"
+
 using namespace std;
 
-void graph_mode(bool on);
-void toggle_graphix();
-bool graph_check();
-void robot_graph();
-void update_armor();
-void update_heat();
-void update_lives();
-void update_cycle_window();
-void setscreen();
-void draw_robot(int n);
-void begin_window(); //starts up window
+// void graph_mode(bool on);
+// void toggle_graphix();
+// bool graph_check();
+// void robot_graph();
+// void update_armor();
+// void update_heat();
+// void update_lives();
+// void update_cycle_window();
+// void setscreen();
+// void draw_robot(int n);
+// void begin_window(); //starts up window
 
+void runGraphics();
 void setColor(int h);
 void drawTriangles();
 void robotStats();
@@ -43,7 +43,7 @@ SDL_Color white = {255, 255, 255};
 string robotTest = "Testing";
 const int WWIDTH = 1280;
 const int WHEIGHT = 720;
-int numRobots = 36;
+int numRobots = 6;
 bool runTriangles = true;
 
 SDL_Texture *texture = NULL;
@@ -52,8 +52,8 @@ SDL_Renderer *render = NULL;
 SDL_Surface *surface = NULL;
 
 
-int main(int argc, char *args[])
-{
+//int main(int argc, char *args[])
+void runGraphics(){
     if (!init())
     {
         std::cout << "Failed to Initialize" << endl;
@@ -126,7 +126,6 @@ void drawTriangles()
                 SDL_RenderDrawLine(render, positionX[i] + 30, positionY[i] + 18, positionX[i] + 25, positionY[i] + 28);
                 SDL_RenderDrawLine(render, positionX[i] + 30, positionY[i] + 18, positionX[i] + 35, positionY[i] + 28);
                 SDL_RenderDrawLine(render, positionX[i] + 25, positionY[i] + 28, positionX[i] + 35, positionY[i] + 28);
-                cout << "in while loop" << endl;
                 validPos = true;
             }
         }
@@ -217,7 +216,6 @@ bool validatePos(int robPosX[], int robPosY[], int currentLoaded)
             {
                 return false;
             }
-            cout << "in for loop" << endl;
         }
         return true;
     }
@@ -302,71 +300,71 @@ SDL_Texture *imageTexture(std::string fPath)
     return nTexture;
 }
 
-void graph_mode(bool on)
-{
-    return;
-}
+// void graph_mode(bool on)
+// {
+//     return;
+// }
 
-void toggle_graphix()
-{
-    //	graph_mode(!graphix);
-    //	if(!graphix)
-    //    {
-    //		cout << "Match " << played << "/" << matches << ", Battle in progress..." << endl;
-    //	}
-    return;
-}
+// void toggle_graphix()
+// {
+//     //	graph_mode(!graphix);
+//     //	if(!graphix)
+//     //    {
+//     //		cout << "Match " << played << "/" << matches << ", Battle in progress..." << endl;
+//     //	}
+//     return;
+// }
 
-bool graph_check(int n)
-{
-    return false; // Set to false to not use graphics
-}
+// bool graph_check(int n)
+// {
+//     return false; // Set to false to not use graphics
+// }
 
-void robot_graph(int n)
-{
-    return;
-}
+// void robot_graph(int n)
+// {
+//     return;
+// }
 
-void update_armor(int n)
-{
-    return;
-}
+// void update_armor(int n)
+// {
+//     return;
+// }
 
-void update_heat(int n)
-{
-    return;
-}
+// void update_heat(int n)
+// {
+//     return;
+// }
 
-void update_lives(int n)
-{
-    return;
-}
+// void update_lives(int n)
+// {
+//     return;
+// }
 
-void update_cycle_window()
-{
-    //    if(!graphix)
-    //    {
-    //    cout << "\r" << "Match " << played << "/" << matches << ", Cycle: " << zero_pad(game_cycle,9);
-    //    }
-    //    else
-    //    {
-    //        cout << endl;
-    //    }
-    //    return;
-}
+// void update_cycle_window()
+// {
+//     //    if(!graphix)
+//     //    {
+//     //    cout << "\r" << "Match " << played << "/" << matches << ", Cycle: " << zero_pad(game_cycle,9);
+//     //    }
+//     //    else
+//     //    {
+//     //        cout << endl;
+//     //    }
+//     //    return;
+// }
 
-void setscreen()
-{
-    return;
-}
+// void setscreen()
+// {
+//     return;
+// }
 
-void draw_robot(int n)
-{
-    return;
-}
+// void draw_robot(int n)
+// {
+//     return;
+// }
 
-void begin_window()
-{
-    setscreen();
-    return;
-}
+// void begin_window()
+// {
+//     setscreen();
+//     return;
+//}
