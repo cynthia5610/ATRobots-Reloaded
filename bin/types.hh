@@ -14,7 +14,7 @@ const char version[] = "2.11";
 const char cnotice1[] = "Copyright 1997 ''99, Ed T. Toton III";
 const char cnotice2[] = "All Rights Reserved.";
 const char cnotice3[] = "Copyright 2014, William 'Amos' Confer";
-const char main_filename[] = "ATR2";
+const char main_name[] = "ATR2";
 const char robot_ext[] = ".AT2";
 const char locked_ext[] = ".ATL";
 const char config_ext[] = ".ATS";
@@ -184,7 +184,7 @@ typedef struct{
 } robot_rec;
 
 /* PARSEING TYPE */
-typedef char * parsetype[max_op+1][16+1];
+typedef char parsetype[max_op+1][16+1];
 
 /* ROBOT POINTER */
 typedef robot_rec* robot_ptr;
@@ -216,7 +216,7 @@ FILE * f; //Needs to see where this is used //Parse_param creates another one //
 int numvars, numlabels, maxcode, lock_pos, lock_dat;
 char * varname [1+max_vars][1+max_var_len];
 int varloc[1+max_vars];
-char * labelname [1+max_vars][1+max_var_len];
+char labelname [1+max_vars][1+max_var_len];
 int labelnum[1+max_labels];
 bool show_source, compile_only;
 char * lock_code;

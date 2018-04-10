@@ -29,6 +29,7 @@ extern char* lcase(char* s);
 extern char* space(unsigned char i);
 extern char* repchar(char c, unsigned char i);
 extern double getDistance(double x1, double y1, double x2, double y2);
-int robot_color(int n);
-void textcolor(int num);
+extern int robot_color(int n);
+extern void textcolor(int num);
+extern bool in(int low, int high);
 #endif

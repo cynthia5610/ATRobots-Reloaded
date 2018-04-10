@@ -29,6 +29,7 @@ char* repchar(char c, unsigned char i);
 double getDistance(double x1, double y1, double x2, double y2);
 int robot_color(int n);
 void textcolor(int num);
+bool in(int low, int high);
 
 /* 
 VARIABLES
@@ -231,4 +232,9 @@ void textcolor(int num)
     s = s + "m";
     cout << s;
     return;
+}
+
+bool in(int value, int low, int high){
+    bool result;
+    return(result);
 }

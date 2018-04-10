@@ -43,6 +43,7 @@ void create_robot(int n, char* filename);
 void parse_param(char * s);
 void init_missiles(double xx, double yy, double xxv, double yyv, int dir, int s, int blast, bool ob);
 void shutdown();
+char* victor_string(int k, int n);
 
 
 
@@ -570,7 +571,7 @@ void update_cycle_window()
 {
     if(!graphix)
     {
-    cout << "\r" << "Match " << played << "/" << matches << ", Cycle: " << zero_pad(game_cycle,9);
+        cout << "\r" << "Match " << played << "/" << matches << ", Cycle: " << zero_pad(game_cycle,9);
     }
     else
     {
@@ -1019,96 +1020,99 @@ void check_plen(int plen)
 void compile(int n, char* filename)
 {
     /*
-    string s, s1, s2, s3, orig_s, msg;
+    char *s;
+    char *s1;
+    char *s2;
+    char *s3;
+    char *orig_s;
+    char *msg;
     int i, j, k, l, linecount, mask, locktype;
     char c,lc;
     char ss [max_op][16];
     parsetype pp;
     
     //code starts
-    lock_code ='';
     lock_pos = 0;
     locktype = 0;
     lock_dat = 0;
     
     
-    if(filename != file)  
+    if(!EXIST(filename))  
     {
         prog_error(8,filename);
     }
     textcolor(robot_color(n));
-    cout >> ("Compiling robot #", n + 1, ": ",filename);
-    //robot[n];                                                         //check this later
-    is_locked = false; 
-    textcolor(robot_color(n));                                          //check this later
+    cout << ("Compiling robot #", n + 1, ": ",filename);
+    robot[n]->is_locked = false; 
+    textcolor(robot_color(n));                                        
     numvars = 0;
     numlabels = 0;
     for(k = 0; k < max_code; k++)
     {
         for(i = 0; i < max_op; i++)
         {
-            code[k].op[i] = 0;
+            robot[n]->code[k].op[i] = 0;
         }
     }
-    plen = 0;
-    assign(f,filename);
-    reset(f);
-    s = '';
+    robot[n]->plen = 0;
+    //assign(f,filename);
+    //reset(f);
     linecount = 0;
 
     
     //Main compile loop, while not end of file and not end tag, and under max code limit, continue
-    while (!(f.eof()) && (s != '#END') && (plen <= maxcode))
+    while (!(f.eof()) && (s != "#END") && (robot[n]->plen <= maxcode))
     {
-        readln(f,s);
-        inc(linecount);
+        //readln(f,s);
+        linecount++;
         if(locktype < 3)
         {
             lock_pos = 0;
         }
-        if(lock_code != '')
+        if(lock_code != '\0')
         {
-            for(i = 1; i < length(s); i++)
+            for(i = 1; i < strlen(s); i++)
             {
-                inc(lock_pos);
-                if(lock_pos > length(lock_code))
+                lock_pos++;
+                if(lock_pos > strlen(lock_code))
                 {
                     lock_pos = 1;
                 }
                 switch(locktype)
                 {
                     case '3':
-                        //s[i] = char((ord(s[i])-1) xor (ord(lock_code[lock_pos]) xor lock_dat));
+                        s[i] = char((int(s[i])-1) ^ (int(lock_code[lock_pos]) ^ lock_dat)); break;
                     case '2':
-                        //s[i] = char(ord(s[i]) xor (ord(lock_code[lock_pos]) xor 1));
+                        s[i] = char(int(s[i]) ^ (int(lock_code[lock_pos]) ^ 1)); break;
                     default:
-                        //s[i] = char(ord(s[i]) xor ord(lock_code[lock_pos]));
+                        s[i] = char(int(s[i]) ^ int(lock_code[lock_pos])); break;
                 }
             }
-            //lock_dat = ord(s[i]) && 15;
+            lock_dat = int(s[i]) & 15;
         }
     }
-        s = btrim(s);
+        //s = btrim(s); TEST
         orig_s = s;
-        for(i = 1; i < length(s); i++)
+        for(i = 1; i < strlen(s); i++)
         {
             if (s[i] in [#0..#32,',',#128..#255] )                                                  //check this later
             {
                 s[i] = ' ';
             }
-            if (show_source && ((lock_code == '') || debugging_compiler))
+            if (show_source && ((lock_code == NULL) || debugging_compiler))
             {
-                writeln(zero_pad(linecount,3)+':'+zero_pad(plen,3)+' ',s);
+                //writeln(zero_pad(linecount,3)+':'+zero_pad(plen,3)+' ',s);
             }
             if (debugging_compiler)                                                                  //check this later
             {
+                
                 if(readkey == #27)                                                                  //check this later
                 {
                     exit;
                 }
             }
             k = 0;
-            for(i = length(s); i > 0; i--)
+            for(i = strlen(s); i > 0; i--)
             {
                 if ( s[i] = ';')
                 {
@@ -1119,35 +1123,35 @@ void compile(int n, char* filename)
             {
                 s = lstr( s , k - 1);
             }
-            s = btrim(ucase(s));
+            //s = btrim(uCase(s));
             for ( i = 0; i < max_op; i++)
             {
-                pp[i] = '';
+                pp[i][0] = '\0';
             }
-            if ((length(s) > 0) && (s[1] != ';'))
+            if ((strlen(s) > 0) && (s[1] != ';'))
             {
-                case(s[1] == '#')
+                if(s[1] == '#')
                 {
-                    s1 = ucase(btrim(rstr(s,length(s)-1)));
-                    msg = btrim(rstr(orig_s,length(orig_s)-5));
+                    s1 = uCase(rstr(s,strlen(s)-1));
+                    msg = rstr(orig_s, strlen(orig_s)-5);
                     k = 0;
-                    for (i = 1; i <= length(s1); i++)
+                    for (i = 1; i <= strlen(s); i++)
                     {
                         if ((k = 0) && (s1[i] = ' '))
                         {
                             k = i;
                         }
-                        dec(k);
+                        k--;
                         if (k > 1)
                         {
                             s2 = lstr(s1,k);
-                            s3 = ucase(btrim(rstr(s1,length(s1) - k)));
+                            s3 = uCase(rstr(s1, strlen(s1) - k));
                             k = 0;
                             if (numvars > 0 )
                             {
                                 for (i = 1; i <= numvars; i++)
                                 {
-                                    if (s3 = varname[i])
+                                    if (s3 == varname[i][0])
                                     {
                                         k = i;
                                     }
@@ -1155,176 +1159,176 @@ void compile(int n, char* filename)
                             }
                         }
                     }
-                    if ((s2 == 'DEF') && (numvars < max_vars))
+                    if ((s2 == "DEF") && (numvars < max_vars))
                     {
-                        if (length(s3) > max_var_len)
+                        if (strlen(s3) > max_var_len)
                         {
-                            prog_error(12,s3)
+                            prog_error(12,s3);
                         }
                         else if (k > 0) 
                         {    
-                            prog_error(11,s3)
+                            prog_error(11,s3);
                         }
                         else
                         {
-                            inc(numvars);
+                            numvars++;
                             if (numvars > max_vars)
                             {    
-                                prog_error(14,'')
+                                prog_error(14, '\0');
                             }
                             else 
                             {
-                                varname[numvars] = s3;
+                                varname[numvars][0] = s3;
                                 varloc [numvars] = 127 + numvars;
                             }
                         }
                     }
-                    else if (lstr(s2,4) == 'LOCK') then
+                    else if (lstr(s2,4) == "LOCK")
                     {
-                        is_locked = true; 
-                        if (length(s2) > 4)
+                        robot[n]->is_locked = true; 
+                        if (strlen(s2) > 4)
                         {
-                            locktype = value(rstr(s2,length(s2)-4));
+                            locktype = value(rstr(s2,strlen(s2)-4));
                         }
-                        lock_code = btrim(ucase(s3));
-                        writeln('Robot is of LOCKed format from this point forward. [',locktype,']');
-                        for (i = 1; i < length(lock_code); i++)
+                        lock_code = uCase(s3);
+                        //writeln('Robot is of LOCKed format from this point forward. [',locktype,']');
+                        for (i = 1; i < strlen(lock_code); i++)
                         {   
-                            lock_code[i] = char(ord(lock_code[i])-65);
+                            lock_code[i] = char(int(lock_code[i])-65);
                         }
                     }
-                    else if (s2 == 'MSG') 
+                    else if (s2 == "MSG") 
                     {
-                        name = msg;
+                        robot[n]->name = msg;
                     }
-                    else if (s2 == 'TIME') 
+                    else if (s2 == "TIME") 
                     {
-                        robot_time_limit = value(s3);
-                        if (robot_time_limit < 0) 
+                        robot[n]->robot_time_limit = value(s3);
+                        if (robot[n]->robot_time_limit < 0) 
                         {
-                            robot_time_limit = 0;
+                            robot[n]->robot_time_limit = 0;
                         }
                     }
-                    else if (s2 == 'CONFIG')
+                    else if (s2 == "CONFIG")
                     {
-                        if (lstr(s3,8) == 'SCANNER=') 
-                            config.scanner = value(rstr(s3,length(s3)-8));
-                        else if (lstr(s3,7) == 'SHIELD=') 
-                            config.shield=value(rstr(s3,length(s3)-7));
-                        else if (lstr(s3,7) == 'WEAPON=') 
-                            config.weapon = value(rstr(s3,length(s3)-7));
-                        else if (lstr(s3,6) == 'ARMOR=') 
-                            config.armor = value(rstr(s3,length(s3)-6));
-                        else if (lstr(s3,7) == 'ENGINE=') 
-                            config.engine = value(rstr(s3,length(s3)-7));
-                        else if (lstr(s3,10) == 'HEATSINKS=') 
-                            config.heatsinks = value(rstr(s3,length(s3)-10));
-                        else if (lstr(s3,6) == 'MINES=') 
-                            config.mines = value(rstr(s3,length(s3)-6));
+                        if (lstr(s3,8) == "SCANNER=") 
+                            robot[n]->config.scanner = value(rstr(s3,strlen(s3)-8));
+                        else if (lstr(s3,7) == "SHIELD=") 
+                            robot[n]->config.shield=value(rstr(s3,strlen(s3)-7));
+                        else if (lstr(s3,7) == "WEAPON=") 
+                            robot[n]->config.weapon = value(rstr(s3,strlen(s3)-7));
+                        else if (lstr(s3,6) == "ARMOR=") 
+                            robot[n]->config.armor = value(rstr(s3,strlen(s3)-6));
+                        else if (lstr(s3,7) == "ENGINE=") 
+                            robot[n]->config.engine = value(rstr(s3,strlen(s3)-7));
+                        else if (lstr(s3,10) == "HEATSINKS=") 
+                            robot[n]->config.heatsinks = value(rstr(s3,strlen(s3)-10));
+                        else if (lstr(s3,6) == "MINES=") 
+                            robot[n]->config.mines = value(rstr(s3,strlen(s3)-6));
                         else 
                             prog_error(20,s3);
                         //replace                                                  //check this later
                         {
-                            if ( scanner < 0 )
-                                scanner = 0; 
-                            if ( scanner>5 )
-                                scanner = 5;
-                            if ( shield < 0 ) 
-                                shield = 0;   
-                            if ( shield>5 )
-                                shield = 5;
-                            if ( weapon < 0 )
-                                weapon = 0;   
-                            if ( weapon>5 )
-                                weapon = 5;
-                            if ( armor < 0 )
-                                armor = 0;     
-                            if ( armor > 5 ) 
-                                armor = 5;
-                            if ( engine < 0 )
-                                engine = 0;   
-                            if ( engine > 5 ) 
-                                engine = 5;
-                            if ( heatsinks < 0 ) 
-                                heatsinks = 0; 
-                            if ( heatsinks > 5 ) 
-                                heatsinks = 5;
-                            if ( mines < 0 )
-                                mines = 0;     
-                            if ( mines > 5 )
-                                mines = 5;
+                            if ( robot[n]->config.scanner < 0 )
+                                robot[n]->config.scanner = 0; 
+                            if ( robot[n]->config.scanner>5 )
+                                robot[n]->config.scanner = 5;
+                            if ( robot[n]->config.shield < 0 ) 
+                                robot[n]->config.shield = 0;   
+                            if ( robot[n]->config.shield>5 )
+                                robot[n]->config.shield = 5;
+                            if ( robot[n]->config.weapon < 0 )
+                                robot[n]->config.weapon = 0;   
+                            if ( robot[n]->config.weapon>5 )
+                                robot[n]->config.weapon = 5;
+                            if ( robot[n]->config.armor < 0 )
+                                robot[n]->config.armor = 0;     
+                            if ( robot[n]->config.armor > 5 ) 
+                                robot[n]->config.armor = 5;
+                            if ( robot[n]->config.engine < 0 )
+                                robot[n]->config.engine = 0;   
+                            if ( robot[n]->config.engine > 5 ) 
+                                robot[n]->config.engine = 5;
+                            if ( robot[n]->config.heatsinks < 0 ) 
+                                robot[n]->config.heatsinks = 0; 
+                            if ( robot[n]->config.heatsinks > 5 ) 
+                                robot[n]->config.heatsinks = 5;
+                            if ( robot[n]->config.mines < 0 )
+                                robot[n]->config.mines = 0;     
+                            if ( robot[n]->config.mines > 5 )
+                                robot[n]->config.mines = 5;
                         }
                     }
                     else
                     {
-                        writeln('Warning: unknown directive "'+s2+'"');
+                        //writeln('Warning: unknown directive "'+s2+'"');
                     }
                 }
             }
     
-            case(s[1] == '*')
+            if(s[1] == '*')
             {
                 
-                check_plen(plen);
+                check_plen(robot[n]->plen);
                 for (i = 0; i < max_op; i++) 
                 {
-                    pp[i] = '';
+                    pp[i][0] = '\0';
                 }
-                for (i = 2; i < length(s); i++)
+                for (i = 2; i < strlen(s); i++)
                 {
                     if ( s[i]='*' ) 
                     {
                         prog_error(23,s);
                         k = 0; 
                         i = 1; 
-                        s1 = '';
+                        s1 = '\0';
                     }
-                    if (length(s) <= 2 )
+                    if (strlen(s) <= 2 )
                     {
                         prog_error(22,s);
                     }
-                    while (( i < length(s)) && (k <= max_op))
+                    while ((i < strlen(s) && (k <= max_op)))
                     {
-                        inc(i);
-                        if ( ord(s[i]) in [33..41,43..127] ) 
-                            pp[k] = pp[k] + s[i];
+                        i++;
+                        if ( int(s[i]) in [33..41,43..127] ) 
+                            pp[k][0] = pp[k][0] + s[i];
                         
-                        else if ((ord(s[i]) in [0..32,128..255]) && (ord(s[i-1]) in [33..41,43..127]) )                                                  //check this later
-                            inc(k);
+                        else if ((int(s[i]) in [0..32,128..255]) && (int(s[i-1]) in [33..41,43..127]) )                                                  //check this later
+                            k++;
                     }
                     for (i = 0; i < max_op; i++)
                     {
-                        code[plen].op[i] = str2int(pp[i]);
-                        inc(plen);
+                        robot[n]->code[robot[n]->plen].op[i] = strtol(pp[i]);
+                        robot[n]->plen++;
                     }
                 }
             }
-            case(s[1] == ':')
+            if(s[1] == ':')
             {
-                check_plen(plen);
-                s1 = rstr(s,length(s)-1);
-                for (i = 1; i < length(s1); i++)
+                check_plen(robot[n]->plen);
+                s1 = rstr(s,strlen(s)-1);
+                for (i = 1; i < strlen(s1); i++)
                 {
                     if  (!(s1[i] in ['0'..'9']))                                                  //check this later
                     {
                         prog_error(1,s);
                     }
-                    code[plen].op[0] = str2int(s1);
-                    code[plen].op[max_op] = 2;
-                    if (show_code)                                                              //check this later
+                    robot[n]->code[robot[n]->plen].op[0] = strtol(s1);
+                    robot[n]->code[robot[n]->plen].op[max_op] = 2;
+                    if (show_code)                                                         //check this later
                     {
-                        print_code(n,plen);
+                        print_code(n, robot[n]->plen);
                     }
-                    inc(plen);
+                    robot[n]->plen++;
                 }
             }
-            case(s[1] == '!')
+            if(s[1] == '!')
             {
                 
-                check_plen(plen);
-                s1 = btrim(rstr(s,length(s)-1));
+                check_plen(robot[n]->plen);
+                s1 = rstr(s,strlen(s)-1);
                 k = 0;
-                for (i = length(s1); i >= 1; i--)
+                for (i = strlen(s1); i >= 1; i--)
                 {
                     if (s1[i] in [';',#8,#9,#10,' ',','])                                       //check this later
                     {
@@ -1338,30 +1342,30 @@ void compile(int n, char* filename)
                 }
                 for (i = 1; i < numlabels; i++)
                 {
-                    if ( labelname[i] = s1) 
+                    if ( labelname[i] == s1) 
                     {
                         if (labelnum[i] >= 0) 
-                            prog_error(13,'"!' + s1 + '" ('+cstr(labelnum[i])+')');
+                            prog_error(13, '\0'); //'"!' + s1 + '" ('+cstr(labelnum[i])+')'
                             k = i;
                     }
                     if (k = 0) 
                     {
-                        inc(numlabels);
+                        numlabels++;
                         if (numlabels > max_labels) 
                         {    
-                            prog_error(15,'');
+                            prog_error(15, '\0');
                         }
                         k = numlabels;
                     }
                         labelname[k] = s1;
-                        labelnum [k] = plen;
+                        labelnum [k] = robot[n]->plen;
                 }
             }
             else
             {
-                check_plen(plen);
+                check_plen(robot[n]->plen);
                 k = 0;
-                for (i = length(s); i >= 1; i--)
+                for (i = strlen(s); i >= 1; i--)
                 {
                     if (s[i] == ';') 
                     {
@@ -1375,14 +1379,14 @@ void compile(int n, char* filename)
                 }
                 for (j = 0; j < max_op; j++)
                 {
-                    pp[j] = '';
+                    pp[j][0] = '\0';
                 }
-                for (j = 1; j < length(s); j++)
+                for (j = 1; j < strlen(s); j++)
                 {
                     c = s[j];
                     if (!(c in [' ',#8,#9,#10,','])) && (k <= max_op)                                                   //check this later
                     {
-                        pp[k] = pp[k]+c;
+                        pp[k][0] = pp[k][0] + c;
                     }
                     else if (!(lc in [' ',#8,#9,#10,',']))                                                   //check this later
                     {
@@ -1390,52 +1394,52 @@ void compile(int n, char* filename)
                     }
                     lc = c;
                 }
-                parse1(n,plen,pp);
-                inc(plen);
+                parse1(n, robot[n]->plen, pp);
+                robot[n]->plen++;
             }
             
         }
     
 
  
-        if ( plen <= maxcode)
+        if ( robot[n]->plen <= maxcode)
         {
             for (i = 0;  i < max_op; i++) 
             {
-                pp[i] = '';
+                pp[i][0] = '\0';
             }
-            pp[0] = 'NOP';
-            parse1(n,plen,pp);
+            pp[0][0] = "NOP";
+            parse1(n,robot[n]->plen,pp);
         }
         else
         {
-            dec(plen); 
+            robot[n]->plen--; 
         }
         if ( numlabels > 0 )
         {
-            for ( i = 0; i < plen; i++)
+            for ( i = 0; i < robot[n]->plen; i++)
             {
                 for (j = 0; j < (max_op-1); j++)
                 {
-                    if (code[i].op[max_op] shr (j*4) == 3)                                                  //check this later
+                    if (robot[n]->code[i].op[max_op] >> (j*4) == 3)                                                  //check this later
                     {
-                        k = code[i].op[j];
+                        k = robot[n]->code[i].op[j];
                         if (( k>0) && (k <= numlabels ))
                         {
                             l = labelnum[k];
                             if (l < 0) 
                             {    
-                                prog_error(19,'"!' + labelname[k] + '" ('+cstr(l)+')');
+                                prog_error(19, '\0'); //'!' + labelname[k] + '" ('+cstr(l)+')'
                             }
-                            if (l < 0) or (l > maxcode)
+                            if ((l < 0) || (l > maxcode))
                             {
-                                prog_error(18,'"!'+labelname[k]+'" ('+cstr(l)+')');
+                                prog_error(18, '\0'); //'!'+labelname[k]+'" ('+cstr(l)+')'
                             }
                             else
                             {
-                                code[i].op[j] = l;
-                                mask = !($F shl (j*4));
-                                code[i].op[max_op] = (code[i].op[max_op] && mask) or (4 shl (j*4));
+                                robot[n]->code[i].op[j] = l;
+                                mask = !($F << (j*4));
+                                robot[n]->code[i].op[max_op] = (robot[n]->code[i].op[max_op] && mask) || (4 << (j*4));
                             }
                         }
                         else
@@ -1447,8 +1451,7 @@ void compile(int n, char* filename)
             textcolor(7);
             }
         }
-    }*/
-    
+    */
     return;
 }
 
@@ -1477,7 +1480,7 @@ void parse_param(char * s)
     found = false;
     s = uCase(s);
 
-    if(s == NULL){
+    if(s == '\0'){
         return;
     }
     if(s[0] == '#')
@@ -1533,7 +1536,6 @@ void parse_param(char * s)
         else if(s[1] == 'M')
         {
             matches = value(&s[2]);
-            cout << "MATCHES = " << matches << endl;
             found = true;
         }
         else if(s[1] == 'S')
@@ -1611,7 +1613,7 @@ void parse_param(char * s)
     else if(s[0] == ';'){
         found = true;
     }
-    else if(num_robots < max_robots && s != NULL)
+    else if(num_robots < max_robots && s != '\0')
     {
         num_robots++;
         create_robot(num_robots,s);
