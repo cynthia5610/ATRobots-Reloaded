@@ -1149,10 +1149,10 @@ void compile(int n, char* filename)
                             {
                                 for (i = 1; i <= numvars; i++)
                                 {
-                                    if (s3 == varname[i][0])
-                                    {
-                                        k = i;
-                                    }
+                                    // if (s3 == varname[i][0])
+                                    // {
+                                    //     k = i;
+                                    // }
                                 }
                             }
                         }
@@ -1176,7 +1176,7 @@ void compile(int n, char* filename)
                             }
                             else 
                             {
-                                varname[numvars][0] = s3;
+                                //varname[numvars][0] = s3;
                                 varloc [numvars] = 127 + numvars;
                             }
                         }
