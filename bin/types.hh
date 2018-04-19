@@ -214,7 +214,7 @@ missile_rec missile[max_missiles+1]; //+1
 //compiler variable
 FILE * f; //Needs to see where this is used //Parse_param creates another one //****
 int numvars, numlabels, maxcode, lock_pos, lock_dat;
-char * varname [1+max_vars][1+max_var_len];
+char varname [1+max_vars][1+max_var_len];
 int varloc[1+max_vars];
 char labelname [1+max_vars][1+max_var_len];
 int labelnum[1+max_labels];
