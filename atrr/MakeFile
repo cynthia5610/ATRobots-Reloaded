@@ -7,9 +7,10 @@ mac:
 
 linux:
 
-	g++ Semi_Menu_Window.cpp  -o ATRLinux -I include -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
-	g++ ATRLOCK.cpp -o ATRLOCK 
-	g++ TriangleTest5.cpp -o animation -I include -lSDL2 
+	g++ -c ../bin/atrr2.cpp
+	g++ -c ../bin/atrrfunc.cpp
+	g++ -c ../bin/filelib.cpp
+	g++ -o atrr atrr2.o atrrfunc.o filelib.o
 
 
 installMac:
