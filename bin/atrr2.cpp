@@ -1557,7 +1557,7 @@ void compile(int n, char* filename)
                     //     prog_error(1,s);
                     // }
                     // //robot[n]->code[robot[n]->plen].op[0] = strtol(s1);
-                    robot[n]->code[robot[n]->plen].op[max_op] = 2;
+                    robot[n]->code[robot[n]->plen].op[max_op-1] = 2;
                     if (show_code)
                     {
                         print_code(n, robot[n]->plen);
@@ -1664,7 +1664,7 @@ void compile(int n, char* filename)
             {
                 for (j = 0; j < (max_op-1); j++)
                 {
-                    if (robot[n]->code[i].op[max_op] >> (j*4) == 3)                                                  //check this later
+                    if (robot[n]->code[i].op[max_op-1] >> (j*4) == 3)                                                  //check this later
                     {
                         k = robot[n]->code[i].op[j];
                         if (( k>0) && (k <= numlabels ))
@@ -1682,7 +1682,7 @@ void compile(int n, char* filename)
                             {
                                 robot[n]->code[i].op[j] = l;
                                 //mask = !($F << (j*4));
-                                robot[n]->code[i].op[max_op] = (robot[n]->code[i].op[max_op] && mask) || (4 << (j*4));
+                                robot[n]->code[i].op[max_op-1] = (robot[n]->code[i].op[max_op-1] && mask) || (4 << (j*4));
                             }
                         }
                         else
