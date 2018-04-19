@@ -171,7 +171,7 @@ void init(int ParamCount, char **ParamStr)
     reg_name = "Unregistered"; //ATRFUNC/ATRT
     reg_num = 65535; //ATRFUNC/ATRT //$FFFF
     //check_registration(); //ATRFUNC/ATRT
-    //NEED COLOR
+    
     cout << endl;
     cout << "\033[36m" << progname << " " << version << " " << "\033[0m" <<endl;
     cout << "\033[36m" << cnotice1 << "\033[0m" << endl;
@@ -960,30 +960,16 @@ void prog_error(int n, const char* ss)
         case 26: cout <<"\"" << ss << "\"" << endl; break;
         default: cout <<ss;  break;
     }
-    textcolor(16);
     exit(EXIT_FAILURE);
 }
 
 void print_code(int n, int p)
 {
-    int i;
-    //cout << hex(p) << ": ";
-    for(i = 0; i < max_op; i++)
-    {
-        cout << zero_pad(robot[n]->code[p].op[i],5) << " ";
-    }
-    cout << " =  ";
-    for(i = 0; i < max_op; i++)
-    {
-       // cout << hex(robot[n]->code[p].op[i]) << "h ";
-    }
-    cout << endl;
-    cout << endl;
     return;
 }
 
 void parse1(int n, int p, parsetype s)
-{
+{/**
     int i, j ,k, l, opcode, microcode;
     bool found, indirect;
     char * ss;
@@ -994,10 +980,10 @@ void parse1(int n, int p, parsetype s)
         found = false;
         opcode = 0;
         microcode = 0;
-        strcpy(s[i],uCase(s[i])); //Got rid of btrim
+        s[i] = uCase(s[i]); //Got rid of btrim
         indirect = false;
         
-        /*
+        (*
          Microcode:
          0 = instruction, number, constant
          1 = variable, memory access
@@ -1005,268 +991,34 @@ void parse1(int n, int p, parsetype s)
          3 = !label (unresolved)
          4 = !label (resolved)
          8h mask = inderect addressing (enclosed in [])
-         */
+         *)
         
-        if(s[i] == NULL)
+        if(s[i] == '')
         {
             opcode = 0;
             microcode = 0;
             found = true;
         }
         
-        //MINUS 1 IN ARRAY BC ARRAY STARTS @ 0
-        if(strcmp(lstr(s[i],1),"[") && strcmp(rstr(s[i],1),"]")) //or strcmp(lstr(s[i],0)?
+        if(lstr(s[i],1) == '[' && rstr(s[i],1) == ']'))
         {
-            strncpy(s[i],&(s[i][1]),strlen(s[i])-1);//s[i] = s[i].substr(2,strlen(s[i]))-2); //NEED FIX
+            s[i] = copy(s[i],2,length(s[i])-2); // change/check
             indirect = true;
         }
         
         //!labels
-        if(!found && s[i][1] == '!')
-        {
-            strcpy(ss,s[i]);
-            strcpy(ss,rstr(ss,strlen(ss)-1));
-            if(numlabels>0)
-            {
-                for(j=0; j<numlabels; j++)
-                {
-                    if(ss==labelname[j])
-                    {
-                        found = true;
-                        if(labelnum[j]>=0)
-                        {
-                            opcode = labelnum[j];
-                            microcode = 4;
-                        }
-                        else
-                        {
-                            opcode = j;
-                            microcode = 3;
-                        }
-                    }
-                }
-                if(!found)
-                {
-                    numlabels++;
-                    if(numlabels > max_labels)
-                    {
-                        prog_error(15,"");
-                    }
-                    else
-                    {
-                        strcpy(labelname[numlabels],ss);
-                        labelnum[numlabels] = -1;
-                        opcode = numlabels;
-                        microcode = 3;
-                        found = true;
-                    }
-                }
-            }
-        }
         
-        if(numvars>0 && !found)
-        {
-            for(j=0; j<numvars; j++)
-            {
-                if(s[i] == varname[j])
-                {
-                    opcode = varloc[j];
-                    microcode = 1;
-                    found = true;
-                }
-            }
-        }
-        
-        //Instructions
-        if(strcmp(s[i],"NOP"))    { opcode = 0;  found = true; }
-        if(strcmp(s[i],"ADD"))    { opcode = 1;  found = true; }
-        if(strcmp(s[i],"SUB"))    { opcode = 2;  found = true; }
-        if(strcmp(s[i],"OR"))     { opcode = 3;  found = true; }
-        if(strcmp(s[i],"AND"))    { opcode = 4;  found = true; }
-        if(strcmp(s[i],"XOR"))    { opcode = 5;  found = true; }
-        if(strcmp(s[i],"NOT"))    { opcode = 6;  found = true; }
-        if(strcmp(s[i],"MPY"))    { opcode = 7;  found = true; }
-        if(strcmp(s[i],"DIV"))    { opcode = 8;  found = true; }
-        if(strcmp(s[i],"MOD"))    { opcode = 9;  found = true; }
-        if(strcmp(s[i],"RET"))    { opcode = 10; found = true; }
-        if(strcmp(s[i],"RETURN")) { opcode = 10; found = true; }
-        if(strcmp(s[i],"GSB"))    { opcode = 11; found = true; }
-        if(strcmp(s[i],"GOSUB"))  { opcode = 11; found = true; }
-        if(strcmp(s[i],"CALL"))   { opcode = 11; found = true; }
-        if(strcmp(s[i],"JMP"))    { opcode = 12; found = true; }
-        if(strcmp(s[i],"JUMP"))   { opcode = 12; found = true; }
-        if(strcmp(s[i],"GOTO"))   { opcode = 12; found = true; }
-        if(strcmp(s[i],"JLS"))    { opcode = 13; found = true; }
-        if(strcmp(s[i],"JB"))     { opcode = 13; found = true; }
-        if(strcmp(s[i],"JGR"))    { opcode = 14; found = true; }
-        if(strcmp(s[i],"JA"))     { opcode = 14; found = true; }
-        if(strcmp(s[i],"JNE"))    { opcode = 15; found = true; }
-        if(strcmp(s[i],"JEQ"))    { opcode = 16; found = true; }
-        if(strcmp(s[i],"JE"))     { opcode = 16; found = true; }
-        if(strcmp(s[i],"XCHG"))   { opcode = 17; found = true; }
-        if(strcmp(s[i],"SWAP"))   { opcode = 17; found = true; }
-        if(strcmp(s[i],"DO"))     { opcode = 18; found = true; }
-        if(strcmp(s[i],"LOOP"))   { opcode = 19; found = true; }
-        if(strcmp(s[i],"CMP"))    { opcode = 20; found = true; }
-        if(strcmp(s[i],"TEST"))   { opcode = 21; found = true; }
-        if(strcmp(s[i],"SET"))    { opcode = 22; found = true; }
-        if(strcmp(s[i],"MOV"))    { opcode = 22; found = true; }
-        if(strcmp(s[i],"LOC"))    { opcode = 23; found = true; }
-        if(strcmp(s[i],"ADRR"))   { opcode = 23; found = true; }
-        if(strcmp(s[i],"GET"))    { opcode = 24; found = true; }
-        if(strcmp(s[i],"PUT"))    { opcode = 25; found = true; }
-        if(strcmp(s[i],"INT"))    { opcode = 26; found = true; }
-        if(strcmp(s[i],"IPO"))    { opcode = 27; found = true; }
-        if(strcmp(s[i],"IN"))     { opcode = 27; found = true; }
-        if(strcmp(s[i],"OPO"))    { opcode = 28; found = true; }
-        if(strcmp(s[i],"OUT"))    { opcode = 28; found = true; }
-        if(strcmp(s[i],"DEL"))    { opcode = 29; found = true; }
-        if(strcmp(s[i],"DELAY"))  { opcode = 29; found = true; }
-        if(strcmp(s[i],"PUSH"))   { opcode = 30; found = true; }
-        if(strcmp(s[i],"POP"))    { opcode = 31; found = true; }
-        if(strcmp(s[i],"ERR"))    { opcode = 32; found = true; }
-        if(strcmp(s[i],"ERROR"))  { opcode = 32; found = true; }
-        if(strcmp(s[i],"INC"))    { opcode = 33; found = true; }
-        if(strcmp(s[i],"DEC"))    { opcode = 34; found = true; }
-        if(strcmp(s[i],"SHL"))    { opcode = 35; found = true; }
-        if(strcmp(s[i],"SHR"))    { opcode = 36; found = true; }
-        if(strcmp(s[i],"ROL"))    { opcode = 37; found = true; }
-        if(strcmp(s[i],"ROR"))    { opcode = 38; found = true; }
-        if(strcmp(s[i],"JZ"))     { opcode = 39; found = true; }
-        if(strcmp(s[i],"JNZ"))    { opcode = 40; found = true; }
-        if(strcmp(s[i],"JAE"))    { opcode = 41; found = true; }
-        if(strcmp(s[i],"JGE"))    { opcode = 41; found = true; }
-        if(strcmp(s[i],"JLE"))    { opcode = 42; found = true; }
-        if(strcmp(s[i],"JBE"))    { opcode = 42; found = true; }
-        if(strcmp(s[i],"SAL"))    { opcode = 43; found = true; }
-        if(strcmp(s[i],"SAR"))    { opcode = 44; found = true; }
-        if(strcmp(s[i],"NEG"))    { opcode = 45; found = true; }
-        if(strcmp(s[i],"JTL"))    { opcode = 46; found = true; }
-
-        //Registers
-        if(strcmp(s[i],"COLCNT")) { opcode = 8;  microcode = 1; found = true; }
-        if(strcmp(s[i],"METERS")) { opcode = 9;  microcode = 1; found = true; }
-        if(strcmp(s[i],"COMBASE")){ opcode = 10; microcode = 1; found = true; }
-        if(strcmp(s[i],"COMEND")) { opcode = 11; microcode = 1; found = true; }
-        if(strcmp(s[i],"FLAGS"))  { opcode = 64; microcode = 1; found = true; }
-        if(strcmp(s[i],"AX"))     { opcode = 65; microcode = 1; found = true; }
-        if(strcmp(s[i],"BX"))     { opcode = 66; microcode = 1; found = true; }
-        if(strcmp(s[i],"CX"))     { opcode = 67; microcode = 1; found = true; }
-        if(strcmp(s[i],"DX"))     { opcode = 68; microcode = 1; found = true; }
-        if(strcmp(s[i],"EX"))     { opcode = 69; microcode = 1; found = true; }
-        if(strcmp(s[i],"FX"))     { opcode = 70; microcode = 1; found = true; }
-        if(strcmp(s[i],"SP"))     { opcode = 71; microcode = 1; found = true; }
-        
-        //constants
-        if(strcmp(s[i],"MAXINT"))           { opcode = 32676; microcode = 0; found  = true; }
-        if(strcmp(s[i],"MININT"))           { opcode = -32768; microcode = 0; found = true; }
-        if(strcmp(s[i],"P_SPEDOMETER"))     { opcode = 1;  microcode = 0; found = true; }
-        if(strcmp(s[i],"P_HEAT"))           { opcode = 2;  microcode = 0; found = true; }
-        if(strcmp(s[i],"P_COMPASS"))        { opcode = 3;  microcode = 0; found = true; }
-        if(strcmp(s[i],"P_TANGLE"))         { opcode = 4;  microcode = 0; found = true; }
-        if(strcmp(s[i],"P_TURRET_OFS"))     { opcode = 4;  microcode = 0; found = true; }
-        if(strcmp(s[i],"P_THEADING"))       { opcode = 5;  microcode = 0; found = true; }
-        if(strcmp(s[i],"P_TURRENT_ABS"))    { opcode = 5;  microcode = 0; found = true; }
-        if(strcmp(s[i],"P_ARMOR"))          { opcode = 6;  microcode = 0; found = true; }
-        if(strcmp(s[i],"P_DAMAGE"))         { opcode = 6;  microcode = 0; found = true; }
-        if(strcmp(s[i],"P_SCAN"))           { opcode = 7;  microcode = 0; found = true; }
-        if(strcmp(s[i],"P_ACCURACY"))       { opcode = 8;  microcode = 0; found = true; }
-        if(strcmp(s[i],"P_RADAR"))          { opcode = 9;  microcode = 0; found = true; }
-        if(strcmp(s[i],"P_RANDOM"))         { opcode = 10; microcode = 0; found = true; }
-        if(strcmp(s[i],"P_RAND"))           { opcode = 10; microcode = 0; found = true; }
-        if(strcmp(s[i],"P_THROTTLE"))       { opcode = 11; microcode = 0; found = true; }
-        if(strcmp(s[i],"P_TROTATE"))        { opcode = 12; microcode = 0; found = true; }
-        if(strcmp(s[i],"P_OFS_TURRENT"))    { opcode = 12; microcode = 0; found = true; }
-        if(strcmp(s[i],"P_TAIM"))           { opcode = 13; microcode = 0; found = true; }
-        if(strcmp(s[i],"P_ABS_TURRENT"))    { opcode = 13; microcode = 0; found = true; }
-        if(strcmp(s[i],"P_STEERING"))       { opcode = 14; microcode = 0; found = true; }
-        if(strcmp(s[i],"P_WEAP"))           { opcode = 15; microcode = 0; found = true; }
-        if(strcmp(s[i],"P_WEAPON"))         { opcode = 15; microcode = 0; found = true; }
-        if(strcmp(s[i],"P_FIRE"))           { opcode = 15; microcode = 0; found = true; }
-        if(strcmp(s[i],"P_SONAR"))          { opcode = 16; microcode = 0; found = true; }
-        if(strcmp(s[i],"P_ARC"))            { opcode = 17; microcode = 0; found = true; }
-        if(strcmp(s[i],"P_SCANARC"))        { opcode = 17; microcode = 0; found = true; }
-        if(strcmp(s[i],"P_OVERBURN"))       { opcode = 18; microcode = 0; found = true; }
-        if(strcmp(s[i],"P_TRANSPONDER"))    { opcode = 19; microcode = 0; found = true; }
-        if(strcmp(s[i],"P_SHUTDOWN"))       { opcode = 20; microcode = 0; found = true; }
-        if(strcmp(s[i],"P_CHANNEL"))        { opcode = 21; microcode = 0; found = true; }
-        if(strcmp(s[i],"P_MINELAYER"))      { opcode = 22; microcode = 0; found = true; }
-        if(strcmp(s[i],"P_MINETRIGGER"))    { opcode = 23; microcode = 0; found = true; }
-        if(strcmp(s[i],"P_SHIELD"))         { opcode = 24; microcode = 0; found = true; }
-        if(strcmp(s[i],"P_SHIELDS"))        { opcode = 24; microcode = 0; found = true; }
-        if(strcmp(s[i],"I_DESTRUCT"))       { opcode = 0;  microcode = 0; found = true; }
-        if(strcmp(s[i],"I_RESET"))          { opcode = 1;  microcode = 0; found = true; }
-        if(strcmp(s[i],"I_LOCATE"))         { opcode = 2;  microcode = 0; found = true; }
-        if(strcmp(s[i],"I_KEEPSHIFT"))      { opcode = 3;  microcode = 0; found = true; }
-        if(strcmp(s[i],"I_OVERBURN"))       { opcode = 4;  microcode = 0; found = true; }
-        if(strcmp(s[i],"I_ID"))             { opcode = 5;  microcode = 0; found = true; }
-        if(strcmp(s[i],"I_TIMER"))          { opcode = 6;  microcode = 0; found = true; }
-        if(strcmp(s[i],"I_ANGLE"))          { opcode = 7;  microcode = 0; found = true; }
-        if(strcmp(s[i],"I_TID"))            { opcode = 8;  microcode = 0; found = true; }
-        if(strcmp(s[i],"I_TARGETID"))       { opcode = 8;  microcode = 0; found = true; }
-        if(strcmp(s[i],"I_TINFO"))          { opcode = 9;  microcode = 0; found = true; }
-        if(strcmp(s[i],"I_TARGETINFO"))     { opcode = 9;  microcode = 0; found = true; }
-        if(strcmp(s[i],"I_GINFO"))          { opcode = 10; microcode = 0; found = true; }
-        if(strcmp(s[i],"I_GAMEINFO"))       { opcode = 10; microcode = 0; found = true; }
-        if(strcmp(s[i],"I_RINFO"))          { opcode = 11; microcode = 0; found = true; }
-        if(strcmp(s[i],"I_ROBOTINFO"))      { opcode = 11; microcode = 0; found = true; }
-        if(strcmp(s[i],"I_COLLISIONS"))     { opcode = 12; microcode = 0; found = true; }
-        if(strcmp(s[i],"I_RESETCOLCNT"))    { opcode = 13; microcode = 0; found = true; }
-        if(strcmp(s[i],"I_TRANSMIT"))       { opcode = 14; microcode = 0; found = true; }
-        if(strcmp(s[i],"I_RECEIVE"))        { opcode = 15; microcode = 0; found = true; }
-        if(strcmp(s[i],"I_DATAREADY"))      { opcode = 16; microcode = 0; found = true; }
-        if(strcmp(s[i],"I_CLEARCOM"))       { opcode = 17; microcode = 0; found = true; }
-        if(strcmp(s[i],"I_KILLS"))          { opcode = 18; microcode = 0; found = true; }
-        if(strcmp(s[i],"I_DEATHS"))         { opcode = 18; microcode = 0; found = true; }
-        if(strcmp(s[i],"I_CLEARMETERS"))    { opcode = 19; microcode = 0; found = true; }
-
-        //memory addresses
-        //MINUS 1 IN ARRAY BC ARRAY STARTS @ 0
-        if(!found && s[i][0] == '@' && (s[i][1] >= '0' && s[i][1] <= '9'))
-        {
-            //opcode = str2int(rstr(s[i],strlen(s[i])-1)); //HELP
-            if(opcode < 0 || (opcode>(max_ram+1)+((max_code+1) << 3)-1)) //NEED CHECK
-                prog_error(3,s[i]);
-            microcode = 1;
-            found = true;
-        }
-        
-        //numbers
-        //MINUS 1 IN ARRAY BC ARRAY STARTS @ 0
-        if(!found && ((s[i][0] >= '0' && s[i][0] <= '9') || s[i][0] == '-'))
-        {
-           //opcode = str2int(s[i]); //HELP
-            found = true;
-        }
-        
-        if(found)
-        {
-            robot[n]->code[p].op[i] = opcode;
-            if(indirect)
-                microcode = microcode | 8;
-            //MINUS 1 IN ARRAY BC ARRAY STARTS @ 0
-            robot[n]->code[p].op[max_op-1] = robot[n]->code[p].op[max_op-1] | (microcode << (i*4));
-        }
-        else if( s[i] != NULL)
-            prog_error(2,s[i]);
-    }
-    if(show_code)
-        print_code(n,p);
-    if(compile_by_line)
-        //readkey;
+    }**/
     return;
 }
 
 void check_plen(int plen)
 {
-    if(plen > maxcode)
-        prog_error(16,strcat((char*)"\r\nMaximum program length exceeded,(Limit: ",strcat(cstr(maxcode+1)," compiled lines)")));
     return;
 }
 
 void compile(int n, char* filename)
 {
-    /*
     char *s;
     char *s1;
     char *s2;
@@ -1282,14 +1034,13 @@ void compile(int n, char* filename)
     lock_pos = 0;
     locktype = 0;
     lock_dat = 0;
-    
-    
-    if(!EXIST(filename))  
+
+    if(!EXIST(filename))
     {
         prog_error(8,filename);
     }
     textcolor(robot_color(n));
-    cout << ("Compiling robot #", n + 1, ": ",filename);
+    cout << "Compiling robot #" << n + 1 << ": " << filename << endl;
     robot[n]->is_locked = false; 
     textcolor(robot_color(n));                                        
     numvars = 0;
@@ -1308,7 +1059,7 @@ void compile(int n, char* filename)
 
     
     //Main compile loop, while not end of file and not end tag, and under max code limit, continue
-    while (!(f.eof()) && (s != "#END") && (robot[n]->plen <= maxcode))
+    while (!(feof(f)) && (!strcmp(s, "#END")) && (robot[n]->plen <= maxcode))
     {
         //readln(f,s);
         linecount++;
@@ -1316,7 +1067,7 @@ void compile(int n, char* filename)
         {
             lock_pos = 0;
         }
-        if(lock_code != '\0')
+        if(strcmp(lock_code, "\0"))
         {
             for(i = 1; i < strlen(s); i++)
             {
@@ -1342,10 +1093,10 @@ void compile(int n, char* filename)
         orig_s = s;
         for(i = 1; i < strlen(s); i++)
         {
-            if (s[i] in [#0..#32,',',#128..#255] )                                                  //check this later
-            {
-                s[i] = ' ';
-            }
+            // if (s[i] in [#0..#32,',',#128..#255] )                                                  //check this later
+            // {
+            //     s[i] = ' ';
+            // }
             if (show_source && ((lock_code == NULL) || debugging_compiler))
             {
                 //writeln(zero_pad(linecount,3)+':'+zero_pad(plen,3)+' ',s);
@@ -1353,15 +1104,15 @@ void compile(int n, char* filename)
             if (debugging_compiler)                                                                  //check this later
             {
                 
-                if(readkey == #27)                                                                  //check this later
-                {
-                    exit;
-                }
+                // if(readkey == #27)                                                                  //check this later
+                // {
+                //     exit;
+                // }
             }
             k = 0;
             for(i = strlen(s); i > 0; i--)
             {
-                if ( s[i] = ';')
+                if ( s[i] == ';')
                 {
                     k = i;
                 }
@@ -1406,7 +1157,7 @@ void compile(int n, char* filename)
                             }
                         }
                     }
-                    if ((s2 == "DEF") && (numvars < max_vars))
+                    if ((strcmp(s2, "DEF")) && (numvars < max_vars))
                     {
                         if (strlen(s3) > max_var_len)
                         {
@@ -1421,7 +1172,7 @@ void compile(int n, char* filename)
                             numvars++;
                             if (numvars > max_vars)
                             {    
-                                prog_error(14, '\0');
+                                prog_error(14, s3);
                             }
                             else 
                             {
@@ -1430,7 +1181,7 @@ void compile(int n, char* filename)
                             }
                         }
                     }
-                    else if (lstr(s2,4) == "LOCK")
+                    else if (strcmp(lstr(s2,4), "LOCK"))
                     {
                         robot[n]->is_locked = true; 
                         if (strlen(s2) > 4)
@@ -1444,11 +1195,11 @@ void compile(int n, char* filename)
                             lock_code[i] = char(int(lock_code[i])-65);
                         }
                     }
-                    else if (s2 == "MSG") 
+                    else if (strcmp(s2, "MSG")) 
                     {
                         robot[n]->name = msg;
                     }
-                    else if (s2 == "TIME") 
+                    else if (strcmp(s2, "TIME"))
                     {
                         robot[n]->robot_time_limit = value(s3);
                         if (robot[n]->robot_time_limit < 0) 
@@ -1456,25 +1207,24 @@ void compile(int n, char* filename)
                             robot[n]->robot_time_limit = 0;
                         }
                     }
-                    else if (s2 == "CONFIG")
+                    else if (strcmp(s2, "CONFIG"))
                     {
-                        if (lstr(s3,8) == "SCANNER=") 
+                        if (strcmp(lstr(s3,8), "SCANNER="))
                             robot[n]->config.scanner = value(rstr(s3,strlen(s3)-8));
-                        else if (lstr(s3,7) == "SHIELD=") 
+                        else if (strcmp(lstr(s3,7), "SHIELD="))
                             robot[n]->config.shield=value(rstr(s3,strlen(s3)-7));
-                        else if (lstr(s3,7) == "WEAPON=") 
+                        else if (strcmp(lstr(s3,7), "WEAPON="))
                             robot[n]->config.weapon = value(rstr(s3,strlen(s3)-7));
-                        else if (lstr(s3,6) == "ARMOR=") 
+                        else if (strcmp(lstr(s3,6), "ARMOR="))
                             robot[n]->config.armor = value(rstr(s3,strlen(s3)-6));
-                        else if (lstr(s3,7) == "ENGINE=") 
+                        else if (strcmp(lstr(s3,7), "ENGINE="))
                             robot[n]->config.engine = value(rstr(s3,strlen(s3)-7));
-                        else if (lstr(s3,10) == "HEATSINKS=") 
+                        else if (strcmp(lstr(s3,10), "HEATSINKS="))
                             robot[n]->config.heatsinks = value(rstr(s3,strlen(s3)-10));
-                        else if (lstr(s3,6) == "MINES=") 
+                        else if (strcmp(lstr(s3,6), "MINES="))
                             robot[n]->config.mines = value(rstr(s3,strlen(s3)-6));
                         else 
                             prog_error(20,s3);
-                        //replace                                                  //check this later
                         {
                             if ( robot[n]->config.scanner < 0 )
                                 robot[n]->config.scanner = 0; 
@@ -1523,12 +1273,12 @@ void compile(int n, char* filename)
                 }
                 for (i = 2; i < strlen(s); i++)
                 {
-                    if ( s[i]='*' ) 
+                    if (s[i] == '*') 
                     {
                         prog_error(23,s);
                         k = 0; 
                         i = 1; 
-                        s1 = '\0';
+                        s1[0] = '\0';
                     }
                     if (strlen(s) <= 2 )
                     {
@@ -1537,15 +1287,15 @@ void compile(int n, char* filename)
                     while ((i < strlen(s) && (k <= max_op)))
                     {
                         i++;
-                        if ( int(s[i]) in [33..41,43..127] ) 
+                        if( in(int(s[i]), 33, 41) || in(int(s[1]), 43, 127) )
                             pp[k][0] = pp[k][0] + s[i];
                         
-                        else if ((int(s[i]) in [0..32,128..255]) && (int(s[i-1]) in [33..41,43..127]) )                                                  //check this later
+                        else if( (in(int(s[i]), 0, 32) || in(int(s[i]), 128, 255)) && (in(int(s[i-1]), 33, 41) || in(int(s[i-1]), 43, 127)) )
                             k++;
                     }
                     for (i = 0; i < max_op; i++)
                     {
-                        robot[n]->code[robot[n]->plen].op[i] = strtol(pp[i]);
+                        //robot[n]->code[robot[n]->plen].op[i] = strtol(pp[i]);
                         robot[n]->plen++;
                     }
                 }
@@ -1556,13 +1306,13 @@ void compile(int n, char* filename)
                 s1 = rstr(s,strlen(s)-1);
                 for (i = 1; i < strlen(s1); i++)
                 {
-                    if  (!(s1[i] in ['0'..'9']))                                                  //check this later
-                    {
-                        prog_error(1,s);
-                    }
-                    robot[n]->code[robot[n]->plen].op[0] = strtol(s1);
+                    // if  (!(s1[i] in ['0'..'9']))
+                    // {
+                    //     prog_error(1,s);
+                    // }
+                    // //robot[n]->code[robot[n]->plen].op[0] = strtol(s1);
                     robot[n]->code[robot[n]->plen].op[max_op] = 2;
-                    if (show_code)                                                         //check this later
+                    if (show_code)
                     {
                         print_code(n, robot[n]->plen);
                     }
@@ -1577,10 +1327,10 @@ void compile(int n, char* filename)
                 k = 0;
                 for (i = strlen(s1); i >= 1; i--)
                 {
-                    if (s1[i] in [';',#8,#9,#10,' ',','])                                       //check this later
-                    {
-                        k = i;
-                    }
+                    // if (s1[i] in [';',#8,#9,#10,' ',','])
+                    // {
+                    //     k = i;
+                    // }
                     if ( k > 0 ) 
                     {
                         s1 = lstr(s1,k-1);
@@ -1589,22 +1339,22 @@ void compile(int n, char* filename)
                 }
                 for (i = 1; i < numlabels; i++)
                 {
-                    if ( labelname[i] == s1) 
+                    if (labelname[i] == s1) 
                     {
                         if (labelnum[i] >= 0) 
-                            prog_error(13, '\0'); //'"!' + s1 + '" ('+cstr(labelnum[i])+')'
+                            prog_error(13, "\0");
                             k = i;
                     }
-                    if (k = 0) 
+                    if (k == 0) 
                     {
                         numlabels++;
                         if (numlabels > max_labels) 
                         {    
-                            prog_error(15, '\0');
+                            prog_error(15, "\0");
                         }
                         k = numlabels;
                     }
-                        labelname[k] = s1;
+                        //labelname[k] = s1;
                         labelnum [k] = robot[n]->plen;
                 }
             }
@@ -1631,14 +1381,14 @@ void compile(int n, char* filename)
                 for (j = 1; j < strlen(s); j++)
                 {
                     c = s[j];
-                    if (!(c in [' ',#8,#9,#10,','])) && (k <= max_op)                                                   //check this later
-                    {
-                        pp[k][0] = pp[k][0] + c;
-                    }
-                    else if (!(lc in [' ',#8,#9,#10,',']))                                                   //check this later
-                    {
-                        k = k + 1;
-                    }
+                    // if (!(c in [' ',#8,#9,#10,','])) && (k <= max_op)                                                   //check this later
+                    // {
+                    //     pp[k][0] = pp[k][0] + c;
+                    // }
+                    // else if (!(lc in [' ',#8,#9,#10,',']))                                                   //check this later
+                    // {
+                    //     k = k + 1;
+                    // }
                     lc = c;
                 }
                 parse1(n, robot[n]->plen, pp);
@@ -1655,7 +1405,7 @@ void compile(int n, char* filename)
             {
                 pp[i][0] = '\0';
             }
-            pp[0][0] = "NOP";
+            //pp[0][0] = "NOP";
             parse1(n,robot[n]->plen,pp);
         }
         else
@@ -1676,16 +1426,16 @@ void compile(int n, char* filename)
                             l = labelnum[k];
                             if (l < 0) 
                             {    
-                                prog_error(19, '\0'); //'!' + labelname[k] + '" ('+cstr(l)+')'
+                                prog_error(19, "\0"); //'!' + labelname[k] + '" ('+cstr(l)+')'
                             }
                             if ((l < 0) || (l > maxcode))
                             {
-                                prog_error(18, '\0'); //'!'+labelname[k]+'" ('+cstr(l)+')'
+                                prog_error(18, "\0"); //'!'+labelname[k]+'" ('+cstr(l)+')'
                             }
                             else
                             {
                                 robot[n]->code[i].op[j] = l;
-                                mask = !($F << (j*4));
+                                //mask = !($F << (j*4));
                                 robot[n]->code[i].op[max_op] = (robot[n]->code[i].op[max_op] && mask) || (4 << (j*4));
                             }
                         }
@@ -1698,119 +1448,21 @@ void compile(int n, char* filename)
             textcolor(7);
             }
         }
-    */
     return;
 }
 
 void robot_config(int n)
 {
-    int i, j, k;
-    switch(robot[n]->config.scanner)
-    {
-        case 5: robot[n]->scanrange = 1500; break;
-        case 4: robot[n]->scanrange = 1000; break;
-        case 3: robot[n]->scanrange = 700;  break;
-        case 2: robot[n]->scanrange = 500;  break;
-        case 1: robot[n]->scanrange = 350;  break;
-        default: robot[n]->scanrange = 250; break;
-    }
-    switch(robot[n]->config.weapon)
-    {
-        case 5: robot[n]->shotstrength = 1.5;  break;
-        case 4: robot[n]->shotstrength = 1.35; break;
-        case 3: robot[n]->shotstrength = 1.2;  break;
-        case 2: robot[n]->shotstrength = 1;    break;
-        case 1: robot[n]->shotstrength = 0.8;  break;
-        default: robot[n]->shotstrength = 0.5; break;
-    }
-    switch(robot[n]->config.armor)
-    {
-        case 5: robot[n]->damageadj = 0.66; robot[n]->speedadj = 0.66; break;
-        case 4: robot[n]->damageadj = 0.77; robot[n]->speedadj = 0.75; break;
-        case 3: robot[n]->damageadj = 0.83; robot[n]->speedadj = 0.85; break;
-        case 2: robot[n]->damageadj = 1;    robot[n]->speedadj = 1;    break;
-        case 1: robot[n]->damageadj = 1.5;  robot[n]->speedadj = 1.2;  break;
-        default: robot[n]->damageadj = 2;   robot[n]->speedadj = 1.33; break;
-    }
-    switch(robot[n]->config.engine)
-    {
-        case 5: robot[n]->speedadj = robot[n]->speedadj*1.5;  break;
-        case 4: robot[n]->speedadj = robot[n]->speedadj*1.35; break;
-        case 3: robot[n]->speedadj = robot[n]->speedadj*1.2;  break;
-        case 2: robot[n]->speedadj = robot[n]->speedadj*1;    break;
-        case 1: robot[n]->speedadj = robot[n]->speedadj*0.8;  break;
-        default: robot[n]->speedadj = robot[n]->speedadj*0.5; break;
-    }
-    //heatsinks are handled separately
-    switch(robot[n]->config.mines)
-    {
-        case 5: robot[n]->mines = 24;  break;
-        case 4: robot[n]->mines = 15;  break;
-        case 3: robot[n]->mines = 10;  break;
-        case 2: robot[n]->mines = 6;   break;
-        case 1: robot[n]->mines = 4;   break;
-        default: robot[n]->mines = 2; robot[n]->config.mines = 0; break;
-    }
-    robot[n]->shields_up = false;
-    if((robot[n]->config.shield < 3) || (robot[n]->config.shield > 5))
-        robot[n]->config.shield = 0;
-    if((robot[n]->config.heatsinks < 0) || (robot[n]->config.heatsinks > 5))
-        robot[n]->config.heatsinks = 0;
     return;
 }
 
 void reset_software(int n)
 {
-    int i;
-    for(i = 0; i < max_ram; i++)
-        robot[n]->ram[i] = 0;
-    robot[n]->ram[71] = 768;
-    robot[n]->thd = robot[n]->hd;
-    robot[n]->tspd = 0;
-    robot[n]->scanarc = 8;
-    robot[n]->shift = 0;
-    robot[n]->err = 0;
-    robot[n]->overburn = false;
-    robot[n]->keepshift = false;
-    robot[n]->ip = 0;
-    robot[n]->accuracy = 0;
-    robot[n]-> meters = 0;
-    robot[n]->delay_left = 0;
-    robot[n]->time_left = 0;
-    robot[n]->shields_up = false;
     return;
 }
 
 void reset_hardware(int n)
 {
-    /**int i;
-    double d, dd; //real
-    for(i = 0; i < max_robot_lines; i++)
-    {
-        robot[n]->ltx[i] = 0;
-        robot[n]->tx[i] = 0;
-        robot[n]->lty[i] = 0;
-        robot[n]->ty[i] = 0;
-    }
-    do
-    {
-        robot[n]->x = rand() % 1000;
-        robot[n]->y = rand() % 1000;
-        dd = 1000;
-        for(i = 0; i < num_robots; i++)
-        {
-            if(robot[i]->x < 0) {robot[i]->x = 0;}
-            if(robot[i]->x > 1000) {robot[i]->x = 1000;}
-            if(robot[i]->y < 0) {robot[i]->y = 0;}
-            if(robot[i]->y > 1000) {robot[i]->y = 1000;}
-            d = distance(robot[n]->x,robot[n]->y,robot[i]->x,robot[i]->y);
-            if((robot[i]->armor > 0) && (i != n) && (d < dd)) {dd = d;}
-        }
-    }while(dd < 33); //or < 32? //until dd > 32
-    for(i = 0; i < max_mines; i++)
-    {
-       
-    }**/
     return;
 }
 
