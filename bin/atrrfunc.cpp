@@ -1,9 +1,12 @@
 #include <iostream>
 #include <stdlib.h>
+#include <stdio.h>
+#include <string>
 #include <string.h>
 #include <ctype.h>
 #include <algorithm>
 #include <math.h>
+#include <cmath>
 #include "atrrfunc.hh"
 #include "filelib.hh"
 

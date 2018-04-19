@@ -1,6 +1,8 @@
 #include <iostream>
+#include <stdio.h>
 #include <fstream>
 #include <string>
+#include <string.h>
 #include <stdlib.h>
 #include <ctime>
 #include <iomanip>

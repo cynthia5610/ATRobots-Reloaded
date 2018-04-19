@@ -1,8 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <string.h>
 #include <cstring>
-
+#include <stdio.h>
 #include "filelib.hh"
 #include "atrrfunc.hh"
 
