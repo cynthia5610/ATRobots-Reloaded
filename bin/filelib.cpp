@@ -74,6 +74,7 @@ char* rstr(char *s1, int l)
 
 bool EXIST(char* thisfile)
 {
+    strcat(thisfile, ".AT2"); 
     ifstream inFile;
     inFile.open(thisfile);
     if(!inFile.is_open())

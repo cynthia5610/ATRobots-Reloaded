@@ -31,5 +31,5 @@ extern char* repchar(char c, unsigned char i);
 extern double getDistance(double x1, double y1, double x2, double y2);
 extern int robot_color(int n);
 extern void textcolor(int num);
-extern bool in(int low, int high);
+extern bool in(int value, int low, int high);
 #endif
