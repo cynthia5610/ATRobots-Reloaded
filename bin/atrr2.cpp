@@ -890,8 +890,76 @@ int scan(int n)
     nn = -1;
     range = INT_MAX;
     if(!(n >= 0 && n <= num_robots)) return 0; //HELP. What do i return?
-    //LINE 1921
-    return 0;
+    if(robot[n]->scanarc < 0) {robot[n]->scanarc = 0;}
+    robot[n]->accuracy = 0;
+    nn = -1;
+    dir = (robot[n]->shift + robot[n]->hd) & 255;
+    if(debug_info)
+    {
+        cout << "<SCAN ARC= " << robot[n]->scanarc << ", DIR= " << dir << ">" << endl;
+    }
+    for(i = 0; i < num_robots; i++)
+    {
+        if(i != n && robot[i]->armor > 0)
+        {
+           // j = find_anglei(robot[n]->x, robot[n]->y, robot[i]->x, robot[i]->y); //ATRFUNC...HELP
+            d = getDistance(robot[n]->x,robot[n]->y,robot[i]->x,robot[i]->y);
+            k = round(d);
+            if(k < range && k <= robot[n]->scanrange && ((abs(j-dir) <= abs(robot[n]->scanarc)) || (abs(j-dir)>=256-abs(robot[n]->scanarc))))
+            {
+                dir = (dir + 1024) & 255;
+                //xx = round(sint[dir]*d+robot[n]->x);// ATRFUNC HELP
+                //yy = round(-cost[dir]*d+robot[n]->y);//HELP
+                r = getDistance(xx,yy,robot[i]->x,robot[i]->y);
+                if(debug_info)
+                {
+                    cout << "SCAN HT! Scan X,Y: " << round(xx) << "," << round(yy) << " Robot X,Y: " << round(robot[i]->x) << "," << round(robot[i]->y) << " Dist = " << round(r) << endl;
+                    //repeat until keypress; flushkey;
+                }
+                if(robot[n]->scanarc > 0 || r < hit_range-2)
+                {
+                    range = k;
+                    robot[n]->accuracy = 0;
+                    if(robot[n]->scanarc > 0)
+                    {
+                        j = (j+1024) & 255;
+                        dir = (dir+1024) & 25;
+                        if(j < dir) {sign = -1;}
+                        if(j > dir) {sign = 1;}
+                        if(j > 190 && dir < 66)
+                        {
+                            dir = dir+256;
+                            sign = -1;
+                        }
+                        if(dir > 190 && j < 66)
+                        {
+                            j = j+256;
+                            sign = 1;
+                        }
+                        acc = abs(j-dir)/robot[n]->scanarc*2;
+                        if(sign < 0)
+                            robot[n]->accuracy = -abs(round(acc));
+                        else
+                            robot[n]->accuracy = abs(round(acc));
+                    }
+                    nn = i;
+                    if(debug_info)
+                    {
+                        cout << "\r" << zero_pad(game_cycle,5) << " S " << n << ": nn = " << nn << ", range = " << range << ", acc = " << robot[n]->accuracy << "           " << endl;
+                        //repeat until keypress; flushkey;
+                    }
+                }
+            }
+        }
+        if(nn >= 0 && nn < num_robots)
+        {
+            robot[n]->ram[5] = robot[nn]->transponder;
+            robot[n]->ram[6] = (robot[nn]->hd - (robot[n]->hd + robot[n]->shift) + 1024) & 255;
+            robot[n]->ram[7] = robot[nn]->spd;
+            robot[n]->ram[13] = round(robot[nn]->speed*100);
+        }
+    }
+    return range;
 }
 
 void score_robots()
@@ -1780,8 +1848,9 @@ void reset_software(int n)
 
 void reset_hardware(int n)
 {
-    /**int i;
+    int i;
      double d, dd; //real
+    
      for(i = 0; i < max_robot_lines; i++)
      {
      robot[n]->ltx[i] = 0;
@@ -1789,6 +1858,7 @@ void reset_hardware(int n)
      robot[n]->lty[i] = 0;
      robot[n]->ty[i] = 0;
      }
+    
      do
      {
      robot[n]->x = rand() % 1000;
@@ -1800,14 +1870,44 @@ void reset_hardware(int n)
      if(robot[i]->x > 1000) {robot[i]->x = 1000;}
      if(robot[i]->y < 0) {robot[i]->y = 0;}
      if(robot[i]->y > 1000) {robot[i]->y = 1000;}
-     d = distance(robot[n]->x,robot[n]->y,robot[i]->x,robot[i]->y);
+             d = getDistance(robot[n]->x,robot[n]->y,robot[i]->x,robot[i]->y);
      if((robot[i]->armor > 0) && (i != n) && (d < dd)) {dd = d;}
      }
      }while(dd < 33); //or < 32? //until dd > 32
+    
      for(i = 0; i < max_mines; i++)
      {
+         robot[n]->mine[i].x = -1;
+         robot[n]->mine[i].y = -1;
+         robot[n]->mine[i].yield = 0;
+         robot[n]->mine[i].detonate = false;
+         robot[n]->mine[i].detect = 0;
+     }
      
-     }**/
+    robot[n]->lx = -1;
+    robot[n]->ly = -1;
+    robot[n]->hd = rand() % 256;
+    robot[n]->shift = 0;
+    robot[n]->lhd = robot[n]->hd+1;
+    robot[n]->lshift = robot[n]->shift+1;
+    robot[n]->spd = 0;
+    robot[n]->speed = 0;
+    robot[n]->cooling = false;
+    robot[n]->armor = 100;
+    robot[n]->larmor = 0;
+    robot[n]->heat = 0;
+    robot[n]->lheat = 1;
+    robot[n]->match_shots = 0;
+    robot[n]->won = false;
+    robot[n]->last_damage = 0;
+    robot[n]->last_hit = 0;
+    robot[n]->transponder = n+1;
+    robot[n]->meters = 0;
+    robot[n]->shutdown = 400;
+    robot[n]->shields_up = false;
+    robot[n]->channel = robot[n]->transponder;
+    robot[n]->startkills = robot[n]->kills;
+    robot_config(n);
     return;
 }
 
