@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <fstream>
 #include <string>
-#include <string.h>
 #include <stdlib.h>
 #include <ctime>
 #include <iomanip>
@@ -46,13 +45,16 @@ void parse_param(char * s);
 void init_missiles(double xx, double yy, double xxv, double yyv, int dir, int s, int blast, bool ob);
 void shutdown();
 char* victor_string(int k, int n);
-
+void readStats();
 
 
 int main(int argc, char *argv[]){
 
     //move the robot array up by two to account for the negative index
 	robot += 2;
+
+    //for testing purposes
+    readStats();
 
     //send the robots & flags
 	init(argc, argv);
@@ -2190,6 +2192,79 @@ void init_debug_window()
 
 void close_debug_window()
 {
+    return;
+}
+
+/*
+------- GUI FUNCTIONS -------
+*/
+
+void readStats(){
+    size_t pos = 0;
+    string line;
+    string token;
+
+    string endString = "#END";
+    string robotName = "CIRCLES.AT2";
+    string delimiter = "=";
+
+    string scanner = "#CONFIG scanner",
+           weapon = "#CONFIG weapon",
+           armor = "#CONFIG armor",
+           engine = "#CONFIG engine",
+           heatsinks = "#CONFIG heatsinks",
+           mines = "#CONFIG mines",
+           shield = "#CONFIG shield";
+
+    string scannerVal,
+           weaponVal,
+           armorVal,
+           engineVal,
+           heatsinksVal,
+           minesVal,
+           shieldVal;
+
+    fstream robotFile (robotName);
+    if(robotFile.is_open()){
+        while(getline(robotFile, line) && line != "#END"){
+            if((pos = line.find(delimiter)) != string::npos){
+                token = line.substr(0, pos);
+                if(token == scanner){
+                    scannerVal = line.erase(0, pos + delimiter.length());
+                }
+                else if(token == weapon){
+                    weaponVal = line.erase(0, pos + delimiter.length());
+                }
+                else if(token == armor){
+                    armorVal = line.erase(0, pos + delimiter.length());
+                }
+                else if(token == engine){
+                    engineVal = line.erase(0, pos + delimiter.length());
+                }
+                else if(token == heatsinks){
+                    heatsinksVal = line.erase(0, pos + delimiter.length());
+                }
+                else if(token == mines){
+                    minesVal = line.erase(0, pos + delimiter.length());
+                }
+                else if(token == shield){
+                    shieldVal = line.erase(0, pos + delimiter.length());
+                }
+            }
+        }
+        //print values for testing
+        cout << "scanner value is:" <<  scannerVal << endl;
+        cout << "weapon value is:" <<   weaponVal << endl;
+        cout << "armor value is:" <<  armorVal << endl;
+        cout << "engine value is:" <<  engineVal << endl;
+        cout << "heatsinks value is:" <<  heatsinksVal << endl;
+        cout << "mines value is:" <<  minesVal << endl;
+        cout << "shield value is:" <<  shieldVal << endl;
+    }
+    else{
+        
+    }
+    robotFile.close();
     return;
 }
 
