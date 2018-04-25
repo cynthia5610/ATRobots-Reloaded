@@ -3,6 +3,7 @@
 #include <fstream>
 #include <string>
 #include <stdlib.h>
+#include <cstring>
 #include <ctime>
 #include <iomanip>
 #include <climits> //FOR INT_MAX
@@ -46,7 +47,7 @@ void init_missiles(double xx, double yy, double xxv, double yyv, int dir, int s,
 void shutdown();
 char* victor_string(int k, int n);
 void readStats();
-void writeStats(string token, string value);
+void writeStats(string robotName, string token, string value);
 
 
 int main(int argc, char *argv[]){
@@ -56,7 +57,7 @@ int main(int argc, char *argv[]){
 
     //for testing purposes
     readStats();
-    writeStats("scanner", "10");
+    writeStats("CIRCLES.AT2", "scanner", "1111");
 
     //send the robots & flags
 	init(argc, argv);
@@ -2269,18 +2270,76 @@ void readStats(){
     return;
 }
 
-void writeStats(string intoken, string value){
-    FILE *f = fopen("CIRCLES.AT2", "rb");
-    fseek(f, 0, SEEK_END);
-    long fsize = ftell(f);
-    fseek(f, 0, SEEK_SET);
+void writeStats(string robotName, string intoken, string value){
+    bool found = false;
+    size_t pos = 0;
+    string line;
+    string token;
 
-    char *buffer = (char *)malloc(fsize + 1);
-    fread(buffer, fsize, 1, f);
-    fclose(f);
+    string tempFile = "tempFile.AT2";
+    string delimiter = "=";
 
-    buffer[fsize] = 0;
-    cout << buffer << endl;
+    string scanner = "#CONFIG scanner",
+           weapon = "#CONFIG weapon",
+           armor = "#CONFIG armor",
+           engine = "#CONFIG engine",
+           heatsinks = "#CONFIG heatsinks",
+           mines = "#CONFIG mines",
+           shield = "#CONFIG shield";
+
+    string scannerVal,
+           weaponVal,
+           armorVal,
+           engineVal,
+           heatsinksVal,
+           minesVal,
+           shieldVal;
+    
+    if(intoken == "scanner"){
+        intoken = scanner;
+    }
+    else if(intoken == "weapon"){
+        intoken = weapon;
+    }
+    else if(intoken == "armor"){
+        intoken = armor;
+    }
+    else if(intoken == "engine"){
+        intoken = engine;
+    }
+    else if(intoken == "heatsinks"){
+        intoken = heatsinks;
+    }
+    else if(intoken == "mines"){
+        intoken = mines;
+    }
+    else if(intoken == "shield"){
+        intoken = shield;
+    }
+    ifstream robotFile (robotName);
+    ofstream tempRobotFile (tempFile);
+    if(robotFile.is_open()){
+        while(getline(robotFile, line)){
+            if((pos = line.find(delimiter)) != string::npos){
+                token = line.substr(0, pos);
+                if(intoken == token){
+                    line = line.erase(line.size()-1, line.size()-2);
+                    line = line.append(value);
+                    tempRobotFile << line << endl;
+                }
+                else{
+                    tempRobotFile << line << endl;
+                }
+            }
+            else{
+                tempRobotFile << line << endl;
+            }
+        }
+    }
+    robotFile.close();
+    tempRobotFile.close();
+    remove((robotName.c_str()));
+    rename(tempFile.c_str(), robotName.c_str());
 }
 
 /*

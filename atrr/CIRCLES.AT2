@@ -1,9 +1,9 @@
 #CONFIG engine=1
 #CONFIG heatsinks=2
-#CONFIG scanner=3
+#CONFIG scanner=11111
 #CONFIG armor=4
 #CONFIG weapon=5
 #CONFIG mines=6
 #CONFIG shield=7
 
-#END#CONFIG scanner=#CONFIG scanner=10#
+#END
