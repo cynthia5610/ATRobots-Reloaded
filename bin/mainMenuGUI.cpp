@@ -26,7 +26,8 @@ const char *gameDelay();
 const char *gameTime();
 const char *robotTime();
 void drawQuitPlay();
-string readInDigit();
+string readInDigit(int n);
+void updateDigit(string here, int which);
 
 bool init();
 bool loadMedia();
@@ -44,7 +45,6 @@ SDL_Window *window = NULL;
 SDL_Renderer *render = NULL;
 SDL_Surface *surface = NULL;
 
-
 TTF_Font *font1 = NULL;
 TTF_Font *font2 = NULL;
 
@@ -57,6 +57,11 @@ string matPlay = "Default";
 string gaDelay = "Default";
 string gaTime = "     16";
 string robTime = "Default";
+
+int mTP = 0;
+int gD = 0;
+int gT = 16;
+int rT = 0;
 
 int main(int argc, char *argv[])
 {
@@ -101,7 +106,7 @@ void runGraphics()
 
                     SDL_GetMouseState(&x, &y);
 
-                    if (e.type == SDL_QUIT)
+                    if (e.type == SDL_QUIT || e.key.keysym.sym == SDLK_ESCAPE)
                     {
                         close();
                         quit = true;
@@ -250,8 +255,8 @@ void runGraphics()
                             if (e.button.button == SDL_BUTTON_LEFT)
                             {
                                 std::cout << "Matches to play pressed" << std::endl;
-                                matPlay = readInDigit();
-                                cout << matPlay << endl;
+                                mTP = atoi(readInDigit(1).c_str());
+                                cout << mTP << endl;
                                 settingCycle();
                                 SDL_RenderPresent(render);
                             }
@@ -265,7 +270,8 @@ void runGraphics()
                             if (e.button.button == SDL_BUTTON_LEFT)
                             {
                                 std::cout << "Game Delay pressed" << std::endl;
-                                gaDelay = readInDigit();
+                                gD = atoi(readInDigit(2).c_str());
+                                cout << gD << endl;
                                 settingCycle();
                                 SDL_RenderPresent(render);
                             }
@@ -279,7 +285,8 @@ void runGraphics()
                             if (e.button.button == SDL_BUTTON_LEFT)
                             {
                                 std::cout << "Game Time-Limit pressed" << std::endl;
-                                gaTime = readInDigit();
+                                gT = atoi(readInDigit(3).c_str());
+                                cout << gT << endl;
                                 settingCycle();
                                 SDL_RenderPresent(render);
                             }
@@ -293,7 +300,8 @@ void runGraphics()
                             if (e.button.button == SDL_BUTTON_LEFT)
                             {
                                 std::cout << "Robot Time-Slice pressed" << std::endl;
-                                robTime = readInDigit();
+                                rT = atoi(readInDigit(4).c_str());
+                                cout << rT << endl;
                                 settingCycle();
                                 SDL_RenderPresent(render);
                             }
@@ -387,9 +395,9 @@ void drawRobots()
         temp.h = 55;
 
         SDL_Rect temp2;
-        temp2.x = 25 + half;
+        temp2.x = 45 + half;
         temp2.y = 102 + (70 * height);
-        temp2.w = 57;
+        temp2.w = 37;
         temp2.h = 31;
 
         SDL_Rect temp3;
@@ -399,7 +407,7 @@ void drawRobots()
         temp3.h = 31;
 
         SDL_Rect temp4;
-        temp4.x = 32 + half;
+        temp4.x = 50 + half;
         temp4.y = 107 + (70 * height);
         temp4.w = 15;
         temp4.h = 21;
@@ -431,9 +439,10 @@ void drawRobots()
         surface = TTF_RenderText_Solid(font1, "R", black);
         texture = SDL_CreateTextureFromSurface(render, surface);
         SDL_RenderCopy(render, texture, NULL, &temp4);
+        SDL_FreeSurface(surface);
         surface = TTF_RenderText_Solid(font1, robNum, red);
         texture = SDL_CreateTextureFromSurface(render, surface);
-        temp4.x = 42 + half;
+        temp4.x = 60 + half;
         SDL_RenderCopy(render, texture, NULL, &temp4);
         SDL_FreeSurface(surface);
         height++;
@@ -507,8 +516,7 @@ void settingCycle()
             setting = "Matches to play:  ";
             //option = addfront(const_cast<char*>(matPlay.c_str()), 7);
             option = matPlay.c_str();
-            cout << "got to here my boy" << endl;
-            break;  
+            break;
         case 6:
             button = "D";
             setting = "Game Delay:       ";
@@ -535,6 +543,7 @@ void settingCycle()
         surface = TTF_RenderText_Solid(font1, button, red);
         texture = SDL_CreateTextureFromSurface(render, surface);
         SDL_RenderCopy(render, texture, NULL, &temp2);
+        SDL_FreeSurface(surface);
 
         SDL_Rect temp3;
         temp3.x = 80 + half;
@@ -545,6 +554,7 @@ void settingCycle()
         surface = TTF_RenderText_Solid(font1, setting, white);
         texture = SDL_CreateTextureFromSurface(render, surface);
         SDL_RenderCopy(render, texture, NULL, &temp3);
+        SDL_FreeSurface(surface);
 
         SDL_Rect temp4;
         temp4.x = 335 + spHalf;
@@ -555,8 +565,8 @@ void settingCycle()
         surface = TTF_RenderText_Solid(font1, option, white);
         texture = SDL_CreateTextureFromSurface(render, surface);
         SDL_RenderCopy(render, texture, NULL, &temp4);
-
         SDL_FreeSurface(surface);
+
         height++;
     }
     drawQuitPlay();
@@ -637,7 +647,7 @@ const char *robotTime(){
 
 } */
 
-string readInDigit()
+string readInDigit(int n)
 {
     SDL_Event e;
     string inputNumbers;
@@ -651,12 +661,48 @@ string readInDigit()
                 leave = true;
                 return inputNumbers;
             }
-            if (e.type == SDL_TEXTINPUT)
+            if (e.type == SDL_TEXTINPUT && e.key.keysym.sym != SDLK_BACKSPACE)
             {
                 inputNumbers += e.text.text;
+                updateDigit(inputNumbers, n);
+            }
+            if (e.key.keysym.sym == SDLK_BACKSPACE)
+            {
+                if (e.type == SDL_KEYDOWN)
+                {
+                    inputNumbers = inputNumbers.substr(0, inputNumbers.size() - 1);
+                    updateDigit(inputNumbers, n);
+                    cout << "running once" << endl;
+                }
             }
         }
     }
+}
+
+void updateDigit(string here, int which)
+{
+    string tempHere = here;
+    for (int i = tempHere.length(); i < 7; i++)
+    {
+        tempHere = " " + tempHere;
+    }
+    switch (which)
+    {
+    case 1:
+        matPlay = tempHere.c_str();
+        break;
+    case 2:
+        gaDelay = tempHere.c_str();
+        break;
+    case 3:
+        gaTime = tempHere.c_str();
+        break;
+    case 4:
+        robTime = tempHere.c_str();
+        break;
+    }
+    settingCycle();
+    SDL_RenderPresent(render);
 }
 
 void drawQuitPlay()
