@@ -66,7 +66,6 @@ int rT = 0;
 int main(int argc, char *argv[])
 {
     runGraphics();
-    return 0;
 }
 
 void runGraphics()
@@ -88,7 +87,7 @@ void runGraphics()
 
             font1 = TTF_OpenFont("Averia.ttf", 100);
             font2 = TTF_OpenFont("Averia.ttf", 38);
-
+            bool depressed = false;
             int x = 0;
             int y = 0;
 
@@ -103,16 +102,14 @@ void runGraphics()
 
                 while (SDL_PollEvent(&e) != 0)
                 {
-
                     SDL_GetMouseState(&x, &y);
-
-                    if (e.type == SDL_QUIT || e.key.keysym.sym == SDLK_ESCAPE)
+                    if (e.type == SDL_QUIT || e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE)
                     {
                         close();
                         quit = true;
                     }
                     //Robot 1
-                    else if (x >= 25 && x <= 82 && y >= 102 && y <= 133)
+                    else if (x >= 45 && x <= 82 && y >= 102 && y <= 133)
                     {
                         if (e.type == SDL_MOUSEBUTTONUP)
                         {
@@ -123,7 +120,7 @@ void runGraphics()
                         }
                     }
                     //Robot 2
-                    else if (x >= 25 && x <= 82 && y >= 172 && y <= 203)
+                    else if (x >= 45 && x <= 82 && y >= 172 && y <= 203)
                     {
                         if (e.type == SDL_MOUSEBUTTONUP)
                         {
@@ -134,7 +131,7 @@ void runGraphics()
                         }
                     }
                     //Robot 3
-                    else if (x >= 25 && x <= 82 && y >= 242 && y <= 273)
+                    else if (x >= 45 && x <= 82 && y >= 242 && y <= 273)
                     {
                         if (e.type == SDL_MOUSEBUTTONUP)
                         {
@@ -145,7 +142,7 @@ void runGraphics()
                         }
                     }
                     //Robot 4
-                    else if (x >= 525 && x <= 582 && y >= 102 && y <= 133)
+                    else if (x >= 545 && x <= 582 && y >= 102 && y <= 133)
                     {
                         if (e.type == SDL_MOUSEBUTTONUP)
                         {
@@ -156,7 +153,7 @@ void runGraphics()
                         }
                     }
                     //Robot 5
-                    else if (x >= 525 && x <= 582 && y >= 172 && y <= 203)
+                    else if (x >= 545 && x <= 582 && y >= 172 && y <= 203)
                     {
                         if (e.type == SDL_MOUSEBUTTONUP)
                         {
@@ -167,13 +164,145 @@ void runGraphics()
                         }
                     }
                     //Robot 6
-                    else if (x >= 525 && x <= 582 && y >= 242 && y <= 273)
+                    else if (x >= 545 && x <= 582 && y >= 242 && y <= 273)
                     {
                         if (e.type == SDL_MOUSEBUTTONUP)
                         {
                             if (e.button.button == SDL_BUTTON_LEFT)
                             {
                                 std::cout << "Robot 6 Pressed" << std::endl;
+                            }
+                        }
+                    }
+                    //Robot 1 Remove
+                    else if (x >= 8 && x <= 40 && y >= 102 && y <= 115)
+                    {
+                        if (e.type == SDL_MOUSEBUTTONUP)
+                        {
+                            if (e.button.button == SDL_BUTTON_LEFT)
+                            {
+                                std::cout << "Robot 1 Removed" << std::endl;
+                            }
+                        }
+                    }
+                    //Robot 2 Remove
+                    else if (x >= 8 && x <= 40 && y >= 172 && y <= 185)
+                    {
+                        if (e.type == SDL_MOUSEBUTTONUP)
+                        {
+                            if (e.button.button == SDL_BUTTON_LEFT)
+                            {
+                                std::cout << "Robot 2 Removed" << std::endl;
+                            }
+                        }
+                    }
+                    //Robot 3 Remove
+                    else if (x >= 8 && x <= 40 && y >= 242 && y <= 255)
+                    {
+                        if (e.type == SDL_MOUSEBUTTONUP)
+                        {
+                            if (e.button.button == SDL_BUTTON_LEFT)
+                            {
+                                std::cout << "Robot 3 Removed" << std::endl;
+                            }
+                        }
+                    }
+                    //Robot 4 Remove
+                    else if (x >= 508 && x <= 540 && y >= 102 && y <= 115)
+                    {
+                        if (e.type == SDL_MOUSEBUTTONUP)
+                        {
+                            if (e.button.button == SDL_BUTTON_LEFT)
+                            {
+                                std::cout << "Robot 4 Removed" << std::endl;
+                            }
+                        }
+                    }
+                    //Robot 5 Remove
+                    else if (x >= 508 && x <= 540 && y >= 172 && y <= 185)
+                    {
+                        if (e.type == SDL_MOUSEBUTTONUP)
+                        {
+                            if (e.button.button == SDL_BUTTON_LEFT)
+                            {
+                                std::cout << "Robot 5 Removed" << std::endl;
+                            }
+                        }
+                    }
+                    //Robot 6 Remove
+                    else if (x >= 508 && x <= 540 && y >= 242 && y <= 255)
+                    {
+                        if (e.type == SDL_MOUSEBUTTONUP)
+                        {
+                            if (e.button.button == SDL_BUTTON_LEFT)
+                            {
+                                std::cout << "Robot 6 Removed" << std::endl;
+                            }
+                        }
+                    }
+                    //Robot 1 Edit
+                    else if (x >= 8 && x <= 40 && y >= 117 && y <= 130)
+                    {
+                        if (e.type == SDL_MOUSEBUTTONUP)
+                        {
+                            if (e.button.button == SDL_BUTTON_LEFT)
+                            {
+                                std::cout << "Robot 1 Edited" << std::endl;
+                            }
+                        }
+                    }
+                    //Robot 2 Edit
+                    else if (x >= 8 && x <= 40 && y >= 187 && y <= 200)
+                    {
+                        if (e.type == SDL_MOUSEBUTTONUP)
+                        {
+                            if (e.button.button == SDL_BUTTON_LEFT)
+                            {
+                                std::cout << "Robot 2 Edited" << std::endl;
+                            }
+                        }
+                    }
+                    //Robot 3 Edit
+                    else if (x >= 8 && x <= 40 && y >= 257 && y <= 270)
+                    {
+                        if (e.type == SDL_MOUSEBUTTONUP)
+                        {
+                            if (e.button.button == SDL_BUTTON_LEFT)
+                            {
+                                std::cout << "Robot 3 Edited" << std::endl;
+                            }
+                        }
+                    }
+                    //Robot 4 Edit
+                    else if (x >= 508 && x <= 540 && y >= 117 && y <= 130)
+                    {
+                        if (e.type == SDL_MOUSEBUTTONUP)
+                        {
+                            if (e.button.button == SDL_BUTTON_LEFT)
+                            {
+                                std::cout << "Robot 4 Edited" << std::endl;
+                            }
+                        }
+                    }
+                    //Robot 5 Edit
+                    else if (x >= 508 && x <= 540 && y >= 187 && y <= 200)
+                    {
+                        if (e.type == SDL_MOUSEBUTTONUP)
+                        {
+                            if (e.button.button == SDL_BUTTON_LEFT)
+                            {
+                                std::cout << "Robot 5 Removed" << std::endl;
+                            }
+                        }
+                    }
+                    //Robot 6 Edit
+                    else if (x >= 508 && x <= 540 && y >= 257 && y <= 270)
+                    {
+                        if (e.type == SDL_MOUSEBUTTONUP)
+                        {
+                            if (e.button.button == SDL_BUTTON_LEFT)
+                            {
+                                std::cout << "Robot 6 Removed" << std::endl;
                             }
                         }
                     }
@@ -257,8 +386,6 @@ void runGraphics()
                                 std::cout << "Matches to play pressed" << std::endl;
                                 mTP = atoi(readInDigit(1).c_str());
                                 cout << mTP << endl;
-                                settingCycle();
-                                SDL_RenderPresent(render);
                             }
                         }
                     }
@@ -272,8 +399,6 @@ void runGraphics()
                                 std::cout << "Game Delay pressed" << std::endl;
                                 gD = atoi(readInDigit(2).c_str());
                                 cout << gD << endl;
-                                settingCycle();
-                                SDL_RenderPresent(render);
                             }
                         }
                     }
@@ -287,8 +412,6 @@ void runGraphics()
                                 std::cout << "Game Time-Limit pressed" << std::endl;
                                 gT = atoi(readInDigit(3).c_str());
                                 cout << gT << endl;
-                                settingCycle();
-                                SDL_RenderPresent(render);
                             }
                         }
                     }
@@ -302,8 +425,6 @@ void runGraphics()
                                 std::cout << "Robot Time-Slice pressed" << std::endl;
                                 rT = atoi(readInDigit(4).c_str());
                                 cout << rT << endl;
-                                settingCycle();
-                                SDL_RenderPresent(render);
                             }
                         }
                     }
@@ -387,7 +508,7 @@ void drawRobots()
             half = 500;
             height = 0;
         }
-        SDL_SetRenderDrawColor(render, 0, 0, 0, 255);
+
         SDL_Rect temp;
         temp.x = 90 + half;
         temp.y = 90 + (70 * height);
@@ -403,14 +524,20 @@ void drawRobots()
         SDL_Rect temp3;
         temp3.x = 8 + half;
         temp3.y = 102 + (70 * height);
-        temp3.w = 12;
-        temp3.h = 31;
+        temp3.w = 32;
+        temp3.h = 13;
 
         SDL_Rect temp4;
         temp4.x = 50 + half;
         temp4.y = 107 + (70 * height);
         temp4.w = 15;
         temp4.h = 21;
+
+        SDL_Rect temp5;
+        temp5.x = 8 + half;
+        temp5.y = 117 + (70 * height);
+        temp5.w = 32;
+        temp5.h = 13;
         switch (i)
         {
         case 0:
@@ -432,10 +559,14 @@ void drawRobots()
             robNum = "6";
             break;
         }
+        SDL_SetRenderDrawColor(render, 0, 0, 0, 255);
         SDL_RenderFillRect(render, &temp);
         SDL_RenderDrawRect(render, &temp2);
-        SDL_RenderDrawRect(render, &temp3);
-        SDL_RenderDrawLine(render, 13 + half, 109 + (70 * height), 13 + half, 126 + (70 * height));
+        SDL_SetRenderDrawColor(render, 255, 0, 0, 255);
+        SDL_RenderFillRect(render, &temp3);
+        SDL_SetRenderDrawColor(render, 100, 100, 100, 255);
+        SDL_RenderFillRect(render, &temp5);
+        //SDL_RenderDrawLine(render, 13 + half, 109 + (70 * height), 13 + half, 126 + (70 * height));
         surface = TTF_RenderText_Solid(font1, "R", black);
         texture = SDL_CreateTextureFromSurface(render, surface);
         SDL_RenderCopy(render, texture, NULL, &temp4);
@@ -672,7 +803,6 @@ string readInDigit(int n)
                 {
                     inputNumbers = inputNumbers.substr(0, inputNumbers.size() - 1);
                     updateDigit(inputNumbers, n);
-                    cout << "running once" << endl;
                 }
             }
         }
@@ -780,12 +910,12 @@ bool init()
         }
         else
         {
-            int imgFlags = IMG_INIT_PNG;
+            /*             int imgFlags = IMG_INIT_PNG;
             if (!(IMG_Init(imgFlags) & imgFlags))
             {
                 std::cout << "SDL_image Error:" << IMG_GetError() << std::endl;
                 success = false;
-            }
+            } */
 
             render = SDL_CreateRenderer(window, -1, 0);
             if (render == NULL)
