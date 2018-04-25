@@ -6,4 +6,4 @@
 #CONFIG mines=6
 #CONFIG shield=7
 
-#END
+#END#CONFIG scanner=#CONFIG scanner=10#

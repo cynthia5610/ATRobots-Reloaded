@@ -46,6 +46,7 @@ void init_missiles(double xx, double yy, double xxv, double yyv, int dir, int s,
 void shutdown();
 char* victor_string(int k, int n);
 void readStats();
+void writeStats(string token, string value);
 
 
 int main(int argc, char *argv[]){
@@ -55,6 +56,7 @@ int main(int argc, char *argv[]){
 
     //for testing purposes
     readStats();
+    writeStats("scanner", "10");
 
     //send the robots & flags
 	init(argc, argv);
@@ -1011,7 +1013,7 @@ void prog_error(int n, const char* ss)
         case 5: cout <<"Robot names and settings must be specified. An empty arena is no fun.\n"<< endl; break;
         case 6: cout <<"Config file not found - \""<< ss << "\""<< endl; break;
         case 7: cout <<"Cannot access a config file from a config file - \""<< ss <<"\""<< endl; break;
-        case 8: cout <<"Robot not found \"" << ss << "\". Perhaps you mistyped it?\n"<< endl; break;
+        case 8: cout <<"Robot not found. Perhaps you mistyped it?\n"<< endl; break;
         case 9: cout <<"Insufficient RAM to load robot: \"" << ss << "\"... This is not good.\n"<< endl; break;
         case 10: cout <<"Too many robots! We can only handle " << cstr(max_robots<<1) << "! Blah.. limits are limits.\n"<< endl; break; 
         case 11: cout <<"You already have a perfectly good #def for \"" << ss << "\", silly.\n"<< endl; break;
@@ -2224,7 +2226,7 @@ void readStats(){
            minesVal,
            shieldVal;
 
-    fstream robotFile (robotName);
+    ifstream robotFile (robotName);
     if(robotFile.is_open()){
         while(getline(robotFile, line) && line != "#END"){
             if((pos = line.find(delimiter)) != string::npos){
@@ -2252,20 +2254,33 @@ void readStats(){
                 }
             }
         }
-        //print values for testing
-        cout << "scanner value is:" <<  scannerVal << endl;
-        cout << "weapon value is:" <<   weaponVal << endl;
-        cout << "armor value is:" <<  armorVal << endl;
-        cout << "engine value is:" <<  engineVal << endl;
-        cout << "heatsinks value is:" <<  heatsinksVal << endl;
-        cout << "mines value is:" <<  minesVal << endl;
-        cout << "shield value is:" <<  shieldVal << endl;
+        // cout << "scanner value is:" <<  scannerVal << endl;
+        // cout << "weapon value is:" <<   weaponVal << endl;
+        // cout << "armor value is:" <<  armorVal << endl;
+        // cout << "engine value is:" <<  engineVal << endl;
+        // cout << "heatsinks value is:" <<  heatsinksVal << endl;
+        // cout << "mines value is:" <<  minesVal << endl;
+        // cout << "shield value is:" <<  shieldVal << endl;
     }
     else{
-        
+        prog_error(8, "\0");
     }
     robotFile.close();
     return;
+}
+
+void writeStats(string intoken, string value){
+    FILE *f = fopen("CIRCLES.AT2", "rb");
+    fseek(f, 0, SEEK_END);
+    long fsize = ftell(f);
+    fseek(f, 0, SEEK_SET);
+
+    char *buffer = (char *)malloc(fsize + 1);
+    fread(buffer, fsize, 1, f);
+    fclose(f);
+
+    buffer[fsize] = 0;
+    cout << buffer << endl;
 }
 
 /*
