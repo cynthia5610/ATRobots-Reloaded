@@ -2,8 +2,11 @@
 #include <fstream>
 #include <string>
 #include <stdlib.h>
+#include <cstring>
+
 #include "atrrfunc.hh"
 #include "mainMenuGUI.hh"
+#include "types.hh"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -37,6 +40,9 @@ void robotModify(int which);
 void robotPrintButtons();
 bool statChecker();
 void maxStatter();
+void readStats(string robotName);
+void writeStats(string robotName, string token, string value);
+void error(int n, const char* ss);
 
 bool init();
 bool loadMedia();
@@ -76,15 +82,15 @@ int gT = 16;
 int rT = 0;
 
 string rStatEdit[7] = {"Scanner  ", "Weapon   ", "Armor    ", "Engine   ", "Heatsinks", "Mines    ", "Shield   "};
-string rStatOff[7] = {"Scanner", "Weapon", "Armor", "Engine", "Heatsinks", "Mines", "Shield"};
+string rStatOff[7] = {"scanner", "weapon", "armor", "engine", "heatsinks", "mines", "shield"};
 int statChanger[7] = {0, 0, 0, 0, 0, 0, 0};
 string robotOffID[6];
 string robotDisplay[6];
 
-int main(int argc, char *argv[])
-{
-    runGraphics();
-}
+// int main(int argc, char *argv[])
+// {
+//     runGraphics();
+// }
 
 void runGraphics()
 {
@@ -123,7 +129,6 @@ void runGraphics()
             SDL_RenderPresent(render);
             while (!quit)
             {
-                cout << "in while loop" << endl;
 
                 while (SDL_PollEvent(&e) != 0)
                 {
@@ -534,6 +539,16 @@ void robotModify(int which)
     int x = 0;
     int y = 0;
     bool leave = false;
+    cout << "editing robot" << robotOffID[which] << endl;
+    readStats(robotOffID[which]);
+    cout << numScannerVal << endl;
+    statChanger[0] = numScannerVal;
+    statChanger[1] = numWeaponVal;
+    statChanger[2] = numArmorVal;
+    statChanger[3] = numEngineVal;
+    statChanger[4] = numHeatsinksval;
+    statChanger[5] = numMinesVal;
+    statChanger[6] = numShieldVal;
     /*     for (int i = 0; i < 7; i++){
         statChanger[i] = retrieveFunc(robotOffID[which]);
     } */
@@ -553,10 +568,9 @@ void robotModify(int which)
             SDL_GetMouseState(&x, &y);
             if (e.type == SDL_QUIT || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE))
             {
-                /* for (int r = 0; r < 7; r++){
-                    statReadIn(robotOffID[which], rStatOff[r], statChanger[r]);
-                    statChanger[r] = 0;
-                } */
+                 for (int r = 0; r < 7; r++){
+                    writeStats(robotOffID[which], rStatOff[r], to_string(statChanger[r]));
+                } 
                 drawBackground();
                 drawTitleBox();
                 drawRobots();
@@ -570,12 +584,9 @@ void robotModify(int which)
                 {
                     if (e.button.button == SDL_BUTTON_LEFT)
                     {
-                        cout << "leaving" << endl;
-                        /* for (int r = 0; r < 7; r++)
-                        {
-                            statReadIn(robotOffID[which], rStatOff[r], statChanger[r]);
-                        statChanger[r] = 0;
-                        } */
+                        for (int r = 0; r < 7; r++){
+                            writeStats(robotOffID[which], rStatOff[r], to_string(statChanger[r]));
+                        } 
                         drawBackground();
                         drawTitleBox();
                         drawRobots();
@@ -1573,4 +1584,150 @@ SDL_Texture *imageTexture(std::string fPath)
     }
 
     return nTexture;
+}
+
+void readStats(string robotName){
+    cout << "Reading stats" << endl;
+    ifstream robotFile (robotName);
+    if(robotFile.is_open()){
+        while(getline(robotFile, line) && line != "#END"){
+            if((pos = line.find(delimiter)) != string::npos){
+                token = line.substr(0, pos);
+                if(token == scanner){
+                    scannerVal = line.erase(0, pos + delimiter.length());
+                }
+                else if(token == weapon){
+                    weaponVal = line.erase(0, pos + delimiter.length());
+                }
+                else if(token == armor){
+                    armorVal = line.erase(0, pos + delimiter.length());
+                }
+                else if(token == engine){
+                    engineVal = line.erase(0, pos + delimiter.length());
+                }
+                else if(token == heatsinks){
+                    heatsinksVal = line.erase(0, pos + delimiter.length());
+                }
+                else if(token == mines){
+                    minesVal = line.erase(0, pos + delimiter.length());
+                }
+                else if(token == shield){
+                    shieldVal = line.erase(0, pos + delimiter.length());
+                }
+            }
+        }
+            numScannerVal = stoi(scannerVal),
+            numWeaponVal = stoi(weaponVal),
+            numEngineVal = stoi(engineVal),
+            numArmorVal = stoi(armorVal),
+            numHeatsinksval = stoi(heatsinksVal),
+            numMinesVal = stoi(minesVal),
+            numShieldVal = stoi(shieldVal);
+        
+        if(numScannerVal +
+           numWeaponVal +
+           numArmorVal +
+           numEngineVal +
+           numHeatsinksval +
+           numMinesVal +
+           numShieldVal
+           > 12){
+               error(21, robotName.c_str());
+           }
+           
+           if(numScannerVal > 5)
+           error(28, scanner.c_str());
+           if(numWeaponVal > 5)
+           error(28, weapon.c_str());
+           if(numEngineVal > 5)
+           error(28, engine.c_str());
+           if(numArmorVal > 5)
+           error(28, armor.c_str());
+           if(numHeatsinksval > 5)
+           error(28, heatsinks.c_str());
+           if(numMinesVal > 5)
+           error(28, mines.c_str());
+           if(numShieldVal > 5)
+           error(28, shield.c_str());
+    }
+    else{
+        error(8, "\0");
+    }
+    robotFile.close();
+    return;
+}
+
+void writeStats(string robotName, string intoken, string value){
+    cout << "Writing Stat" << endl;
+    cout << robotName << endl;
+    cout << intoken << endl;
+    cout << value << endl;
+    if(intoken == "scanner"){
+        intoken = scanner;
+    }
+    else if(intoken == "weapon"){
+        intoken = weapon;
+    }
+    else if(intoken == "armor"){
+        intoken = armor;
+    }
+    else if(intoken == "engine"){
+        intoken = engine;
+    }
+    else if(intoken == "heatsinks"){
+        intoken = heatsinks;
+    }
+    else if(intoken == "mines"){
+        intoken = mines;
+    }
+    else if(intoken == "shield"){
+        intoken = shield;
+    }
+    ifstream robotFile;
+    robotFile.open(robotName.c_str());
+    ofstream tempRobotFile (tempFile);
+    if(robotFile.is_open()){
+        while(getline(robotFile, line)){
+            if((pos = line.find(delimiter)) != string::npos){
+                token = line.substr(0, pos);
+                cout << token << endl;
+                if(intoken == token){
+                    line = line.erase(line.size()-1, line.size()-2);
+                    line = line.append(value);
+                    cout << line << endl;
+                    tempRobotFile << line << endl;
+                }
+                else{
+                    tempRobotFile << line << endl;
+                }
+            }
+            else{
+                tempRobotFile << line << endl;
+            }
+        }
+    }
+    else{
+        remove(tempFile.c_str());
+    }
+    robotFile.close();
+    tempRobotFile.close();
+    remove((robotName.c_str()));
+    rename(tempFile.c_str(), robotName.c_str());
+    //Error Check
+    readStats(robotName);
+    return;
+}
+
+void error(int n, const char* ss)
+{
+    textcolor(15);
+    textcolor(4); cout << "Error #" << n << ": ";
+    switch(n)
+    {
+        case 26: cout <<"\"" << ss << "\"" << endl; break;
+        case 28: cout <<"To many configuration points: \"" << ss << "\". Max points = 5" << endl; break;
+        default: cout <<ss;  break;
+    }
+    textcolor(16);
+    exit(EXIT_FAILURE);
 }

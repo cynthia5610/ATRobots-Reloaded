@@ -208,41 +208,41 @@ typedef struct{
 
 //Variables
 //robot var
-int num_robots;
-robot_ptr * robot = (robot_ptr *)malloc(sizeof(robot_ptr)*(max_robots-(-2)+1));
-missile_rec missile[max_missiles+1]; //+1
+static int num_robots;
+static robot_ptr * robot = (robot_ptr *)malloc(sizeof(robot_ptr)*(max_robots-(-2)+1));
+static missile_rec missile[max_missiles+1]; //+1
 //compiler variable
-FILE * f; //Needs to see where this is used //Parse_param creates another one //****
-int numvars, numlabels, maxcode, lock_pos, lock_dat;
-char varname [1+max_vars][1+max_var_len];
-int varloc[1+max_vars];
-char labelname [1+max_vars][1+max_var_len];
-int labelnum[1+max_labels];
-bool show_source, compile_only;
-char * lock_code;
-//simulator/graphics variable
-bool bout_over;
-int step_mode;
-int temp_mode;
-int step_count;
-bool step_loop;
-//bool show_debugger;
-bool old_shields, insane_missiles, debug_info, windoze, no_gfx, logging_errors, timing, show_arcs;
-int game_delay, time_slice, insanity, update_timer, max_gx, max_gy, stats_mode;
-long game_limit, game_cycle;
-long matches, played, executed;
+static FILE * f; //Needs to see where this is used //Parse_param creates another one //****
+static int numvars, numlabels, maxcode, lock_pos, lock_dat;
+static char varname [1+max_vars][1+max_var_len];
+static int varloc[1+max_vars];
+static char labelname [1+max_vars][1+max_var_len];
+static int labelnum[1+max_labels];
+static bool show_source, compile_only;
+static char * lock_code;
+ //simulator/graphics variable
+static bool bout_over;
+static int step_mode;
+static int temp_mode;
+static int step_count;
+static bool step_loop;
+ //bool show_debugger;
+static bool old_shields, insane_missiles, debug_info, windoze, no_gfx, logging_errors, timing, show_arcs;
+static int game_delay, time_slice, insanity, update_timer, max_gx, max_gy, stats_mode;
+static long game_limit, game_cycle;
+static long matches, played, executed;
 //general settings
-bool quit, report, show_cnotice;
-int kill_count, report_type;
+static bool quit, report, show_cnotice;
+static int kill_count, report_type;
 //read & write stats
-size_t pos = 0;
-string line;
-string token;
+static size_t pos = 0;
+static string line;
+static string token;
 
-string tempFile = "tempFile.AT2";
-string delimiter = "=";
+static string tempFile = "tempFile.AT2";
+static string delimiter = "=";
 
-string scanner = "#CONFIG scanner",
+static string scanner = "#CONFIG scanner",
        weapon = "#CONFIG weapon",
        armor = "#CONFIG armor",
        engine = "#CONFIG engine",
@@ -250,7 +250,7 @@ string scanner = "#CONFIG scanner",
        mines = "#CONFIG mines",
        shield = "#CONFIG shield";
 
-string scannerVal,
+static string scannerVal,
        weaponVal,
        armorVal,
        engineVal,
@@ -258,12 +258,12 @@ string scannerVal,
        minesVal,
        shieldVal;
        
-int numScannerVal,
-    numWeaponVal,
-    numEngineVal,
-    numArmorVal,
-    numHeatsinksval,
-    numMinesVal,
-    numShieldVal;
+static int    numScannerVal;
+static int    numWeaponVal;
+static int    numEngineVal;
+static int    numArmorVal;
+static int    numHeatsinksval;
+static int    numMinesVal;
+static int    numShieldVal;
 
 #endif

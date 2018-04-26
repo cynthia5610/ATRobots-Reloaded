@@ -1,0 +1,9 @@
+#CONFIG engine=0
+#CONFIG heatsinks=0
+#CONFIG scanner=0
+#CONFIG armor=0
+#CONFIG weapon=0
+#CONFIG mines=0
+#CONFIG shield=0
+
+#END
