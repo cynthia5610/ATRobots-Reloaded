@@ -234,5 +234,36 @@ long matches, played, executed;
 //general settings
 bool quit, report, show_cnotice;
 int kill_count, report_type;
+//read & write stats
+size_t pos = 0;
+string line;
+string token;
+
+string tempFile = "tempFile.AT2";
+string delimiter = "=";
+
+string scanner = "#CONFIG scanner",
+       weapon = "#CONFIG weapon",
+       armor = "#CONFIG armor",
+       engine = "#CONFIG engine",
+       heatsinks = "#CONFIG heatsinks",
+       mines = "#CONFIG mines",
+       shield = "#CONFIG shield";
+
+string scannerVal,
+       weaponVal,
+       armorVal,
+       engineVal,
+       heatsinksVal,
+       minesVal,
+       shieldVal;
+       
+int numScannerVal,
+    numWeaponVal,
+    numEngineVal,
+    numArmorVal,
+    numHeatsinksval,
+    numMinesVal,
+    numShieldVal;
 
 #endif

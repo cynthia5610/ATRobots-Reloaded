@@ -56,8 +56,8 @@ int main(int argc, char *argv[]){
 	robot += 2;
 
     //for testing purposes
-    //readStats("CIRCLES.AT2");
-    //writeStats("CIRCLES.AT2", "engine", "6");
+    readStats("CIRCLES.AT2");
+    writeStats("CIRCLES.AT2", "engine", "6");
 
     //send the robots & flags
 	init(argc, argv);
@@ -1003,7 +1003,7 @@ void prog_error(int n, const char* ss)
 {
     graph_mode(false);
     textcolor(15);
-    cout << "Error #" << n << ": ";
+    textcolor(4); cout << "Error #" << n << ": ";
     switch(n)
     {
         case 0: ss = ss; break; 
@@ -1033,10 +1033,11 @@ void prog_error(int n, const char* ss)
         case 24: cout <<"Invalid step count: \"" << ss << "\". 1-9 are valid conditions."<< endl; break;
         case 25: cout <<"Not enough matches set! Usage: /M(number of matches)" << endl; break;
         case 26: cout <<"\"" << ss << "\"" << endl; break;
-        case 27: cout <<"To many configuration points: Max points = 12" << endl; break;
+        //case 27: cout <<"To many configuration points: Max points = 12" << endl; break;
         case 28: cout <<"To many configuration points: \"" << ss << "\". Max points = 5" << endl; break;
         default: cout <<ss;  break;
     }
+    textcolor(16);
     exit(EXIT_FAILURE);
 }
 
@@ -2205,29 +2206,6 @@ void close_debug_window()
 */
 
 void readStats(string robotName){
-    size_t pos = 0;
-    string line;
-    string token;
-
-    string endString = "#END";
-    string delimiter = "=";
-
-    string scanner = "#CONFIG scanner",
-           weapon = "#CONFIG weapon",
-           armor = "#CONFIG armor",
-           engine = "#CONFIG engine",
-           heatsinks = "#CONFIG heatsinks",
-           mines = "#CONFIG mines",
-           shield = "#CONFIG shield";
-
-    string scannerVal,
-           weaponVal,
-           armorVal,
-           engineVal,
-           heatsinksVal,
-           minesVal,
-           shieldVal;
-
     ifstream robotFile (robotName);
     if(robotFile.is_open()){
         while(getline(robotFile, line) && line != "#END"){
@@ -2256,7 +2234,7 @@ void readStats(string robotName){
                 }
             }
         }
-        int numScannerVal = stoi(scannerVal),
+            numScannerVal = stoi(scannerVal),
             numWeaponVal = stoi(weaponVal),
             numEngineVal = stoi(engineVal),
             numArmorVal = stoi(armorVal),
@@ -2272,7 +2250,7 @@ void readStats(string robotName){
            numMinesVal +
            numShieldVal
            > 12){
-               prog_error(27, "\0");
+               prog_error(21, robotName.c_str());
            }
            
            if(numScannerVal > 5)
@@ -2298,30 +2276,6 @@ void readStats(string robotName){
 }
 
 void writeStats(string robotName, string intoken, string value){
-    bool found = false;
-    size_t pos = 0;
-    string line;
-    string token;
-
-    string tempFile = "tempFile.AT2";
-    string delimiter = "=";
-
-    string scanner = "#CONFIG scanner",
-           weapon = "#CONFIG weapon",
-           armor = "#CONFIG armor",
-           engine = "#CONFIG engine",
-           heatsinks = "#CONFIG heatsinks",
-           mines = "#CONFIG mines",
-           shield = "#CONFIG shield";
-
-    string scannerVal,
-           weaponVal,
-           armorVal,
-           engineVal,
-           heatsinksVal,
-           minesVal,
-           shieldVal;
-    
     if(intoken == "scanner"){
         intoken = scanner;
     }
@@ -2343,7 +2297,8 @@ void writeStats(string robotName, string intoken, string value){
     else if(intoken == "shield"){
         intoken = shield;
     }
-    ifstream robotFile (robotName);
+    ifstream robotFile;
+    robotFile.open(robotName.c_str());
     ofstream tempRobotFile (tempFile);
     if(robotFile.is_open()){
         while(getline(robotFile, line)){
@@ -2363,12 +2318,16 @@ void writeStats(string robotName, string intoken, string value){
             }
         }
     }
+    else{
+        remove(tempFile.c_str());
+    }
     robotFile.close();
     tempRobotFile.close();
     remove((robotName.c_str()));
     rename(tempFile.c_str(), robotName.c_str());
     //Error Check
     readStats(robotName);
+    return;
 }
 
 /*
