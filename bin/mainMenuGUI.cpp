@@ -3,6 +3,7 @@
 #include <string>
 #include <stdlib.h>
 #include "atrrfunc.hh"
+#include "mainMenuGUI.hh"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -79,13 +80,14 @@ int statChanger[7] = {0, 0, 0, 0, 0, 0, 0};
 string robotOffID[6];
 string robotDisplay[6];
 
-int main(int argc, char *argv[])
-{
-    runGraphics();
-}
+// int main(int argc, char *argv[])
+// {
+//     runGraphics();
+// }
 
 void runGraphics()
 {
+    cout << "in Menu!" << endl;
     if (!init())
     {
         std::cout << "Failed to Initialize" << endl;
@@ -98,6 +100,7 @@ void runGraphics()
         }
         else
         {
+            cout << "at event" << endl;
             SDL_Event e;
             bool quit = false;
 
@@ -107,14 +110,19 @@ void runGraphics()
             int x = 0;
             int y = 0;
 
+            cout << "Going into draw background" << endl;
             drawBackground();
+            cout << "Going into title box" << endl;
             drawTitleBox();
+            cout << "Going into draw robots" << endl;
             drawRobots();
+            cout << "Going into setting" << endl;
             settingCycle();
+            cout << "Going into render" << endl;
             SDL_RenderPresent(render);
-
             while (!quit)
             {
+                cout << "in while loop" << endl;
 
                 while (SDL_PollEvent(&e) != 0)
                 {
@@ -1036,13 +1044,14 @@ void drawBackground()
 
 void drawTitleBox()
 {
+    cout << "in titlebox" << endl;
     SDL_SetRenderDrawColor(render, 0, 0, 0, 255);
     SDL_Rect titleBox;
     titleBox.x = 5;
     titleBox.y = 5;
     titleBox.w = 990;
     titleBox.h = 70;
-
+    cout << "set render" << endl;
     SDL_Rect titleText;
     titleText.x = 230;
     titleText.y = 15;
@@ -1050,11 +1059,14 @@ void drawTitleBox()
     titleText.h = 50;
 
     SDL_RenderFillRect(render, &titleBox);
-
+    cout << "render fill" << endl;
     surface = TTF_RenderText_Solid(font1, "AT-Robots Reloaded", white);
+    cout << "going into create texture" << endl;
     texture = SDL_CreateTextureFromSurface(render, surface);
+    cout << "going into copy" << endl;
     SDL_RenderCopy(render, texture, NULL, &titleText);
     SDL_FreeSurface(surface);
+    cout << "out of drawe title" << endl;
 }
 
 void drawRobots()
