@@ -54,8 +54,8 @@ SDL_Window *window = NULL;
 SDL_Renderer *render = NULL;
 SDL_Surface *surface = NULL;
 
-TTF_Font *font1 = NULL;
-TTF_Font *font2 = NULL;
+TTF_Font *font1;
+TTF_Font *font2;
 
 bool scArcs = true;
 bool shSource = false;
@@ -536,6 +536,11 @@ void robotModify(int which)
             SDL_GetMouseState(&x, &y);
             if (e.type == SDL_QUIT || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE))
             {
+                drawBackground();
+                drawTitleBox();
+                drawRobots();
+                settingCycle();
+                SDL_RenderPresent(render);
                 leave = true;
             }
             else if (x >= 650 && x <= 985 && y >= 485 && y <= 585)
@@ -545,6 +550,11 @@ void robotModify(int which)
                     if (e.button.button == SDL_BUTTON_LEFT)
                     {
                         cout << "leaving" << endl;
+                        drawBackground();
+                        drawTitleBox();
+                        drawRobots();
+                        settingCycle();
+                        SDL_RenderPresent(render);
                         leave = true;
                     }
                 }
@@ -573,7 +583,7 @@ void robotModify(int which)
                     if (e.button.button == SDL_BUTTON_LEFT)
                     {
                         cout << "stat 2 decreased" << endl;
-                        statChanger[1]++;
+                        statChanger[1]--;
 
                         if (statChecker() == false)
                         {
@@ -977,7 +987,10 @@ string robotName(int which)
                 inputRobotName += e.text.text;
                 editedString = updateRobotName(inputRobotName);
                 robotDisplay[which] = editedString;
+                drawBackground();
+                drawTitleBox();
                 drawRobots();
+                settingCycle();
                 SDL_RenderPresent(render);
             }
             if (e.key.keysym.sym == SDLK_BACKSPACE)
@@ -987,7 +1000,10 @@ string robotName(int which)
                     inputRobotName = inputRobotName.substr(0, inputRobotName.size() - 1);
                     editedString = updateRobotName(inputRobotName);
                     robotDisplay[which] = editedString;
+                    drawBackground();
+                    drawTitleBox();
                     drawRobots();
+                    settingCycle();
                     SDL_RenderPresent(render);
                 }
             }
