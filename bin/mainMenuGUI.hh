@@ -11,8 +11,6 @@
 #include <string>
 #include <stdlib.h>
 
-using namespace std;
-
 extern void runGraphics();
 extern void drawBackground();
 extern void drawTitleBox();
