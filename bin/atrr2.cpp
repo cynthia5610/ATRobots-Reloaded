@@ -57,7 +57,7 @@ int main(int argc, char *argv[]){
 
     //for testing purposes
     //readStats("CIRCLES.AT2");
-    //writeStats("CIRCLES.AT2", "scanner", "5");
+    //writeStats("CIRCLES.AT2", "engine", "6");
 
     //send the robots & flags
 	init(argc, argv);
@@ -1033,7 +1033,8 @@ void prog_error(int n, const char* ss)
         case 24: cout <<"Invalid step count: \"" << ss << "\". 1-9 are valid conditions."<< endl; break;
         case 25: cout <<"Not enough matches set! Usage: /M(number of matches)" << endl; break;
         case 26: cout <<"\"" << ss << "\"" << endl; break;
-        case 27: cout <<"To many CONFIG points: Max points = 12" << endl; break;
+        case 27: cout <<"To many configuration points: Max points = 12" << endl; break;
+        case 28: cout <<"To many configuration points: \"" << ss << "\". Max points = 5" << endl; break;
         default: cout <<ss;  break;
     }
     exit(EXIT_FAILURE);
@@ -2273,6 +2274,21 @@ void readStats(string robotName){
            > 12){
                prog_error(27, "\0");
            }
+           
+           if(numScannerVal > 5)
+           prog_error(28, scanner.c_str());
+           if(numWeaponVal > 5)
+           prog_error(28, weapon.c_str());
+           if(numEngineVal > 5)
+           prog_error(28, engine.c_str());
+           if(numArmorVal > 5)
+           prog_error(28, armor.c_str());
+           if(numHeatsinksval > 5)
+           prog_error(28, heatsinks.c_str());
+           if(numMinesVal > 5)
+           prog_error(28, mines.c_str());
+           if(numShieldVal > 5)
+           prog_error(28, shield.c_str());
     }
     else{
         prog_error(8, "\0");
