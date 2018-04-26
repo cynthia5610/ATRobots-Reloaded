@@ -55,8 +55,8 @@ SDL_Window *window = NULL;
 SDL_Renderer *render = NULL;
 SDL_Surface *surface = NULL;
 
-TTF_Font *font1;
-TTF_Font *font2;
+TTF_Font *font1 = NULL;
+TTF_Font *font2 = NULL;
 
 bool scArcs = true;
 bool shSource = false;

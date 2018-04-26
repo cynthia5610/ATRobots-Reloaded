@@ -8,6 +8,11 @@
 #include <iomanip>
 #include <climits> //FOR INT_MAX
 
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL_ttf.h>
+
 #include "types.hh"
 #include "atrrfunc.hh"
 #include "filelib.hh"
