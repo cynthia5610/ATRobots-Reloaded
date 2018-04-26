@@ -36,6 +36,7 @@ void robotReset(int which);
 void robotModify(int which);
 void robotPrintButtons();
 bool statChecker();
+void maxStatter();
 
 bool init();
 bool loadMedia();
@@ -66,6 +67,8 @@ string matPlay = "Default";
 string gaDelay = "Default";
 string gaTime = "     16";
 string robTime = "Default";
+int maxStatAmount;
+int statAmountLeft;
 
 int mTP = 0;
 int gD = 0;
@@ -521,11 +524,19 @@ void runGraphics()
 
 void robotModify(int which)
 {
+    SDL_Event e;
     int x = 0;
     int y = 0;
-    robotPrintButtons();
-    SDL_Event e;
     bool leave = false;
+    if (robotDisplay[0].empty() == true)
+    {
+        leave = true;
+    }
+    else
+    {
+        maxStatter();
+        robotPrintButtons();
+    }
     while (!leave)
     {
         while (SDL_PollEvent(&e) != 0)
@@ -554,10 +565,12 @@ void robotModify(int which)
                     {
                         cout << "stat 1 decreased" << endl;
                         statChanger[0]--;
-                        if (statChecker == false)
+                        if (statChecker() == false)
                         {
                             statChanger[0]++;
                         }
+                        maxStatter();
+                        robotPrintButtons();
                     }
                 }
             }
@@ -569,6 +582,13 @@ void robotModify(int which)
                     {
                         cout << "stat 2 decreased" << endl;
                         statChanger[1]++;
+
+                        if (statChecker() == false)
+                        {
+                            statChanger[1]++;
+                        }
+                        maxStatter();
+                        robotPrintButtons();
                     }
                 }
             }
@@ -580,6 +600,13 @@ void robotModify(int which)
                     {
                         cout << "stat 3 decreased" << endl;
                         statChanger[2]--;
+
+                        if (statChecker() == false)
+                        {
+                            statChanger[2]++;
+                        }
+                        maxStatter();
+                        robotPrintButtons();
                     }
                 }
             }
@@ -591,6 +618,13 @@ void robotModify(int which)
                     {
                         cout << "stat 4 decreased" << endl;
                         statChanger[3]--;
+
+                        if (statChecker() == false)
+                        {
+                            statChanger[3]++;
+                        }
+                        maxStatter();
+                        robotPrintButtons();
                     }
                 }
             }
@@ -602,6 +636,12 @@ void robotModify(int which)
                     {
                         cout << "stat 5 decreased" << endl;
                         statChanger[4]--;
+                        if (statChecker() == false)
+                        {
+                            statChanger[4]++;
+                        }
+                        maxStatter();
+                        robotPrintButtons();
                     }
                 }
             }
@@ -613,6 +653,12 @@ void robotModify(int which)
                     {
                         cout << "stat 6 decreased" << endl;
                         statChanger[5]--;
+                        if (statChecker() == false)
+                        {
+                            statChanger[5]++;
+                        }
+                        maxStatter();
+                        robotPrintButtons();
                     }
                 }
             }
@@ -625,6 +671,12 @@ void robotModify(int which)
                         cout << "stat 7 decreased" << endl;
                         statChanger[6]--;
                         robotPrintButtons();
+                        if (statChecker() == false)
+                        {
+                            statChanger[6]++;
+                        }
+                        maxStatter();
+                        robotPrintButtons();
                     }
                 }
             }
@@ -636,6 +688,12 @@ void robotModify(int which)
                     {
                         cout << "stat 1 increased" << endl;
                         statChanger[0]++;
+                        if (statChecker() == false)
+                        {
+                            statChanger[0]--;
+                        }
+                        maxStatter();
+                        robotPrintButtons();
                     }
                 }
             }
@@ -647,6 +705,12 @@ void robotModify(int which)
                     {
                         cout << "stat 2 increased" << endl;
                         statChanger[1]++;
+                        if (statChecker() == false)
+                        {
+                            statChanger[1]--;
+                        }
+                        maxStatter();
+                        robotPrintButtons();
                     }
                 }
             }
@@ -658,6 +722,12 @@ void robotModify(int which)
                     {
                         cout << "stat 3 increased" << endl;
                         statChanger[2]++;
+                        if (statChecker() == false)
+                        {
+                            statChanger[2]--;
+                        }
+                        maxStatter();
+                        robotPrintButtons();
                     }
                 }
             }
@@ -669,6 +739,12 @@ void robotModify(int which)
                     {
                         cout << "stat 4 increased" << endl;
                         statChanger[3]++;
+                        if (statChecker() == false)
+                        {
+                            statChanger[3]--;
+                        }
+                        maxStatter();
+                        robotPrintButtons();
                     }
                 }
             }
@@ -680,6 +756,12 @@ void robotModify(int which)
                     {
                         cout << "stat 5 increased" << endl;
                         statChanger[4]++;
+                        if (statChecker() == false)
+                        {
+                            statChanger[4]--;
+                        }
+                        maxStatter();
+                        robotPrintButtons();
                     }
                 }
             }
@@ -691,6 +773,12 @@ void robotModify(int which)
                     {
                         cout << "stat 6 increased" << endl;
                         statChanger[5]++;
+                        if (statChecker() == false)
+                        {
+                            statChanger[5]--;
+                        }
+                        maxStatter();
+                        robotPrintButtons();
                     }
                 }
             }
@@ -702,10 +790,12 @@ void robotModify(int which)
                     {
                         cout << "stat 7 increased" << endl;
                         statChanger[6]++;
+
                         if (statChecker() == false)
                         {
                             statChanger[6]--;
                         }
+                        maxStatter();
                         robotPrintButtons();
                     }
                 }
@@ -714,11 +804,17 @@ void robotModify(int which)
     }
 }
 
+void maxStatter()
+{
+    maxStatAmount = statChanger[0] + statChanger[1] + statChanger[2] + statChanger[3] + statChanger[4] + statChanger[5] + statChanger[6];
+    statAmountLeft = 12 - maxStatAmount;
+}
+
 bool statChecker()
 {
     int totalSum;
     totalSum = statChanger[0] + statChanger[1] + statChanger[2] + statChanger[3] + statChanger[4] + statChanger[5] + statChanger[6];
-    if (totalSum < 13 && statChanger[0] < 6 && statChanger[1] < 6 && statChanger[2] < 6 && statChanger[3] < 6 && statChanger[4] < 6 && statChanger[5] < 6 && statChanger[6] < 6)
+    if (totalSum < 13 && statChanger[0] < 6 && statChanger[1] < 6 && statChanger[2] < 6 && statChanger[3] < 6 && statChanger[4] < 6 && statChanger[5] < 6 && statChanger[6] < 6 && statChanger[0] > -1 && statChanger[1] > -1 && statChanger[2] > -1 && statChanger[3] > -1 && statChanger[4] > -1 && statChanger[5] > -1 && statChanger[6] > -1)
     {
         cout << "returning true" << endl;
         return true;
@@ -838,12 +934,12 @@ void robotPrintButtons()
     surface = TTF_RenderText_Solid(font1, "Points Used:", black);
     texture = SDL_CreateTextureFromSurface(render, surface);
     SDL_RenderCopy(render, texture, NULL, &info2);
-    surface = TTF_RenderText_Solid(font1, "12", black);
-    texture = SDL_CreateTextureFromSurface(render, surface);
-    SDL_RenderCopy(render, texture, NULL, &info3);
-    surface = TTF_RenderText_Solid(font1, "0", black);
+    surface = TTF_RenderText_Solid(font1, to_string(maxStatAmount).c_str(), black);
     texture = SDL_CreateTextureFromSurface(render, surface);
     SDL_RenderCopy(render, texture, NULL, &info4);
+    surface = TTF_RenderText_Solid(font1, to_string(statAmountLeft).c_str(), black);
+    texture = SDL_CreateTextureFromSurface(render, surface);
+    SDL_RenderCopy(render, texture, NULL, &info3);
     SDL_FreeSurface(surface);
     SDL_SetRenderDrawColor(render, 0, 0, 0, 255);
     SDL_RenderFillRect(render, &rButton);
