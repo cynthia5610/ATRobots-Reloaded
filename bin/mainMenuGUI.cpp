@@ -3,6 +3,7 @@
 #include <string>
 #include <stdlib.h>
 #include "atrrfunc.hh"
+#include "mainMenuGUI.hh"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -76,13 +77,14 @@ int statChanger[7] = {0, 0, 0, 0, 0, 0, 0};
 string robotOffID[6];
 string robotDisplay[6];
 
-int main(int argc, char *argv[])
-{
-    runGraphics();
-}
+// int main(int argc, char *argv[])
+// {
+//     runGraphics();
+// }
 
 void runGraphics()
 {
+    cout << "in Menu!" << endl;
     if (!init())
     {
         std::cout << "Failed to Initialize" << endl;
@@ -95,6 +97,7 @@ void runGraphics()
         }
         else
         {
+            cout << "at event" << endl;
             SDL_Event e;
             bool quit = false;
 
@@ -104,14 +107,19 @@ void runGraphics()
             int x = 0;
             int y = 0;
 
+            cout << "Going into draw background" << endl;
             drawBackground();
+            cout << "Going into title box" << endl;
             drawTitleBox();
+            cout << "Going into draw robots" << endl;
             drawRobots();
+            cout << "Going into setting" << endl;
             settingCycle();
+            cout << "Going into render" << endl;
             SDL_RenderPresent(render);
-
             while (!quit)
             {
+                cout << "in while loop" << endl;
 
                 while (SDL_PollEvent(&e) != 0)
                 {

@@ -8,10 +8,10 @@
 #include <iomanip>
 #include <climits> //FOR INT_MAX
 
-
 #include "types.hh"
 #include "atrrfunc.hh"
 #include "filelib.hh"
+#include "mainMenuGUI.hh"
 
 using namespace std;
 
@@ -56,72 +56,69 @@ int main(int argc, char *argv[]){
 	robot += 2;
 
     //for testing purposes
-    readStats("CIRCLES.AT2");
-    writeStats("CIRCLES.AT2", "engine", "6");
+    //readStats("CIRCLES.AT2");
+    //writeStats("CIRCLES.AT2", "engine", "6");
 
     //send the robots & flags
 	init(argc, argv);
 
-    //set number of matches -- currently hard coded
-	//matches = 2;
+    if(!graphix){	
+	    //loop variables
+	    int i, j, k, l, n, w;
+	    
+        n = 0;
 	
-	//loop variables
-	int i, j, k, l, n, w;
-	
-	//turning off graphics
-	graphix = false;
-	n = 0;
-	
-    //if matches > 0, run fights
-	if(matches > 0){
-		for(i = 0; i < matches; i++){
-			bout();
-		}
-	}
+        //if matches > 0, run fights
+	    if(matches > 0){
+		    for(i = 0; i < matches; i++){
+			    bout();
+		    }
+	    }
 
-	if(matches > 1){
-		cout << endl;
-		cout << endl;
+	    if(matches > 1){
+		    cout << endl;
+		    cout << endl;
 
-        textcolor(15);
-		cout << "Bout Complete! (" << matches << " matches)" << endl;
+            textcolor(15);
+		    cout << "Bout Complete! (" << matches << " matches)" << endl;
 
-		k = 0;
-		w = 0;
+		    k = 0;
+		    w = 0;
 
-		for(i = 0; i < num_robots; i++){
-			if(robot[i]->wins == w){
-				k++;
-			}
-			if(robot[i]->wins > w){
-				k = 1;
-				n = i;
-				w = robot[i]->wins;
-			}
-		}
-		cout << "Robot           		Wins   Matches   Kill   Deaths   Shots" << endl;
-		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		    for(i = 0; i < num_robots; i++){
+			    if(robot[i]->wins == w){
+				    k++;
+			    }
+			    if(robot[i]->wins > w){
+				    k = 1;
+				    n = i;
+				    w = robot[i]->wins;
+			    }
+		    }
+		    cout << "Robot           		Wins   Matches   Kill   Deaths   Shots" << endl;
+		    cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 
-		for(i = 0; i <= num_robots; i++){
-            textcolor(robot_color(i));
-			cout << robot[i]->fn << 
-			setw(24) << robot[i]->wins << 
-			setw(8) << robot[i]->trials << 
-			setw(8) << robot[i]->kills <<
-			setw(8) << robot[i]->deaths <<
-			setw(8) << robot[i]->shots_fired << 
-			endl;
-		}
-		cout << endl;
-        textcolor(15);
+		    for(i = 0; i <= num_robots; i++){
+                textcolor(robot_color(i));
+			    cout << robot[i]->fn << 
+			    setw(24) << robot[i]->wins << 
+			    setw(8) << robot[i]->trials << 
+			    setw(8) << robot[i]->kills <<
+			    setw(8) << robot[i]->deaths <<
+			    setw(8) << robot[i]->shots_fired << 
+			    endl;
+		    }
+		    cout << endl;
+            textcolor(15);
 
-		if(k == 1){ //this might have to be (k == 1);
-			cout << "Robot #" << n+1 << " " << robot[n]->fn << " wins the bout! (Score: " << w << "/" << matches << ")" << endl;
-		}
-		else{
-			cout << "There is no clear victor!" << endl;
-		}
-	}
+		    if(k == 1){ //this might have to be (k == 1);
+			    cout << "Robot #" << n+1 << " " << robot[n]->fn << " wins the bout! (Score: " << w << "/" << matches << ")" << endl;
+		    }
+		    else{
+			    cout << "There is no clear victor!" << endl;
+		    }
+	    }
+    }
     shutdown();
     textcolor(16);
 }
@@ -203,6 +200,12 @@ void init(int ParamCount, char **ParamStr)
         }
     }
     else prog_error(5, "\0"); //ATR2
+    
+    if(graphix){
+        cout << "Graphics on!" << endl;
+        runGraphics();
+    }
+    else{
     if(matches == 0){
         prog_error(25, "\0");
     }
@@ -244,6 +247,8 @@ void init(int ParamCount, char **ParamStr)
         //cout << "Freemem: " << memavail << endl; //memavail *6
         cout << endl;
     }
+    }
+    return;
 }
 void init_bout()
 {
@@ -1996,7 +2001,7 @@ void parse_param(char * s)
         }
         else if(s[1] == 'G')
         {
-            no_gfx = true;
+            graphix = true;
             found = true;
         }
         else if(s[1] == 'R')
