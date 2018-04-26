@@ -28,6 +28,12 @@ const char *robotTime();
 void drawQuitPlay();
 string readInDigit(int n);
 void updateDigit(string here, int which);
+string loadRobotName(string rName, int rNumber);
+string robotName(int which);
+string updateRobotName(string rName);
+void robotReset(int which);
+void robotModify(int which);
+void robotPrintButtons();
 
 bool init();
 bool loadMedia();
@@ -35,6 +41,7 @@ void close();
 SDL_Texture *imageTexture(std::string fPath);
 
 SDL_Color white = {255, 255, 255};
+SDL_Color gray = {172, 172, 172};
 SDL_Color black = {0, 0, 0};
 SDL_Color red = {255, 0, 0};
 const int WWIDTH = 1000;
@@ -62,6 +69,11 @@ int mTP = 0;
 int gD = 0;
 int gT = 16;
 int rT = 0;
+
+string rStatEdit[7] = {"Scanner  ", "Weapon   ", "Armor    ", "Engine   ", "Heatsinks", "Mines    ", "Shield   "};
+
+string robotOffID[6];
+string robot[6];
 
 int main(int argc, char *argv[])
 {
@@ -116,6 +128,7 @@ void runGraphics()
                             if (e.button.button == SDL_BUTTON_LEFT)
                             {
                                 std::cout << "Robot 1 Pressed" << std::endl;
+                                robotOffID[0] = robotName(0);
                             }
                         }
                     }
@@ -127,6 +140,7 @@ void runGraphics()
                             if (e.button.button == SDL_BUTTON_LEFT)
                             {
                                 std::cout << "Robot 2 Pressed" << std::endl;
+                                robotOffID[1] = robotName(1);
                             }
                         }
                     }
@@ -138,6 +152,7 @@ void runGraphics()
                             if (e.button.button == SDL_BUTTON_LEFT)
                             {
                                 std::cout << "Robot 3 Pressed" << std::endl;
+                                robotOffID[2] = robotName(2);
                             }
                         }
                     }
@@ -149,6 +164,7 @@ void runGraphics()
                             if (e.button.button == SDL_BUTTON_LEFT)
                             {
                                 std::cout << "Robot 4 Pressed" << std::endl;
+                                robotOffID[3] = robotName(3);
                             }
                         }
                     }
@@ -160,6 +176,7 @@ void runGraphics()
                             if (e.button.button == SDL_BUTTON_LEFT)
                             {
                                 std::cout << "Robot 5 Pressed" << std::endl;
+                                robotOffID[4] = robotName(4);
                             }
                         }
                     }
@@ -171,6 +188,7 @@ void runGraphics()
                             if (e.button.button == SDL_BUTTON_LEFT)
                             {
                                 std::cout << "Robot 6 Pressed" << std::endl;
+                                robotOffID[4] = robotName(4);
                             }
                         }
                     }
@@ -182,6 +200,7 @@ void runGraphics()
                             if (e.button.button == SDL_BUTTON_LEFT)
                             {
                                 std::cout << "Robot 1 Removed" << std::endl;
+                                robotReset(0);
                             }
                         }
                     }
@@ -193,6 +212,7 @@ void runGraphics()
                             if (e.button.button == SDL_BUTTON_LEFT)
                             {
                                 std::cout << "Robot 2 Removed" << std::endl;
+                                robotReset(1);
                             }
                         }
                     }
@@ -204,6 +224,7 @@ void runGraphics()
                             if (e.button.button == SDL_BUTTON_LEFT)
                             {
                                 std::cout << "Robot 3 Removed" << std::endl;
+                                robotReset(2);
                             }
                         }
                     }
@@ -215,6 +236,7 @@ void runGraphics()
                             if (e.button.button == SDL_BUTTON_LEFT)
                             {
                                 std::cout << "Robot 4 Removed" << std::endl;
+                                robotReset(3);
                             }
                         }
                     }
@@ -226,6 +248,7 @@ void runGraphics()
                             if (e.button.button == SDL_BUTTON_LEFT)
                             {
                                 std::cout << "Robot 5 Removed" << std::endl;
+                                robotReset(4);
                             }
                         }
                     }
@@ -237,6 +260,7 @@ void runGraphics()
                             if (e.button.button == SDL_BUTTON_LEFT)
                             {
                                 std::cout << "Robot 6 Removed" << std::endl;
+                                robotReset(5);
                             }
                         }
                     }
@@ -248,6 +272,7 @@ void runGraphics()
                             if (e.button.button == SDL_BUTTON_LEFT)
                             {
                                 std::cout << "Robot 1 Edited" << std::endl;
+                                robotModify(0);
                             }
                         }
                     }
@@ -459,8 +484,224 @@ void runGraphics()
 }
 
 /*
------ DRAW SHAPES -----
+----- DRAW SHAPES AND TEXT -----
 */
+
+/* string loadRobotName(string rName, int rNumber)
+{
+    int half = 0;
+    if (rNumber > 2)
+    {
+        int half = 500;
+        rNumber -= 3;
+    }
+    SDL_Rect nameSlots;
+    nameSlots.x = 95 + half;
+    nameSlots.y = 95 + (70 * rNumber);
+    nameSlots.w = 390;
+    nameSlots.h = 45;
+
+
+    surface = TTF_RenderText_Solid(font1, rName.c_str(), white);
+    texture = SDL_CreateTextureFromSurface(render, surface);
+    SDL_RenderCopy(render, texture, NULL, &nameSlots);
+    SDL_FreeSurface(surface);
+
+    SDL_RenderPresent(render);
+} */
+
+void robotModify(int which)
+{
+    robotPrintButtons();
+}
+
+void robotPrintButtons()
+{
+    SDL_Rect clear;
+    clear.x = 0;
+    clear.y = 0;
+    clear.w = 1000;
+    clear.h = 600;
+    SDL_SetRenderDrawColor(render, 172, 172, 172, 255);
+    SDL_RenderFillRect(render, &clear);
+    SDL_SetRenderDrawColor(render, 0, 0, 0, 255);
+    for (int i = 0; i < 7; i++)
+    {
+        SDL_Rect temp;
+        temp.x = 35;
+        temp.y = 35 + (80 * i);
+        temp.w = 200;
+        temp.h = 50;
+
+        SDL_Rect minusBox;
+        minusBox.x = 330;
+        minusBox.y = 35 + (80 * i);
+        minusBox.w = 50;
+        minusBox.h = 50;
+
+        SDL_Rect minus;
+        minus.x = 335;
+        minus.y = 55 + (80 * i);
+        minus.w = 40;
+        minus.h = 10;
+
+        SDL_Rect numberBox;
+        numberBox.x = 430;
+        numberBox.y = 35 + (80 * i);
+        numberBox.w = 50;
+        numberBox.h = 50;
+
+        SDL_Rect plusBox;
+        plusBox.x = 530;
+        plusBox.y = 35 + (80 * i);
+        plusBox.w = 50;
+        plusBox.h = 50;
+
+        SDL_Rect plus1;
+        plus1.x = 535;
+        plus1.y = 55 + (80 * i);
+        plus1.w = 40;
+        plus1.h = 10;
+
+        SDL_Rect plus2;
+        plus2.x = 550;
+        plus2.y = 40 + (80 * i);
+        plus2.w = 10;
+        plus2.h = 40;
+
+        SDL_SetRenderDrawColor(render, 0, 0, 0, 255);
+        SDL_RenderFillRect(render, &temp);
+        SDL_RenderFillRect(render, &minusBox);
+        SDL_RenderFillRect(render, &numberBox);
+        SDL_RenderFillRect(render, &plusBox);
+        SDL_SetRenderDrawColor(render, 255, 0, 0, 255);
+        SDL_RenderFillRect(render, &minus);
+        SDL_SetRenderDrawColor(render, 0, 255, 0, 255);
+        SDL_RenderFillRect(render, &plus1);
+        SDL_RenderFillRect(render, &plus2);
+        surface = TTF_RenderText_Solid(font1, rStatEdit[i].c_str(), white);
+        texture = SDL_CreateTextureFromSurface(render, surface);
+        SDL_RenderCopy(render, texture, NULL, &temp);
+        SDL_FreeSurface(surface);
+    }
+    SDL_Rect info1;
+    info1.x = 650;
+    info1.y = 35;
+    info1.w = 180;
+    info1.h = 50;
+
+    SDL_Rect info2;
+    info2.x = 650;
+    info2.y = 115;
+    info2.w = 180;
+    info2.h = 50;
+
+    SDL_Rect info3;
+    info3.x = 880;
+    info3.y = 35;
+    info3.w = 70;
+    info3.h = 50;
+
+    SDL_Rect info4;
+    info4.x = 880;
+    info4.y = 115;
+    info4.w = 70;
+    info4.h = 50;
+
+    SDL_Rect rButton;
+    rButton.x = 650;
+    rButton.y = 435;
+    rButton.w = 300;
+    rButton.h = 100;
+
+
+
+    surface = TTF_RenderText_Solid(font1, "Points Left:", black);
+    texture = SDL_CreateTextureFromSurface(render, surface);
+    SDL_RenderCopy(render, texture, NULL, &info1);
+    surface = TTF_RenderText_Solid(font1, "Points Used:", black);
+    texture = SDL_CreateTextureFromSurface(render, surface);
+    SDL_RenderCopy(render, texture, NULL, &info2);
+    surface = TTF_RenderText_Solid(font1, "12", black);
+    texture = SDL_CreateTextureFromSurface(render, surface);
+    SDL_RenderCopy(render, texture, NULL, &info3);
+    surface = TTF_RenderText_Solid(font1, "0", black);
+    texture = SDL_CreateTextureFromSurface(render, surface);
+    SDL_RenderCopy(render, texture, NULL, &info4);
+    SDL_FreeSurface(surface);
+    SDL_SetRenderDrawColor(render, 0, 0, 0, 255);
+    SDL_RenderFillRect(render, &rButton);
+    surface = TTF_RenderText_Solid(font1, "Return", gray);
+    texture = SDL_CreateTextureFromSurface(render, surface);
+    SDL_RenderCopy(render, texture, NULL, &rButton);
+
+    SDL_RenderPresent(render);
+}
+
+void robotReset(int which)
+{
+    for (int i = which; i < 5; i++)
+    {
+        robot[i] = robot[i + 1];
+        robotOffID[i] = robotOffID[i + 1];
+    }
+    robot[5] = "";
+    robotOffID[5] = "";
+    drawRobots();
+    SDL_RenderPresent(render);
+}
+
+string robotName(int which)
+{
+    SDL_Event e;
+    string inputRobotName;
+    bool leave = false;
+    string compString;
+    string editedString;
+    while (!leave)
+    {
+        while (SDL_PollEvent(&e) != 0)
+        {
+            if (e.type == SDL_QUIT || e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE || e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_RETURN)
+            {
+                leave = true;
+                return inputRobotName;
+            }
+            if (e.type == SDL_TEXTINPUT && e.key.keysym.sym != SDLK_BACKSPACE)
+            {
+                cout << "getting to here" << endl;
+                inputRobotName += e.text.text;
+                editedString = updateRobotName(inputRobotName);
+                robot[which] = editedString;
+                drawRobots();
+                SDL_RenderPresent(render);
+            }
+            if (e.key.keysym.sym == SDLK_BACKSPACE)
+            {
+                if (e.type == SDL_KEYDOWN)
+                {
+                    inputRobotName = inputRobotName.substr(0, inputRobotName.size() - 1);
+                    editedString = updateRobotName(inputRobotName);
+                    robot[which] = editedString;
+                    drawRobots();
+                    SDL_RenderPresent(render);
+                }
+            }
+        }
+    }
+}
+
+string updateRobotName(string rName)
+{
+    cout << "updating robot" << endl;
+    string tempHere = rName;
+    for (int i = tempHere.length(); i < 20; i++)
+    {
+        tempHere = " " + tempHere;
+    }
+    return tempHere;
+}
+
 void drawBackground()
 {
     SDL_SetRenderDrawColor(render, 172, 172, 172, 255);
@@ -508,6 +749,12 @@ void drawRobots()
             half = 500;
             height = 0;
         }
+
+        SDL_Rect nameSlots;
+        nameSlots.x = 95 + half;
+        nameSlots.y = 105 + (70 * height);
+        nameSlots.w = 390;
+        nameSlots.h = 25;
 
         SDL_Rect temp;
         temp.x = 90 + half;
@@ -575,6 +822,11 @@ void drawRobots()
         texture = SDL_CreateTextureFromSurface(render, surface);
         temp4.x = 60 + half;
         SDL_RenderCopy(render, texture, NULL, &temp4);
+        SDL_FreeSurface(surface);
+        cout << robot[i] << endl;
+        surface = TTF_RenderText_Solid(font1, robot[i].c_str(), gray);
+        texture = SDL_CreateTextureFromSurface(render, surface);
+        SDL_RenderCopy(render, texture, NULL, &temp);
         SDL_FreeSurface(surface);
         height++;
     }
@@ -783,19 +1035,27 @@ string readInDigit(int n)
     SDL_Event e;
     string inputNumbers;
     bool leave = false;
+    string compString;
     while (!leave)
     {
         while (SDL_PollEvent(&e) != 0)
         {
-            if (e.type == SDL_QUIT || e.key.keysym.sym == SDLK_ESCAPE || e.key.keysym.sym == SDLK_RETURN)
+            if (e.type == SDL_QUIT || e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE || e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_RETURN)
             {
                 leave = true;
                 return inputNumbers;
             }
-            if (e.type == SDL_TEXTINPUT && e.key.keysym.sym != SDLK_BACKSPACE)
+            if (e.type == SDL_TEXTINPUT)
             {
-                inputNumbers += e.text.text;
-                updateDigit(inputNumbers, n);
+                compString = e.text.text;
+                if (compString == "0" || compString == "1" || compString == "2" || compString == "3" || compString == "4" || compString == "5" || compString == "6" || compString == "7" || compString == "8" || compString == "9")
+                {
+                    if (inputNumbers.length() > 0 || compString != "0")
+                    {
+                        inputNumbers += e.text.text;
+                        updateDigit(inputNumbers, n);
+                    }
+                }
             }
             if (e.key.keysym.sym == SDLK_BACKSPACE)
             {
