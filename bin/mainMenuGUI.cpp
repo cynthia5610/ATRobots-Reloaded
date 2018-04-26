@@ -76,14 +76,15 @@ int gT = 16;
 int rT = 0;
 
 string rStatEdit[7] = {"Scanner  ", "Weapon   ", "Armor    ", "Engine   ", "Heatsinks", "Mines    ", "Shield   "};
+string rStatOff[7] = {"Scanner", "Weapon", "Armor", "Engine", "Heatsinks", "Mines", "Shield"};
 int statChanger[7] = {0, 0, 0, 0, 0, 0, 0};
 string robotOffID[6];
 string robotDisplay[6];
 
-// int main(int argc, char *argv[])
-// {
-//     runGraphics();
-// }
+int main(int argc, char *argv[])
+{
+    runGraphics();
+}
 
 void runGraphics()
 {
@@ -296,6 +297,7 @@ void runGraphics()
                             if (e.button.button == SDL_BUTTON_LEFT)
                             {
                                 std::cout << "Robot 2 Edited" << std::endl;
+                                robotModify(1);
                             }
                         }
                     }
@@ -307,6 +309,7 @@ void runGraphics()
                             if (e.button.button == SDL_BUTTON_LEFT)
                             {
                                 std::cout << "Robot 3 Edited" << std::endl;
+                                robotModify(2);
                             }
                         }
                     }
@@ -318,6 +321,7 @@ void runGraphics()
                             if (e.button.button == SDL_BUTTON_LEFT)
                             {
                                 std::cout << "Robot 4 Edited" << std::endl;
+                                robotModify(3);
                             }
                         }
                     }
@@ -329,6 +333,7 @@ void runGraphics()
                             if (e.button.button == SDL_BUTTON_LEFT)
                             {
                                 std::cout << "Robot 5 Removed" << std::endl;
+                                robotModify(4);
                             }
                         }
                     }
@@ -340,6 +345,7 @@ void runGraphics()
                             if (e.button.button == SDL_BUTTON_LEFT)
                             {
                                 std::cout << "Robot 6 Removed" << std::endl;
+                                robotModify(5);
                             }
                         }
                     }
@@ -528,7 +534,10 @@ void robotModify(int which)
     int x = 0;
     int y = 0;
     bool leave = false;
-    if (robotDisplay[0].empty() == true)
+    /*     for (int i = 0; i < 7; i++){
+        statChanger[i] = retrieveFunc(robotOffID[which]);
+    } */
+    if (robotDisplay[which].empty() == true)
     {
         leave = true;
     }
@@ -544,6 +553,10 @@ void robotModify(int which)
             SDL_GetMouseState(&x, &y);
             if (e.type == SDL_QUIT || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE))
             {
+                /* for (int r = 0; r < 7; r++){
+                    statReadIn(robotOffID[which], rStatOff[r], statChanger[r]);
+                    statChanger[r] = 0;
+                } */
                 drawBackground();
                 drawTitleBox();
                 drawRobots();
@@ -558,6 +571,11 @@ void robotModify(int which)
                     if (e.button.button == SDL_BUTTON_LEFT)
                     {
                         cout << "leaving" << endl;
+                        /* for (int r = 0; r < 7; r++)
+                        {
+                            statReadIn(robotOffID[which], rStatOff[r], statChanger[r]);
+                        statChanger[r] = 0;
+                        } */
                         drawBackground();
                         drawTitleBox();
                         drawRobots();
