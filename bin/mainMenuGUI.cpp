@@ -1441,6 +1441,9 @@ void updateDigit(string here, int which)
         robTime = tempHere.c_str();
         break;
     }
+    drawBackground();
+    drawTitleBox();
+    drawRobots();
     settingCycle();
     SDL_RenderPresent(render);
 }
