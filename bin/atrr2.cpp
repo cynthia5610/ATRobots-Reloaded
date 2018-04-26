@@ -46,7 +46,7 @@ void parse_param(char * s);
 void init_missiles(double xx, double yy, double xxv, double yyv, int dir, int s, int blast, bool ob);
 void shutdown();
 char* victor_string(int k, int n);
-void readStats();
+void readStats(string robotName);
 void writeStats(string robotName, string token, string value);
 
 
@@ -56,8 +56,8 @@ int main(int argc, char *argv[]){
 	robot += 2;
 
     //for testing purposes
-    readStats();
-    writeStats("CIRCLES.AT2", "scanner", "1111");
+    //readStats("CIRCLES.AT2");
+    //writeStats("CIRCLES.AT2", "scanner", "5");
 
     //send the robots & flags
 	init(argc, argv);
@@ -1033,6 +1033,7 @@ void prog_error(int n, const char* ss)
         case 24: cout <<"Invalid step count: \"" << ss << "\". 1-9 are valid conditions."<< endl; break;
         case 25: cout <<"Not enough matches set! Usage: /M(number of matches)" << endl; break;
         case 26: cout <<"\"" << ss << "\"" << endl; break;
+        case 27: cout <<"To many CONFIG points: Max points = 12" << endl; break;
         default: cout <<ss;  break;
     }
     exit(EXIT_FAILURE);
@@ -2202,13 +2203,12 @@ void close_debug_window()
 ------- GUI FUNCTIONS -------
 */
 
-void readStats(){
+void readStats(string robotName){
     size_t pos = 0;
     string line;
     string token;
 
     string endString = "#END";
-    string robotName = "CIRCLES.AT2";
     string delimiter = "=";
 
     string scanner = "#CONFIG scanner",
@@ -2255,13 +2255,24 @@ void readStats(){
                 }
             }
         }
-        // cout << "scanner value is:" <<  scannerVal << endl;
-        // cout << "weapon value is:" <<   weaponVal << endl;
-        // cout << "armor value is:" <<  armorVal << endl;
-        // cout << "engine value is:" <<  engineVal << endl;
-        // cout << "heatsinks value is:" <<  heatsinksVal << endl;
-        // cout << "mines value is:" <<  minesVal << endl;
-        // cout << "shield value is:" <<  shieldVal << endl;
+        int numScannerVal = stoi(scannerVal),
+            numWeaponVal = stoi(weaponVal),
+            numEngineVal = stoi(engineVal),
+            numArmorVal = stoi(armorVal),
+            numHeatsinksval = stoi(heatsinksVal),
+            numMinesVal = stoi(minesVal),
+            numShieldVal = stoi(shieldVal);
+        
+        if(numScannerVal +
+           numWeaponVal +
+           numArmorVal +
+           numEngineVal +
+           numHeatsinksval +
+           numMinesVal +
+           numShieldVal
+           > 12){
+               prog_error(27, "\0");
+           }
     }
     else{
         prog_error(8, "\0");
@@ -2340,6 +2351,8 @@ void writeStats(string robotName, string intoken, string value){
     tempRobotFile.close();
     remove((robotName.c_str()));
     rename(tempFile.c_str(), robotName.c_str());
+    //Error Check
+    readStats(robotName);
 }
 
 /*
