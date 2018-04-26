@@ -55,8 +55,8 @@ SDL_Window *window = NULL;
 SDL_Renderer *render = NULL;
 SDL_Surface *surface = NULL;
 
-TTF_Font *font1 = NULL;
-TTF_Font *font2 = NULL;
+TTF_Font *font1;
+TTF_Font *font2;
 
 bool scArcs = true;
 bool shSource = false;
@@ -1028,13 +1028,14 @@ void drawBackground()
 
 void drawTitleBox()
 {
+    cout << "in titlebox" << endl;
     SDL_SetRenderDrawColor(render, 0, 0, 0, 255);
     SDL_Rect titleBox;
     titleBox.x = 5;
     titleBox.y = 5;
     titleBox.w = 990;
     titleBox.h = 70;
-
+    cout << "set render" << endl;
     SDL_Rect titleText;
     titleText.x = 230;
     titleText.y = 15;
@@ -1042,11 +1043,14 @@ void drawTitleBox()
     titleText.h = 50;
 
     SDL_RenderFillRect(render, &titleBox);
-
+    cout << "render fill" << endl;
     surface = TTF_RenderText_Solid(font1, "AT-Robots Reloaded", white);
+    cout << "going into create texture" << endl;
     texture = SDL_CreateTextureFromSurface(render, surface);
+    cout << "going into copy" << endl;
     SDL_RenderCopy(render, texture, NULL, &titleText);
     SDL_FreeSurface(surface);
+    cout << "out of drawe title" << endl;
 }
 
 void drawRobots()

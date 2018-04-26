@@ -1,5 +1,5 @@
 mac:
-	g++ -c -std=c++17 ../bin/mainMenuGUI.cpp
+	g++ -c ../bin/mainMenuGUI.cpp
 	g++ -c ../bin/atrr2.cpp
 	g++ -c ../bin/atrrfunc.cpp
 	g++ -c ../bin/filelib.cpp

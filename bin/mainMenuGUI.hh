@@ -1,15 +1,15 @@
 #ifndef __MAINMENUGUI_HH__
 #define __MAINMENUGUI_HH__
 
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <stdlib.h>
-
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL_ttf.h>
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <stdlib.h>
 
 using namespace std;
 
