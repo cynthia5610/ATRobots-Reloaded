@@ -34,6 +34,7 @@ string updateRobotName(string rName);
 void robotReset(int which);
 void robotModify(int which);
 void robotPrintButtons();
+bool statChecker();
 
 bool init();
 bool loadMedia();
@@ -71,9 +72,9 @@ int gT = 16;
 int rT = 0;
 
 string rStatEdit[7] = {"Scanner  ", "Weapon   ", "Armor    ", "Engine   ", "Heatsinks", "Mines    ", "Shield   "};
-
+int statChanger[7] = {0, 0, 0, 0, 0, 0, 0};
 string robotOffID[6];
-string robot[6];
+string robotDisplay[6];
 
 int main(int argc, char *argv[])
 {
@@ -512,11 +513,218 @@ void runGraphics()
 
 void robotModify(int which)
 {
+    int x = 0;
+    int y = 0;
     robotPrintButtons();
+    SDL_Event e;
+    bool leave = false;
+    while (!leave)
+    {
+        while (SDL_PollEvent(&e) != 0)
+        {
+            SDL_GetMouseState(&x, &y);
+            if (e.type == SDL_QUIT || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE))
+            {
+                leave = true;
+            }
+            else if (x >= 650 && x <= 985 && y >= 485 && y <= 585)
+            {
+                if (e.type == SDL_MOUSEBUTTONUP)
+                {
+                    if (e.button.button == SDL_BUTTON_LEFT)
+                    {
+                        cout << "leaving" << endl;
+                        leave = true;
+                    }
+                }
+            }
+            else if (x >= 330 && x <= 380 && y >= 35 && y <= 85)
+            {
+                if (e.type == SDL_MOUSEBUTTONUP)
+                {
+                    if (e.button.button == SDL_BUTTON_LEFT)
+                    {
+                        cout << "stat 1 decreased" << endl;
+                        statChanger[0]--;
+                        if (statChecker == false)
+                        {
+                            statChanger[0]++;
+                        }
+                    }
+                }
+            }
+            else if (x >= 330 && x <= 380 && y >= 115 && y <= 165)
+            {
+                if (e.type == SDL_MOUSEBUTTONUP)
+                {
+                    if (e.button.button == SDL_BUTTON_LEFT)
+                    {
+                        cout << "stat 2 decreased" << endl;
+                        statChanger[1]++;
+                    }
+                }
+            }
+            else if (x >= 330 && x <= 380 && y >= 195 && y <= 245)
+            {
+                if (e.type == SDL_MOUSEBUTTONUP)
+                {
+                    if (e.button.button == SDL_BUTTON_LEFT)
+                    {
+                        cout << "stat 3 decreased" << endl;
+                        statChanger[2]--;
+                    }
+                }
+            }
+            else if (x >= 330 && x <= 380 && y >= 275 && y <= 325)
+            {
+                if (e.type == SDL_MOUSEBUTTONUP)
+                {
+                    if (e.button.button == SDL_BUTTON_LEFT)
+                    {
+                        cout << "stat 4 decreased" << endl;
+                        statChanger[3]--;
+                    }
+                }
+            }
+            else if (x >= 330 && x <= 380 && y >= 355 && y <= 405)
+            {
+                if (e.type == SDL_MOUSEBUTTONUP)
+                {
+                    if (e.button.button == SDL_BUTTON_LEFT)
+                    {
+                        cout << "stat 5 decreased" << endl;
+                        statChanger[4]--;
+                    }
+                }
+            }
+            else if (x >= 330 && x <= 380 && y >= 435 && y <= 485)
+            {
+                if (e.type == SDL_MOUSEBUTTONUP)
+                {
+                    if (e.button.button == SDL_BUTTON_LEFT)
+                    {
+                        cout << "stat 6 decreased" << endl;
+                        statChanger[5]--;
+                    }
+                }
+            }
+            else if (x >= 330 && x <= 380 && y >= 515 && y <= 565)
+            {
+                if (e.type == SDL_MOUSEBUTTONUP)
+                {
+                    if (e.button.button == SDL_BUTTON_LEFT)
+                    {
+                        cout << "stat 7 decreased" << endl;
+                        statChanger[6]--;
+                        robotPrintButtons();
+                    }
+                }
+            }
+            else if (x >= 530 && x <= 580 && y >= 35 && y <= 85)
+            {
+                if (e.type == SDL_MOUSEBUTTONUP)
+                {
+                    if (e.button.button == SDL_BUTTON_LEFT)
+                    {
+                        cout << "stat 1 increased" << endl;
+                        statChanger[0]++;
+                    }
+                }
+            }
+            else if (x >= 530 && x <= 580 && y >= 115 && y <= 165)
+            {
+                if (e.type == SDL_MOUSEBUTTONUP)
+                {
+                    if (e.button.button == SDL_BUTTON_LEFT)
+                    {
+                        cout << "stat 2 increased" << endl;
+                        statChanger[1]++;
+                    }
+                }
+            }
+            else if (x >= 530 && x <= 580 && y >= 195 && y <= 245)
+            {
+                if (e.type == SDL_MOUSEBUTTONUP)
+                {
+                    if (e.button.button == SDL_BUTTON_LEFT)
+                    {
+                        cout << "stat 3 increased" << endl;
+                        statChanger[2]++;
+                    }
+                }
+            }
+            else if (x >= 530 && x <= 580 && y >= 275 && y <= 325)
+            {
+                if (e.type == SDL_MOUSEBUTTONUP)
+                {
+                    if (e.button.button == SDL_BUTTON_LEFT)
+                    {
+                        cout << "stat 4 increased" << endl;
+                        statChanger[3]++;
+                    }
+                }
+            }
+            else if (x >= 530 && x <= 580 && y >= 355 && y <= 405)
+            {
+                if (e.type == SDL_MOUSEBUTTONUP)
+                {
+                    if (e.button.button == SDL_BUTTON_LEFT)
+                    {
+                        cout << "stat 5 increased" << endl;
+                        statChanger[4]++;
+                    }
+                }
+            }
+            else if (x >= 530 && x <= 580 && y >= 435 && y <= 485)
+            {
+                if (e.type == SDL_MOUSEBUTTONUP)
+                {
+                    if (e.button.button == SDL_BUTTON_LEFT)
+                    {
+                        cout << "stat 6 increased" << endl;
+                        statChanger[5]++;
+                    }
+                }
+            }
+            else if (x >= 530 && x <= 580 && y >= 515 && y <= 565)
+            {
+                if (e.type == SDL_MOUSEBUTTONUP)
+                {
+                    if (e.button.button == SDL_BUTTON_LEFT)
+                    {
+                        cout << "stat 7 increased" << endl;
+                        statChanger[6]++;
+                        if (statChecker() == false)
+                        {
+                            statChanger[6]--;
+                        }
+                        robotPrintButtons();
+                    }
+                }
+            }
+        }
+    }
+}
+
+bool statChecker()
+{
+    int totalSum;
+    totalSum = statChanger[0] + statChanger[1] + statChanger[2] + statChanger[3] + statChanger[4] + statChanger[5] + statChanger[6];
+    if (totalSum < 13 && statChanger[0] < 6 && statChanger[1] < 6 && statChanger[2] < 6 && statChanger[3] < 6 && statChanger[4] < 6 && statChanger[5] < 6 && statChanger[6] < 6)
+    {
+        cout << "returning true" << endl;
+        return true;
+    }
+    else
+    {
+        cout << "returning false" << endl;
+        return false;
+    }
 }
 
 void robotPrintButtons()
 {
+    const char *tempStat;
     SDL_Rect clear;
     clear.x = 0;
     clear.y = 0;
@@ -582,6 +790,9 @@ void robotPrintButtons()
         surface = TTF_RenderText_Solid(font1, rStatEdit[i].c_str(), white);
         texture = SDL_CreateTextureFromSurface(render, surface);
         SDL_RenderCopy(render, texture, NULL, &temp);
+        surface = TTF_RenderText_Solid(font1, to_string(statChanger[i]).c_str(), gray);
+        texture = SDL_CreateTextureFromSurface(render, surface);
+        SDL_RenderCopy(render, texture, NULL, &numberBox);
         SDL_FreeSurface(surface);
     }
     SDL_Rect info1;
@@ -610,12 +821,9 @@ void robotPrintButtons()
 
     SDL_Rect rButton;
     rButton.x = 650;
-    rButton.y = 435;
-    rButton.w = 300;
+    rButton.y = 485;
+    rButton.w = 335;
     rButton.h = 100;
-
-
-
     surface = TTF_RenderText_Solid(font1, "Points Left:", black);
     texture = SDL_CreateTextureFromSurface(render, surface);
     SDL_RenderCopy(render, texture, NULL, &info1);
@@ -642,10 +850,10 @@ void robotReset(int which)
 {
     for (int i = which; i < 5; i++)
     {
-        robot[i] = robot[i + 1];
+        robotDisplay[i] = robotDisplay[i + 1];
         robotOffID[i] = robotOffID[i + 1];
     }
-    robot[5] = "";
+    robotDisplay[5] = "";
     robotOffID[5] = "";
     drawRobots();
     SDL_RenderPresent(render);
@@ -672,7 +880,7 @@ string robotName(int which)
                 cout << "getting to here" << endl;
                 inputRobotName += e.text.text;
                 editedString = updateRobotName(inputRobotName);
-                robot[which] = editedString;
+                robotDisplay[which] = editedString;
                 drawRobots();
                 SDL_RenderPresent(render);
             }
@@ -682,7 +890,7 @@ string robotName(int which)
                 {
                     inputRobotName = inputRobotName.substr(0, inputRobotName.size() - 1);
                     editedString = updateRobotName(inputRobotName);
-                    robot[which] = editedString;
+                    robotDisplay[which] = editedString;
                     drawRobots();
                     SDL_RenderPresent(render);
                 }
@@ -823,8 +1031,8 @@ void drawRobots()
         temp4.x = 60 + half;
         SDL_RenderCopy(render, texture, NULL, &temp4);
         SDL_FreeSurface(surface);
-        cout << robot[i] << endl;
-        surface = TTF_RenderText_Solid(font1, robot[i].c_str(), gray);
+        cout << robotDisplay[i] << endl;
+        surface = TTF_RenderText_Solid(font1, robotDisplay[i].c_str(), gray);
         texture = SDL_CreateTextureFromSurface(render, surface);
         SDL_RenderCopy(render, texture, NULL, &temp);
         SDL_FreeSurface(surface);
@@ -1040,7 +1248,7 @@ string readInDigit(int n)
     {
         while (SDL_PollEvent(&e) != 0)
         {
-            if (e.type == SDL_QUIT || e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE || e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_RETURN)
+            if (e.type == SDL_QUIT || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_RETURN))
             {
                 leave = true;
                 return inputNumbers;
