@@ -37,10 +37,33 @@ git clone https://github.com/LEKrensta/ATRobots-Reloaded.git
 ## Mac OS
 ### Install dependencies
 ```
-make installLinux
+brew install sdl2
+brew install sdl2_image
+brew install sdl2_mixer
+brew install sdl2_ttf
+```
+
+## Linux
+### Install dependencies
+```
+sudo apt-get install libsdl2-dev
+sudo apt-get install libsdl2-image-dev
+sudo apt-get install libsdl2-mixer-dev
+sudo apt-get install libsdl2-ttf-dev
 ```
 
 ### Run
 ```
 ./atrr [flags]
+```
+
+## Flags
+- /M [set number of matches]
+- /G [enable grahpics]
+- /S [disables showing source]
+- /^ [disables Cnotice]
+
+## Clean up
+```
+make clean
 ```
