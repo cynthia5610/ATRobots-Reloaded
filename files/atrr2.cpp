@@ -1940,7 +1940,7 @@ void parse_param(char * s)
     found = false;
     s = uCase(s);
 
-    if(s == '\0'){
+    if(s == NULL){
         return;
     }
     if(s[0] == '#')
@@ -2073,7 +2073,7 @@ void parse_param(char * s)
     else if(s[0] == ';'){
         found = true;
     }
-    else if(num_robots < max_robots && s != '\0')
+    else if(num_robots < max_robots && s != NULL)
     {
         num_robots++;
         create_robot(num_robots,s);
