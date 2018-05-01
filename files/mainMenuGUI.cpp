@@ -133,7 +133,7 @@ void runGraphics()
                 while (SDL_PollEvent(&e) != 0)
                 {
                     SDL_GetMouseState(&x, &y);
-                    if (e.type == SDL_QUIT || e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE)
+                    if ((e.type == SDL_QUIT || e.type == SDL_KEYDOWN) && e.key.keysym.sym == SDLK_ESCAPE)
                     {
                         close();
                         quit = true;
@@ -1013,7 +1013,7 @@ string robotName(int which)
     {
         while (SDL_PollEvent(&e) != 0)
         {
-            if (e.type == SDL_QUIT || e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE || e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_RETURN)
+            if ((e.type == SDL_QUIT || e.type == SDL_KEYDOWN) && (e.key.keysym.sym == SDLK_ESCAPE || e.type == SDL_KEYDOWN) && (e.key.keysym.sym == SDLK_RETURN))
             {
                 leave = true;
                 return inputRobotName;
@@ -1046,6 +1046,7 @@ string robotName(int which)
             }
         }
     }
+    return inputRobotName;
 }
 
 string updateRobotName(string rName)
@@ -1428,6 +1429,7 @@ string readInDigit(int n)
             }
         }
     }
+    return inputNumbers;
 }
 
 void updateDigit(string here, int which)

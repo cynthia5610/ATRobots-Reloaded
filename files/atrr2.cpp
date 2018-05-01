@@ -69,7 +69,7 @@ int main(int argc, char *argv[]){
 
     if(!graphix){	
 	    //loop variables
-	    int i, j, k, l, n, w;
+	    int i, k, n, w;
 	    
         n = 0;
 	
@@ -116,7 +116,7 @@ int main(int argc, char *argv[]){
 		    cout << endl;
             textcolor(15);
 
-		    if(k == 1){ //this might have to be (k == 1);
+		    if(k == 2){ //this might have to be (k == 1);
 			    cout << "Robot #" << n+1 << " " << robot[n]->fn << " wins the bout! (Score: " << w << "/" << matches << ")" << endl;
 		    }
 		    else{
@@ -257,7 +257,7 @@ void init(int ParamCount, char **ParamStr)
 }
 void init_bout()
 {
-    int i, j, k;
+    int i;
     game_cycle = 0;
     for(i = 0; i < max_missiles; i++)
     {
@@ -362,6 +362,7 @@ void bout()
 			case '+': case '=':
 			if(game_delay < 100){
 				switch(game_delay){
+                    /*
 					case 0 ... 4: game_delay = 5;
 					break;
 					case 5 ... 9: game_delay = 10;
@@ -382,11 +383,15 @@ void bout()
 					break;
 					case 80 ... 100: game_delay = 100;
 					break;
+                    */
+                   default: game_delay = 50;
+                   break;
 				}
 			}
 			case '-': case '_':
 			if(game_delay > 0){
 				switch(game_delay){
+                    /*
 					case 0 ... 5: game_delay = 0;
 					break;
 					case 6 ... 10: game_delay = 5;
@@ -407,6 +412,9 @@ void bout()
 					break;
 					case 76 ... 100: game_delay = 75;
 					break;
+                    */
+                   default: game_delay = 20;
+                   break;
 				}
 			}
 			case 'G': toggle_graphix();
@@ -422,6 +430,7 @@ void bout()
 		}
 
 		switch(game_delay){
+            /*
 			case 0 ... 1: k = 100;
 			case 2 ... 5: k = 50;
 			case 6 ... 10: k = 25;
@@ -429,6 +438,7 @@ void bout()
 			case 26 ... 40: k = 10;
 			case 41 ... 70: k = 5;
 			case 71 ... 32787: k = 1;
+            */
 			default: k = 10;
 		}
 		
@@ -1353,6 +1363,7 @@ void check_plen(int plen)
 
 void compile(int n, char* filename)
 {
+/*
     char *s;
     char *s1;
     char *s2;
@@ -1782,6 +1793,7 @@ void compile(int n, char* filename)
             textcolor(7);
             }
         }
+        */
     return;
 }
 
